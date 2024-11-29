@@ -15,6 +15,6 @@ def home(request):
 #     serializer_class = InstalacionSerializer
 #     queryset = Instalacion.objects.all()
 
-class InstalacionView(generics.ListAPIView):
+class InstalacionView(generics.CreateAPIView):
     serializer_class = InstalacionSerializer
     queryset = Instalacion.objects.all()
