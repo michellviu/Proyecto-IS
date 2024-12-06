@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import SET_NULL
-
+import uuid
+import api.models_validations as mv
 
 # Create your models here.
 
@@ -95,6 +96,11 @@ class Actividad_programada(models.Model):
         return f"{self.idA}:{self.idE}"
 
 class Reservacion(models.Model):
+    cod_uni = models.UUIDField(
+        primary_key=True,  # Define el campo como clave primaria
+        default=uuid.uuid4,  # Genera automáticamente un UUID(implentación de GUID) único
+        editable=False  # No se puede editar manualmente
+    )
     idP = models.OneToOneField(
             Padre,
             on_delete=models.CASCADE,
@@ -136,4 +142,7 @@ class Calificacion(models.Model):
 
     puntacion = models.SmallIntegerField()
     fecha = models.DateField()
-    comentario = models.CharField(max_length=100)
+    comentario = models.CharField(
+        max_length=100,
+        validators=[mv.no_offensive_language]  # Aplica el validador personalizado aquí
+    )
