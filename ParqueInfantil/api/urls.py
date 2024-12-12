@@ -16,5 +16,6 @@ urlpatterns = [
  path('actividad_programada', Actividad_programadaView.as_view()),
  path('reservacion', ReservacionView.as_view()),
  path('calificacion', CalificacionView.as_view()),
+ path('instalacionList/', views.InstalacionList.as_view()),
  # path('instalacion', include(router.urls))
 ]
