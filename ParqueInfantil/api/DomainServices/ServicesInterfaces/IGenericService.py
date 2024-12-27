@@ -10,7 +10,7 @@ class IGenericService(ABC):
         pass
 
     @abstractmethod
-    def add(self, entity):
+    def create(self, entity):
         pass
 
     @abstractmethod

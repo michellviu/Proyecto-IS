@@ -1,12 +1,13 @@
 from django.urls import path ,include
 from api import views
-from .views import InstalacionView,ActividadView,RecursoView,UsuarioView,PadreView,EducadorView,AdministradorView,Actividad_programadaView,ReservacionView,CalificacionView
+from .views import InstalacionView,ActividadView,ActividadDetailView,RecursoView,UsuarioView,PadreView,EducadorView,AdministradorView,Actividad_programadaView,ReservacionView,CalificacionView
 
 # router = routers.DefaultRouter()
 # router.register(r'instalacion', views.InstalacionView, 'instalacion')
 urlpatterns = [
  path('', views.home, name='home'),
  path('instalacion', InstalacionView.as_view()),
+ path('actividad/<int:pk>/', ActividadDetailView.as_view()),
  path('actividad', ActividadView.as_view()),
  path('recurso', RecursoView.as_view()),
  path('usuario', UsuarioView.as_view()),

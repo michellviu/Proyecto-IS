@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import IGenericService
+from .IGenericService import IGenericService
 
-class IActivityService(ABC,IGenericService):
+class IActivityService(IGenericService,ABC):
    pass

@@ -4,10 +4,10 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework import status
-from api.models import Instalacion,Actividad,Recurso,Usuario,Padre,Educador,Administrador,Actividad_programada,Reservacion,Calificacion
-from api.serializer import InstalacionSerializer, ActividadSerializer, RecursoSerializer, UsuarioSerializer, PadreSerializer, EducadorSerializer, AdministradorSerializer, Actividad_programadaSerializer, ReservacionSerializer, CalificacionSerializer
-
-
+from .models import Instalacion,Actividad,Recurso,Usuario,Padre,Educador,Administrador,Actividad_programada,Reservacion,Calificacion
+from .serializer import InstalacionSerializer, ActividadSerializer, RecursoSerializer, UsuarioSerializer, PadreSerializer, EducadorSerializer, AdministradorSerializer, Actividad_programadaSerializer, ReservacionSerializer, CalificacionSerializer
+from api.AppServices.ActivityService import ActivityService
+from api.InfrastructurePersistence.ActivityRepository import ActivityRepository
 
 # Create your views here.
 
@@ -38,9 +38,45 @@ class InstalacionList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# vista para crear o listar todas las actividades
 class ActividadView(generics.ListCreateAPIView):
+     serializer_class = ActividadSerializer
+
+     def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.activity_service = ActivityService(ActivityRepository())
+
+     def get_queryset(self):
+        return self.activity_service.get_all()
+
+     def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.activity_service.create(serializer.validated_data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+# vista para ver, actualizar o eliminar una actividad
+class ActividadDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ActividadSerializer
-    queryset = Actividad.objects.all()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.activity_service = ActivityService(ActivityRepository())
+
+    def get_object(self):
+        return self.activity_service.get_by_id(self.kwargs['pk'])
+
+    def update(self, request, *args, **kwargs):
+        activity = self.get_object()
+        serializer = self.get_serializer(activity, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.activity_service.update(activity.idA, serializer.validated_data)
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        activity = self.get_object()
+        self.activity_service.delete(activity.idA)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class RecursoView(generics.ListCreateAPIView):
     serializer_class = RecursoSerializer
