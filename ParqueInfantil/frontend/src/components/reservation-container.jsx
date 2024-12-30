@@ -1,41 +1,56 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { FaInfoCircle, FaTimesCircle } from 'react-icons/fa';
 import './reservation-container.css';
 
-const ReservationContainer = ({ reservation }) => {
-    const { activityImage, reservationName, status } = reservation;
+const ReservationContainer = ({ parentId }) => {
+    const [reservations, setReservations] = useState([]);
+    const [selectedReservation, setSelectedReservation] = useState(null);
 
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'denied':
-                return 'red';
-            case 'confirmed':
-                return 'green';
-            case 'pending':
-                return 'gray';
-            default:
-                return 'black';
-        }
+    useEffect(() => {
+        // Fetch reservations for the given parentId
+        fetch(`/api/reservations?parentId=${parentId}`)
+            .then(response => response.json())
+            .then(data => setReservations(data))
+            .catch(error => console.error('Error fetching reservations:', error));
+    }, [parentId]);
+
+    const handleCancelReservation = (reservationId) => {
+        // Handle reservation cancellation logic here
+        console.log(`Cancel reservation with ID: ${reservationId}`);
     };
 
-    const handleMoreDetails = () => {
-        // Implement the logic to show more details
-    };
-
-    const handleCancelReservation = () => {
-        // Implement the logic to cancel the reservation
+    const handleViewDetails = (reservation) => {
+        setSelectedReservation(reservation);
     };
 
     return (
         <div className="reservation-container">
-            <img src={activityImage} alt="Activity" className="activity-thumbnail" />
-            <div className="reservation-details">
-                <h3>{reservationName}</h3>
-                <p style={{ color: getStatusColor(status) }}>{status}</p>
-            </div>
-            <div className="reservation-actions">
-                <button onClick={handleMoreDetails}>Ver más detalles</button>
-                <button onClick={handleCancelReservation}>✖</button>
-            </div>
+            {reservations.map(reservation => (
+                <div key={reservation.id} className="reservation-item">
+                    <img src={reservation.activityPhoto} alt="Activity" className="activity-thumbnail" />
+                    <div className="reservation-info">
+                        <h3>{reservation.activityName}</h3>
+                        <p className={`reservation-status ${reservation.status.toLowerCase()}`}>
+                            {reservation.status}
+                        </p>
+                    </div>
+                    <div className="reservation-actions">
+                        <FaInfoCircle onClick={() => handleViewDetails(reservation)} className="action-icon" />
+                        <FaTimesCircle onClick={() => handleCancelReservation(reservation.id)} className="action-icon" />
+                    </div>
+                </div>
+            ))}
+            {selectedReservation && (
+                <div className="reservation-details">
+                    <h2>Detalles de la Reserva</h2>
+                    <p>Nombre de la Actividad: {selectedReservation.activityName}</p>
+                    <p>Fecha: {selectedReservation.date}</p>
+                    <p>Hora: {selectedReservation.time}</p>
+                    <p>Estado: {selectedReservation.status}</p>
+                    <p>Descripción: {selectedReservation.description}</p>
+                    <button onClick={() => setSelectedReservation(null)}>Cerrar</button>
+                </div>
+            )}
         </div>
     );
 };

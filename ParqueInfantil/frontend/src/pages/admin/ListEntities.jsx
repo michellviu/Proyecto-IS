@@ -2,9 +2,61 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Button, Input, List, Spin, message } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { FaHome } from 'react-icons/fa';
 import axios from 'axios';
+import styled from 'styled-components';
 
 const { Search } = Input;
+
+// Estilos personalizados usando styled-components
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+  background-color: #f0f2f5;
+`;
+
+const Nav = styled.nav`
+  ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin-right: 20px;
+  }
+`;
+
+const Content = styled.div`
+  display: flex;
+  width: 100%;
+  margin-top: 20px;
+`;
+
+const Sidebar = styled(Menu)`
+  width: 256px;
+`;
+
+const InstancesList = styled.div`
+  flex: 1;
+  padding: 0 20px;
+`;
+
+const ListHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+`;
 
 const ListEntities = () => {
   const [entities, setEntities] = useState([]);
@@ -13,10 +65,10 @@ const ListEntities = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch entities from the database
+    // Obtener entidades de la base de datos
     axios.get('/api/entities')
       .then(response => setEntities(response.data))
-      .catch(error => message.error('Error fetching entities'));
+      .catch(error => message.error('Error al obtener entidades'));
   }, []);
 
   const handleMenuClick = (entity) => {
@@ -32,7 +84,7 @@ const ListEntities = () => {
         setLoading(false);
       })
       .catch(error => {
-        message.error('Error fetching instances');
+        message.error('Error al obtener instancias');
         setLoading(false);
       });
   };
@@ -41,39 +93,48 @@ const ListEntities = () => {
     axios.delete(`/api/instances/${id}`)
       .then(() => {
         setInstances(instances.filter(instance => instance.id !== id));
-        message.success('Instance deleted');
+        message.success('Instancia eliminada');
       })
-      .catch(error => message.error('Error deleting instance'));
+      .catch(error => message.error('Error al eliminar instancia'));
   };
 
   const handleSearch = (value) => {
-    // Implement search functionality
+    const filteredInstances = instances.filter(instance =>
+      Object.values(instance).some(val =>
+        String(val).toLowerCase().includes(value.toLowerCase())
+      )
+    );
+    setInstances(filteredInstances);
   };
 
   const handleSort = (attribute) => {
-    // Implement sort functionality
+    const sortedInstances = [...instances].sort((a, b) => {
+      if (a[attribute] < b[attribute]) return -1;
+      if (a[attribute] > b[attribute]) return 1;
+      return 0;
+    });
+    setInstances(sortedInstances);
   };
 
   return (
-    <div className="admin-dashboard-container">
-      <header className="header">
+    <Container>
+      <Header>
         <h2>Bienvenido</h2>
-        <nav className="nav">
+        <Nav>
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/"><FaHome /></Link>
             </li>
             <li>
-              <Link to="/admin/list-entities">Reload</Link>
+              <Link to="/admin/list-entities">Recargar</Link>
             </li>
           </ul>
-        </nav>
-      </header>
+        </Nav>
+      </Header>
 
-      <div className="content">
-        <Menu
+      <Content>
+        <Sidebar
           mode="inline"
-          style={{ width: 256 }}
           onClick={({ key }) => handleMenuClick(key)}
         >
           {entities.map(entity => (
@@ -81,12 +142,12 @@ const ListEntities = () => {
               {entity}
             </Menu.Item>
           ))}
-        </Menu>
+        </Sidebar>
 
-        <div className="instances-list">
+        <InstancesList>
           {selectedEntity && (
             <>
-              <div className="list-header">
+              <ListHeader>
                 <Search
                   placeholder="Buscar..."
                   onSearch={handleSearch}
@@ -95,7 +156,7 @@ const ListEntities = () => {
                 <Button type="primary" icon={<PlusOutlined />}>
                   Agregar
                 </Button>
-              </div>
+              </ListHeader>
               {loading ? (
                 <Spin />
               ) : (
@@ -119,9 +180,9 @@ const ListEntities = () => {
               )}
             </>
           )}
-        </div>
-      </div>
-    </div>
+        </InstancesList>
+      </Content>
+    </Container>
   );
 };
 

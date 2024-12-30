@@ -28,3 +28,6 @@ RESERVACIÓN(IdP, IdAP, Fecha_Hora, Estado, #Niños, Comentarios)
 CALIFICACIÓN(IdU, IdAP, Puntuación, Fecha, Comentario)
 • FK: IdU REFERENCES USUARIO
 • FK: IdAP REFERENCES ACTIVIDAD_PROGRAMADA
+
+
+npm install styled-components react-icons
