@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaHome } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import HeaderHome from '../components/headers/header-home';
+import HeaderHome from '../components/headers/HeaderHome';
 
 const Container = styled.div`
     display: flex;

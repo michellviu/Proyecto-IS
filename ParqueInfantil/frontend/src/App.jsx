@@ -6,9 +6,8 @@ import Register from './pages/Register';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import ListEntities from './pages/admin/ListEntities';
-//import ActivityCatalog from './pages/ActivityCatalog'
+import ActivityCatalog from './pages/ActivityCatalog';
 /*
-;
 import EducatorProfile from './pages/educator/EducatorProfile';
 import StatisticsRequest from './pages/educator/StatisticsRequest';
 import ResponsibleActivities from './pages/educator/ResponsibleActivities';
@@ -25,7 +24,7 @@ const App = () => {
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/admin/list-entities" element={<ListEntities />} />
-                
+                <Route path="/activity-catalog" element={<ActivityCatalog />} />
             </Routes>
         </Router>
     );
@@ -36,8 +35,8 @@ export default App;
 
 /*
                 
-               
-                <Route path="/activity-catalog" element={<ActivityCatalog />} />
+                
+                
                 <Route path="/educator/profile" element={<EducatorProfile />} />
                 <Route path="/educator/statistics-request" element={<StatisticsRequest />} />
                 <Route path="/educator/responsible-activities" element={<ResponsibleActivities />} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import HeaderHome from '../components/headers/header-home';
+import HeaderHome from '../components/headers/HeaderHome';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -35,35 +35,35 @@ const Home = () => {
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src="https://via.placeholder.com/800x400?text=Foto+1"
+                            src={require('../assets/foto.jpg').default}
                             alt="First slide"
                         />
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src="https://via.placeholder.com/800x400?text=Foto+2"
+                            src={require('../assets/foto.jpg').default}
                             alt="Second slide"
                         />
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src="https://via.placeholder.com/800x400?text=Foto+3"
+                            src={require('../assets/foto.jpg').default}
                             alt="Third slide"
                         />
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src="https://via.placeholder.com/800x400?text=Foto+4"
+                            src={require('../assets/foto.jpg').default}
                             alt="Fourth slide"
                         />
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src="https://via.placeholder.com/800x400?text=Foto+5"
+                            src={require('../assets/foto.jpg').default}
                             alt="Fifth slide"
                         />
                     </Carousel.Item>

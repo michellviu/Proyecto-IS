@@ -1,8 +1,52 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaSort } from 'react-icons/fa';
-import HeaderHome from '../components/headers/header-home';
-import ActivityContainer from '../components/activity-container';
+import HeaderHome from '../components/headers/HeaderHome';
+import ActivityContainer from '../components/ActivityContainer';
+
+
+const Container = styled.div`
+    padding: 20px;
+    background-color: #f0f8ff;
+`;
+
+const SearchBar = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    input {
+        padding: 10px;
+        width: 70%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+`;
+
+const SortButton = styled.button`
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+
+    svg {
+        margin-left: 5px;
+    }
+`;
+
+const Activities = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+`;
 
 const ActivityCatalog = () => {
     const [activities, setActivities] = useState([
@@ -56,48 +100,4 @@ const ActivityCatalog = () => {
         </Container>
     );
 };
-
-const Container = styled.div`
-    padding: 20px;
-    background-color: #f0f8ff;
-`;
-
-const SearchBar = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-
-    input {
-        padding: 10px;
-        width: 70%;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-`;
-
-const SortButton = styled.button`
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-
-    &:hover {
-        background-color: #0056b3;
-    }
-
-    svg {
-        margin-left: 5px;
-    }
-`;
-
-const Activities = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-`;
-
 export default ActivityCatalog;

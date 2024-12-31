@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaInfoCircle, FaTimesCircle } from 'react-icons/fa';
-import './reservation-container.css';
+import '../styles/reservation-container.css'; 
+
 
 const ReservationContainer = ({ parentId }) => {
     const [reservations, setReservations] = useState([]);

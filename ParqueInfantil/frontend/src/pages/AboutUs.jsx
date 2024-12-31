@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 import styled from 'styled-components';
-import HeaderHome from '../components/headers/header-home';
+import HeaderHome from '../components/headers/HeaderHome';
 //import logo from '../assets/logo.png'; // Asegúrate de que la ruta del logo sea correcta
 
 const AboutUsContainer = styled.div`
@@ -35,7 +35,7 @@ const AboutUs = () => {
             <Link to="/" className="home-link">
                 <FaHome /> Inicio
             </Link>
-           { /*<Logo src={logo} alt="Logo del Parque" />*/}
+            { /*<Logo src={logo} alt="Logo del Parque" />*/}
             <Title>Sobre Nosotros</Title>
             <Paragraph>¡Bienvenidos a nuestro parque infantil! Nos dedicamos a proporcionar un entorno seguro y divertido para que los niños jueguen y aprendan.</Paragraph>
             <Paragraph>Nuestra misión es crear un espacio donde los niños puedan explorar, descubrir y crecer a través del juego. Creemos que el juego es una parte esencial del desarrollo infantil y nos esforzamos por ofrecer una variedad de actividades que se adapten a diferentes intereses y grupos de edad.</Paragraph>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaHome, FaList, FaUser, FaCalendarCheck } from 'react-icons/fa';
-import './header-parent.css';
+
 
 const HeaderParent = ({ username }) => {
     return (

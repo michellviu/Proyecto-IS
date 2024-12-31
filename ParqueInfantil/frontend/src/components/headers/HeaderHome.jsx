@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { FaSignInAlt, FaEnvelope, FaInfoCircle } from 'react-icons/fa';
+import { FaSignInAlt, FaEnvelope, FaInfoCircle, FaListAlt, FaHome } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Header = styled.header`
     background-color:rgb(172, 190, 172);
@@ -51,7 +52,7 @@ const HeaderHome = () => {
                     <Li><StyledLink to="/login"><FaSignInAlt />Login</StyledLink></Li>
                     <Li><StyledLink to="/contact"><FaEnvelope />Contáctenos</StyledLink></Li>
                     <Li><StyledLink to="/about"><FaInfoCircle />Sobre Nosotros</StyledLink></Li>
-                  { /* <Li><StyledLink to="/activity-catalog"><FaListAlt />Actividades</StyledLink></Li>*/}
+                    <Li><StyledLink to="/activity-catalog"><FaListAlt />Actividades</StyledLink></Li> 
                 </Ul>
             </Nav>
         </Header>
