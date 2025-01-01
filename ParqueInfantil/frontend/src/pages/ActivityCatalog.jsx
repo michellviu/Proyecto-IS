@@ -122,6 +122,7 @@ const ActivityCatalog = () => {
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
+        setCurrentPage(1);
     };
 
     const handleSort = () => {

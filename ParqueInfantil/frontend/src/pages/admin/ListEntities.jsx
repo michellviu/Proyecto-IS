@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Button, Input, List, Spin, message } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Menu, Button, Input, List, Spin, message, Modal, Form } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, ReloadOutlined, CloseOutlined } from '@ant-design/icons';
 import { FaHome } from 'react-icons/fa';
-import axios from 'axios';
+import { AiOutlineReload } from 'react-icons/ai';
 import styled from 'styled-components';
 
 const { Search } = Input;
 
-// Estilos personalizados usando styled-components
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -21,7 +20,10 @@ const Header = styled.header`
   justify-content: space-between;
   width: 100%;
   padding: 10px 0;
-  background-color: #f0f2f5;
+  background-color: rgb(148, 157, 165);
+  color: white;
+  box-shadow: 0 2px 8px #f0f1f2;
+  border-radius: 10px;
 `;
 
 const Nav = styled.nav`
@@ -34,6 +36,16 @@ const Nav = styled.nav`
 
   li {
     margin-right: 20px;
+  }
+
+  a {
+    color: white;
+    font-size: 1.5em;
+    transition: color 0.3s;
+
+    &:hover {
+      color:rgb(80, 90, 100); /* Cambia el color al pasar el cursor */
+    }
   }
 `;
 
@@ -59,17 +71,17 @@ const ListHeader = styled.div`
 `;
 
 const ListEntities = () => {
-  const [entities, setEntities] = useState([]);
+  const [form] = Form.useForm();
+  const [entities, setEntities] = useState([
+    'INSTALACIONES', 'ACTIVIDAD', 'RECURSOS', 'USUARIO', 'PADRE', 'EDUCADOR', 'ADMINISTRADOR', 'ACTIVIDAD_PROGRAMADA', 'RESERVACIÓN', 'CALIFICACIÓN'
+  ]);
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [instances, setInstances] = useState([]);
+  const [filteredInstances, setFilteredInstances] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Obtener entidades de la base de datos
-    axios.get('/api/entities')
-      .then(response => setEntities(response.data))
-      .catch(error => message.error('Error al obtener entidades'));
-  }, []);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [currentInstance, setCurrentInstance] = useState(null);
 
   const handleMenuClick = (entity) => {
     setSelectedEntity(entity);
@@ -78,42 +90,69 @@ const ListEntities = () => {
 
   const fetchInstances = (entity) => {
     setLoading(true);
-    axios.get(`/api/entities/${entity}/instances`)
-      .then(response => {
-        setInstances(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        message.error('Error al obtener instancias');
-        setLoading(false);
-      });
+    // Simulate fetching data
+    setTimeout(() => {
+      const exampleData = [
+        { id: 1, name: 'Example 1', description: 'This is an example instance' },
+        { id: 2, name: 'Example 2', description: 'This is another example instance' }
+      ];
+      setInstances(exampleData);
+      setFilteredInstances(exampleData);
+      setLoading(false);
+    }, 1000);
   };
 
   const handleDelete = (id) => {
-    axios.delete(`/api/instances/${id}`)
-      .then(() => {
-        setInstances(instances.filter(instance => instance.id !== id));
-        message.success('Instancia eliminada');
-      })
-      .catch(error => message.error('Error al eliminar instancia'));
+    const updatedInstances = instances.filter(instance => instance.id !== id);
+    setInstances(updatedInstances);
+    setFilteredInstances(updatedInstances);
+    message.success('Instancia eliminada');
   };
 
-  const handleSearch = (value) => {
-    const filteredInstances = instances.filter(instance =>
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    const filtered = instances.filter(instance =>
       Object.values(instance).some(val =>
         String(val).toLowerCase().includes(value.toLowerCase())
       )
     );
-    setInstances(filteredInstances);
+    setFilteredInstances(filtered);
   };
 
-  const handleSort = (attribute) => {
-    const sortedInstances = [...instances].sort((a, b) => {
-      if (a[attribute] < b[attribute]) return -1;
-      if (a[attribute] > b[attribute]) return 1;
-      return 0;
-    });
-    setInstances(sortedInstances);
+  const handleEdit = (instance) => {
+    setCurrentInstance(instance);
+    setIsEditModalVisible(true);
+  };
+
+  const handleAdd = () => {
+    setCurrentInstance(null);
+    setIsAddModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsAddModalVisible(false);
+    setIsEditModalVisible(false);
+    setCurrentInstance(null);
+  };
+
+  const handleSave = (values) => {
+    if (currentInstance) {
+      const updatedInstances = instances.map(instance =>
+        instance.id === currentInstance.id ? { ...instance, ...values } : instance
+      );
+      setInstances(updatedInstances);
+      setFilteredInstances(updatedInstances);
+      message.success('Instancia actualizada');
+    } else {
+      const newInstance = { id: instances.length + 1, ...values };
+      const updatedInstances = [...instances, newInstance];
+      setInstances(updatedInstances);
+      setFilteredInstances(updatedInstances);
+      message.success('Instancia agregada');
+    }
+    setIsAddModalVisible(false);
+    setIsEditModalVisible(false);
+    setCurrentInstance(null);
   };
 
   return (
@@ -126,7 +165,7 @@ const ListEntities = () => {
               <Link to="/"><FaHome /></Link>
             </li>
             <li>
-              <Link to="/admin/list-entities">Recargar</Link>
+              <Link to="/admin/list-entities"><AiOutlineReload /></Link>
             </li>
           </ul>
         </Nav>
@@ -150,10 +189,10 @@ const ListEntities = () => {
               <ListHeader>
                 <Search
                   placeholder="Buscar..."
-                  onSearch={handleSearch}
+                  onChange={handleSearch}
                   style={{ width: 200 }}
                 />
-                <Button type="primary" icon={<PlusOutlined />}>
+                <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
                   Agregar
                 </Button>
               </ListHeader>
@@ -162,17 +201,17 @@ const ListEntities = () => {
               ) : (
                 <List
                   itemLayout="horizontal"
-                  dataSource={instances}
+                  dataSource={filteredInstances}
                   renderItem={item => (
                     <List.Item
                       actions={[
-                        <Button icon={<EditOutlined />} />,
+                        <Button icon={<EditOutlined />} onClick={() => handleEdit(item)} />,
                         <Button icon={<DeleteOutlined />} onClick={() => handleDelete(item.id)} />
                       ]}
                     >
                       <List.Item.Meta
-                        title={item.id}
-                        description={Object.values(item).join(', ')}
+                        title={item.name}
+                        description={item.description}
                       />
                     </List.Item>
                   )}
@@ -182,6 +221,79 @@ const ListEntities = () => {
           )}
         </InstancesList>
       </Content>
+
+      <Modal
+        title="Agregar Instancia"
+        open={isAddModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+        afterClose={() => form.resetFields()}
+      >
+        <Form
+          form={form}
+          onFinish={handleSave}
+        >
+          <Form.Item
+            name="name"
+            label="Nombre"
+            rules={[{ required: true, message: 'Por favor ingrese el nombre' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Descripción"
+            rules={[{ required: true, message: 'Por favor ingrese la descripción' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }}>
+              Guardar
+            </Button>
+            <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+              Cancelar
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Editar Instancia"
+        open={isEditModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+        afterClose={() => setCurrentInstance(null)}
+      >
+        <Form
+          key={currentInstance ? currentInstance.id : 'new'}
+          initialValues={currentInstance}
+          onFinish={handleSave}
+        >
+          <Form.Item
+            name="name"
+            label="Nombre"
+            rules={[{ required: true, message: 'Por favor ingrese el nombre' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Descripción"
+            rules={[{ required: true, message: 'Por favor ingrese la descripción' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }}>
+              Guardar
+            </Button>
+            <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+              Cancelar
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </Container>
   );
 };
