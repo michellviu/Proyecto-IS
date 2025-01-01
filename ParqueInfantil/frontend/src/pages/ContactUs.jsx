@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import styled from "styled-components";
+import HeaderHome from '../components/headers/HeaderHome';
 
 
 const Container = styled.div`
@@ -84,12 +85,8 @@ const Button = styled.button`
 const ContactUs = () => {
   return (
     <Container>
-      <Header>
-        <Logo src="/path/to/logo.png" alt="Logo del Parque" />
-        <HomeLink to="/">
-          <FaHome style={{ marginRight: "8px" }} /> Inicio
-        </HomeLink>
-      </Header>
+      <HeaderHome />
+      <Logo src="/path/to/logo.png" alt="Logo del Parque" />
       <Title>Contáctanos</Title>
       <Form>
         <FormGroup>

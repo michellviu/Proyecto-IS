@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 import styled from 'styled-components';
 import HeaderHome from '../components/headers/HeaderHome';
@@ -32,9 +31,6 @@ const AboutUs = () => {
     return (
         <AboutUsContainer>
             <HeaderHome />
-            <Link to="/" className="home-link">
-                <FaHome /> Inicio
-            </Link>
             { /*<Logo src={logo} alt="Logo del Parque" />*/}
             <Title>Sobre Nosotros</Title>
             <Paragraph>¡Bienvenidos a nuestro parque infantil! Nos dedicamos a proporcionar un entorno seguro y divertido para que los niños jueguen y aprendan.</Paragraph>

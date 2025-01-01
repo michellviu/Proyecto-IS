@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaSort } from 'react-icons/fa';
+import { FaSort, FaSearch } from 'react-icons/fa';
 import HeaderHome from '../components/headers/HeaderHome';
 import ActivityContainer from '../components/ActivityContainer';
-
 
 const Container = styled.div`
     padding: 20px;
@@ -14,38 +13,84 @@ const SearchBar = styled.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    margin-top: 20px;
 
     input {
         padding: 10px;
-        width: 70%;
+        width: 60%;
         border: 1px solid #ccc;
         border-radius: 5px;
+    }
+
+    button {
+        padding: 10px;
+        background-color:hsl(135, 18.20%, 55.90%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background-color:#66a072;
+        }
+
+        svg {
+            margin-right: 5px;
+        }
     }
 `;
 
 const SortButton = styled.button`
-    padding: 10px;
+    padding: 10px 20px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 
     &:hover {
         background-color: #0056b3;
+        transform: scale(1.05);
     }
 
     svg {
-        margin-left: 5px;
+        margin-left: 10px;
     }
 `;
 
 const Activities = styled.div`
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     gap: 20px;
+`;
+
+const Pagination = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+        padding: 10px;
+        margin: 0 5px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
 `;
 
 const ActivityCatalog = () => {
@@ -54,9 +99,26 @@ const ActivityCatalog = () => {
         { id: 1, name: 'Activity 1', date: '2023-10-01' },
         { id: 2, name: 'Activity 2', date: '2023-10-05' },
         { id: 3, name: 'Activity 3', date: '2023-10-03' },
+        { id: 4, name: 'Activity 1', date: '2023-10-01' },
+        { id: 5, name: 'Activity 2', date: '2023-10-05' },
+        { id: 6, name: 'Activity 3', date: '2023-10-03' },
+        { id: 1, name: 'Activity 1', date: '2023-10-01' },
+        { id: 2, name: 'Activity 2', date: '2023-10-05' },
+        { id: 3, name: 'Activity 3', date: '2023-10-03' },
+        { id: 4, name: 'Activity 1', date: '2023-10-01' },
+        { id: 5, name: 'Activity 2', date: '2023-10-05' },
+        { id: 6, name: 'Activity 3', date: '2023-10-03' },
+        { id: 1, name: 'Activity 1', date: '2023-10-01' },
+        { id: 2, name: 'Activity 2', date: '2023-10-05' },
+        { id: 3, name: 'Activity 3', date: '2023-10-03' },
+        { id: 4, name: 'Activity 1', date: '2023-10-01' },
+        { id: 5, name: 'Activity 2', date: '2023-10-05' },
+        { id: 6, name: 'Activity 3', date: '2023-10-03' },
     ]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
+    const [currentPage, setCurrentPage] = useState(1);
+    const activitiesPerPage = 4;
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
@@ -78,6 +140,20 @@ const ActivityCatalog = () => {
         activity.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const indexOfLastActivity = currentPage * activitiesPerPage;
+    const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
+    const currentActivities = filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
+
+    const totalPages = Math.ceil(filteredActivities.length / activitiesPerPage);
+
+    const handlePrevPage = () => {
+        setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages));
+    };
+
     return (
         <Container>
             <HeaderHome />
@@ -88,16 +164,28 @@ const ActivityCatalog = () => {
                     value={searchTerm}
                     onChange={handleSearch}
                 />
+                <button>
+                    <FaSearch /> Buscar
+                </button>
                 <SortButton onClick={handleSort}>
                     Ordenar por fecha <FaSort />
                 </SortButton>
             </SearchBar>
             <Activities>
-                {filteredActivities.map(activity => (
+                {currentActivities.map(activity => (
                     <ActivityContainer key={activity.id} activity={activity} />
                 ))}
             </Activities>
+            <Pagination>
+                <button onClick={handlePrevPage} disabled={currentPage === 1}>
+                    Anterior
+                </button>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+                    Siguiente
+                </button>
+            </Pagination>
         </Container>
     );
 };
+
 export default ActivityCatalog;

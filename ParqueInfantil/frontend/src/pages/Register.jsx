@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import styled from 'styled-components';
+import HeaderHome from '../components/headers/HeaderHome';
 
 const Container = styled.div`
     display: flex;
@@ -9,6 +10,12 @@ const Container = styled.div`
     justify-content: center;
     height: 100vh;
     background-color: #f0f2f5;
+`;
+
+const Icon1 = styled(FaUser)`
+    color: #333;
+    font-size: 3rem;
+    margin-bottom: 1rem;
 `;
 
 const Form = styled.form`
@@ -64,6 +71,8 @@ const Button = styled.button`
 const Register = () => {
     return (
         <Container>
+            <HeaderHome />
+            <Icon1 />
             <Form>
                 <Title>Registrarse</Title>
                 <InputGroup>

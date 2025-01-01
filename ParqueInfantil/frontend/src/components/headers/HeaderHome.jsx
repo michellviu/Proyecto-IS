@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { FaSignInAlt, FaEnvelope, FaInfoCircle, FaListAlt, FaHome } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Header = styled.header`
     background-color:rgb(172, 190, 172);
@@ -33,6 +33,7 @@ const StyledLink = styled(Link)`
     display: flex;
     align-items: center;
     font-size: 18px;
+    position: relative;
 
     &:hover {
         color: #333;
@@ -41,18 +42,25 @@ const StyledLink = styled(Link)`
     svg {
         margin-right: 8px;
     }
+
+    &.active {
+        color: #333;
+        text-decoration: underline;
+    }
 `;
 
 const HeaderHome = () => {
+    const location = useLocation();
+
     return (
         <Header>
             <Nav>
                 <Ul>
-                    <Li><StyledLink to="/"><FaHome />Inicio</StyledLink></Li>
-                    <Li><StyledLink to="/login"><FaSignInAlt />Login</StyledLink></Li>
-                    <Li><StyledLink to="/contact"><FaEnvelope />Contáctenos</StyledLink></Li>
-                    <Li><StyledLink to="/about"><FaInfoCircle />Sobre Nosotros</StyledLink></Li>
-                    <Li><StyledLink to="/activity-catalog"><FaListAlt />Actividades</StyledLink></Li> 
+                    <Li><StyledLink to="/" className={location.pathname === '/' ? 'active' : ''}><FaHome />Inicio</StyledLink></Li>
+                    <Li><StyledLink to="/login" className={location.pathname === '/login' ? 'active' : ''}><FaSignInAlt />Login</StyledLink></Li>
+                    <Li><StyledLink to="/activity-catalog" className={location.pathname === '/activity-catalog' ? 'active' : ''}><FaListAlt />Actividades</StyledLink></Li> 
+                    <Li><StyledLink to="/contact" className={location.pathname === '/contact' ? 'active' : ''}><FaEnvelope />Contáctenos</StyledLink></Li>
+                    <Li><StyledLink to="/about" className={location.pathname === '/about' ? 'active' : ''}><FaInfoCircle />Sobre Nosotros</StyledLink></Li>
                 </Ul>
             </Nav>
         </Header>
