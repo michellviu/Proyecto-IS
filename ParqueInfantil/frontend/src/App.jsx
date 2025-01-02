@@ -7,6 +7,7 @@ import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import ListEntities from './pages/admin/ListEntities';
 import ActivityCatalog from './pages/ActivityCatalog';
+import ParentProfile from './pages/parent/ParentProfile';
 /*
 import EducatorProfile from './pages/educator/EducatorProfile';
 import StatisticsRequest from './pages/educator/StatisticsRequest';
@@ -16,17 +17,18 @@ import ReservedActivities from './pages/parent/ReservedActivities';*/
 
 const App = () => {
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/about" element={<AboutUs />} />
-                <Route path="/contact" element={<ContactUs />} />
-                <Route path="/admin/list-entities" element={<ListEntities />} />
-                <Route path="/activity-catalog" element={<ActivityCatalog />} />
-            </Routes>
-        </Router>
+        <ParentProfile></ParentProfile>
+        // <Router>
+        //     <Routes>
+        //         <Route path="/" element={<Home />} />
+        //         <Route path="/login" element={<Login />} />
+        //         <Route path="/register" element={<Register />} />
+        //         <Route path="/about" element={<AboutUs />} />
+        //         <Route path="/contact" element={<ContactUs />} />
+        //         <Route path="/admin/list-entities" element={<ListEntities />} />
+        //         <Route path="/activity-catalog" element={<ActivityCatalog />} />
+        //     </Routes>
+        // </Router>
     );
 };
 
