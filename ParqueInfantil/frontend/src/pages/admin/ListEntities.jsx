@@ -7,6 +7,7 @@ import { AiOutlineReload } from 'react-icons/ai';
 import styled from 'styled-components';
 
 const { Search } = Input;
+const { SubMenu } = Menu;
 
 const Container = styled.div`
   display: flex;
@@ -70,7 +71,7 @@ const ListHeader = styled.div`
   margin-bottom: 20px;
 `;
 
-const ListEntities = (admin = "Eveliz") => {
+const ListEntities = (admin = 'Eveliz') => {
   const [form] = Form.useForm();
   const [entities, setEntities] = useState([
     'INSTALACIONES', 'ACTIVIDAD', 'RECURSOS', 'USUARIO', 'PADRE', 'EDUCADOR', 'ADMINISTRADOR', 'ACTIVIDAD_PROGRAMADA', 'RESERVACIÓN', 'CALIFICACIÓN'
@@ -238,6 +239,38 @@ const ListEntities = (admin = "Eveliz") => {
     setIsEditModalVisible(false);
     setCurrentInstance(null);
   };
+  const [pendingUsers, setPendingUsers] = useState([]);
+
+  const handleUserAuthorizationClick = async () => {
+    try {
+      const response = await fetch('/api/getPendingUsers');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setPendingUsers(data);
+      message.success('Usuarios pendientes obtenidos exitosamente');
+    } catch (error) {
+      console.error('Failed to fetch pending users:', error);
+      message.error('No se pudieron obtener los usuarios pendientes');
+    }
+  };
+
+  const [pendingReservations, setPendingReservations] = useState([]);
+  const handleReservationRequestsClick = async () => {
+    try {
+      const response = await fetch('/api/getPendingReservations');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setPendingReservations(data);
+      message.success('Solicitudes de reserva obtenidas exitosamente');
+    } catch (error) {
+      console.error('Failed to fetch reservation requests:', error);
+      message.error('No se pudieron obtener las solicitudes de reserva');
+    }
+  };
   return (
     <Container>
       <Header>
@@ -257,17 +290,36 @@ const ListEntities = (admin = "Eveliz") => {
       <Content>
         <Sidebar
           mode="inline"
-          onClick={({ key }) => handleMenuClick(key)}
         >
-          {entities.map(entity => (
-            <Menu.Item key={entity}>
-              {entity}
-            </Menu.Item>
-          ))}
+          <Menu.Item key="user-authorization" onClick={() => handleUserAuthorizationClick()}>
+            Autorización de Usuarios
+          </Menu.Item>
+          <Menu.Item key="reservation-requests" onClick={() => handleReservationRequestsClick()}>
+            Solicitudes de Reserva
+          </Menu.Item>
+          <SubMenu key="entities" title="Entidades">
+            {entities.map(entity => (
+              <Menu.Item key={entity} onClick={() => handleMenuClick(entity)}>
+                {entity}
+              </Menu.Item>
+            ))}
+          </SubMenu>
         </Sidebar>
 
         <InstancesList>
-          {selectedEntity && (
+          {selectedEntity === 'user-authorization' && (
+            <div>
+              <h3>Autorización de Usuarios</h3>
+              {/* Aquí puedes agregar el contenido específico para la autorización de usuarios */}
+            </div>
+          )}
+          {selectedEntity === 'reservation-requests' && (
+            <div>
+              <h3>Solicitudes de Reserva</h3>
+              {/* Aquí puedes agregar el contenido específico para las solicitudes de reserva */}
+            </div>
+          )}
+          {entities.includes(selectedEntity) && (
             <>
               <ListHeader>
                 <Search
