@@ -6,3 +6,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
+/ParqueInfantil/api/__pycache__
+/ParqueInfantil/api/migrations
+*.pyc

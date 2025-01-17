@@ -1,8 +1,8 @@
 from django.db import models
 from django.db.models import SET_NULL
 import uuid
-from actividad_programada import Actividad_programada
-from usuario import *
+from .actividad_programada import Actividad_programada
+from .usuario import *
 
 
 class Reservacion(models.Model):

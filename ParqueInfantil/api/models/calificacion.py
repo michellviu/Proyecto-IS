@@ -1,8 +1,8 @@
 from django.db import models
 from django.db.models import SET_NULL
-import ParqueInfantil.api.models.models_validations as mv
-from usuario import *
-from actividad_programada import Actividad_programada
+from .models_validations import *
+from .usuario import *
+from .actividad_programada import Actividad_programada
 
 
 class Calificacion(models.Model):
@@ -27,5 +27,5 @@ class Calificacion(models.Model):
     fecha = models.DateField()
     comentario = models.CharField(
         max_length=100,
-        validators=[mv.no_offensive_language],  # Aplica el validador personalizado aquí
+        validators=[no_offensive_language],  # Aplica el validador personalizado aquí
     )

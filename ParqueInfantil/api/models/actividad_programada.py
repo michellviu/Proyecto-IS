@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import SET_NULL
-from actividad import Actividad
-from usuario import *
+from .actividad import Actividad
+from .usuario import *
 
 
 class Actividad_programada(models.Model):

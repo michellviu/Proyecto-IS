@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import SET_NULL
-from instalacion import Instalacion
+from .instalacion import Instalacion
 
 
 class Recurso(models.Model):
