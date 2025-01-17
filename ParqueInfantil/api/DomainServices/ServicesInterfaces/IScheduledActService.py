@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
 import IGenericService
 
-class IScheduledActRepository(IGenericService):
+class IScheduledActService(IGenericService):
     pass

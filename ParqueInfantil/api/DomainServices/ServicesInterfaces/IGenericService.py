@@ -14,7 +14,7 @@ class IGenericService(ABC):
         pass
 
     @abstractmethod
-    def update(self, entity):
+    def update(self, id, data):
         pass
 
     @abstractmethod

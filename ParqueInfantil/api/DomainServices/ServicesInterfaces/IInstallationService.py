@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import IGenericService
+from .IGenericService import IGenericService
 
-class IInstallationRepository(IGenericService):
+class IInstallationService(IGenericService,ABC):
     pass

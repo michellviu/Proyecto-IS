@@ -14,7 +14,7 @@ class IGenericRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, entity):
+    def update(self, entity, data):
         pass
 
     @abstractmethod
