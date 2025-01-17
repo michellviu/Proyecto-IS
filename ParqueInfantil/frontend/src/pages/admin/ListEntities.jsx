@@ -70,12 +70,36 @@ const ListHeader = styled.div`
   margin-bottom: 20px;
 `;
 
-const ListEntities = () => {
+const ListEntities = (admin = "Eveliz") => {
   const [form] = Form.useForm();
   const [entities, setEntities] = useState([
     'INSTALACIONES', 'ACTIVIDAD', 'RECURSOS', 'USUARIO', 'PADRE', 'EDUCADOR', 'ADMINISTRADOR', 'ACTIVIDAD_PROGRAMADA', 'RESERVACIÓN', 'CALIFICACIÓN'
   ]);
+
+  useEffect(() => {
+    const fetchEntities = async () => {
+      try {
+        const response = await fetch('/api/getEntities'); // Adjust the endpoint as needed
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setEntities(data);
+      } catch (error) {
+        console.error('Failed to fetch entities:', error);
+        message.error('No se pudieron obtener las entidades, usando valores por defecto.');
+      }
+    };
+
+    fetchEntities();
+  }, []);
+
+  const [atributes, setAtributes] = useState([
+    'Id', 'Nombre', 'Descripción']);
+
   const [selectedEntity, setSelectedEntity] = useState(null);
+  
+  const currentBlock = 0;
   const [instances, setInstances] = useState([]);
   const [filteredInstances, setFilteredInstances] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -83,40 +107,77 @@ const ListEntities = () => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [currentInstance, setCurrentInstance] = useState(null);
 
+  const fetchAtributes = async (entity) => {
+    try {
+      const response = await fetch(`/api/getAttributes?entity=${entity}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setAtributes(data);
+    } catch (error) {
+      console.error('Failed to fetch attributes:', error);
+      message.error('No se pudieron obtener los atributos, usando valores por defecto.');
+    }
+  };
+
+  const fetchInstances = async (entity, blockNumber = currentBlock) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/getInstances?entity=${entity}&block=${blockNumber}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setInstances(data);
+      setFilteredInstances(data);
+    } catch (error) {
+      console.error('Failed to fetch instances:', error);
+      message.error('No se pudieron cargar las instancias.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleMenuClick = (entity) => {
     setSelectedEntity(entity);
+    fetchAtributes(entity);
     fetchInstances(entity);
   };
 
-  const fetchInstances = (entity) => {
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/deleteInstance?entity=${selectedEntity}&id=${id}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      fetchInstances(selectedEntity, currentBlock);
+      message.success('Instancia eliminada');
+    } catch (error) {
+      console.error('Failed to delete instance:', error);
+      message.error('No se pudo eliminar la instancia seleccionada');
+    }
+  };
+
+  const handleSearch = async (e) => {
+    const query = e.target.value;
     setLoading(true);
-    // Simulate fetching data
-    setTimeout(() => {
-      const exampleData = [
-        { id: 1, name: 'Example 1', description: 'This is an example instance' },
-        { id: 2, name: 'Example 2', description: 'This is another example instance' }
-      ];
-      setInstances(exampleData);
-      setFilteredInstances(exampleData);
+    try {
+      const response = await fetch(`/api/searchInstances?entity=${selectedEntity}&attribute=name&block=${currentBlock}&query=${query}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setInstances(data);
+      setFilteredInstances(data);
+    } catch (error) {
+      console.error('Failed to search instances:', error);
+      message.error('No se pudieron buscar las instancias.');
+    } finally {
       setLoading(false);
-    }, 1000);
-  };
-
-  const handleDelete = (id) => {
-    const updatedInstances = instances.filter(instance => instance.id !== id);
-    setInstances(updatedInstances);
-    setFilteredInstances(updatedInstances);
-    message.success('Instancia eliminada');
-  };
-
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    const filtered = instances.filter(instance =>
-      Object.values(instance).some(val =>
-        String(val).toLowerCase().includes(value.toLowerCase())
-      )
-    );
-    setFilteredInstances(filtered);
+    }
   };
 
   const handleEdit = (instance) => {
@@ -135,26 +196,48 @@ const ListEntities = () => {
     setCurrentInstance(null);
   };
 
-  const handleSave = (values) => {
+  const handleSave = async (values) => {
     if (currentInstance) {
-      const updatedInstances = instances.map(instance =>
-        instance.id === currentInstance.id ? { ...instance, ...values } : instance
-      );
-      setInstances(updatedInstances);
-      setFilteredInstances(updatedInstances);
-      message.success('Instancia actualizada');
+      try {
+        const response = await fetch(`/api/updateInstance?entity=${selectedEntity}&id=${currentInstance.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(values)
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        message.success('Instancia actualizada');
+        fetchInstances(selectedEntity, currentBlock);
+      } catch (error) {
+        console.error('Failed to update instance:', error);
+        message.error('No se pudo actualizar la instancia');
+      }
     } else {
-      const newInstance = { id: instances.length + 1, ...values };
-      const updatedInstances = [...instances, newInstance];
-      setInstances(updatedInstances);
-      setFilteredInstances(updatedInstances);
-      message.success('Instancia agregada');
+      try {
+        const response = await fetch(`/api/addInstance?entity=${selectedEntity}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(values)
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        message.success('Instancia agregada');
+        fetchInstances(selectedEntity, currentBlock);
+      } catch (error) {
+        console.error('Failed to add instance:', error);
+        message.error('No se pudo agregar la instancia');
+      }
     }
     setIsAddModalVisible(false);
     setIsEditModalVisible(false);
     setCurrentInstance(null);
   };
-
   return (
     <Container>
       <Header>
@@ -190,12 +273,13 @@ const ListEntities = () => {
                 <Search
                   placeholder="Buscar..."
                   onChange={handleSearch}
-                  style={{ width: 200 }}
+                  style={{ width: 500 }}
                 />
                 <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
                   Agregar
                 </Button>
               </ListHeader>
+              
               {loading ? (
                 <Spin />
               ) : (
