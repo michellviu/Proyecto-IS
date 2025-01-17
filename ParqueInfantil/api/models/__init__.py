@@ -5,3 +5,4 @@ from .instalacion import *
 from .recurso import *
 from .reservacion import *
 from .usuario import *
+from .models_validations import *

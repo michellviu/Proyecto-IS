@@ -9,3 +9,6 @@ __pycache__/
 /ParqueInfantil/api/__pycache__
 /ParqueInfantil/api/migrations
 *.pyc
+/ParqueInfantil/ParqueInfantil/__pycache__
+/ParqueInfantil/api/migrations
+ParqueInfantil/api/migrations/0001_initial.py
