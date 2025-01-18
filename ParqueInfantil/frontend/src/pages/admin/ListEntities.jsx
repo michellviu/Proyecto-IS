@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Menu, Button, Input, List, Spin, message, Modal, Form } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ReloadOutlined, CloseOutlined } from '@ant-design/icons';
 import { FaHome } from 'react-icons/fa';
+import { FaSort, FaSearch } from 'react-icons/fa';
 import { AiOutlineReload } from 'react-icons/ai';
 import { BsThreeDots } from 'react-icons/bs';
 import styled from 'styled-components';
@@ -298,8 +299,6 @@ const ListEntities = (admin = 'Eveliz') => {
     }
   };
 
-
-
   
 
   const handleAttributeClick = (attribute) => {
@@ -363,42 +362,44 @@ const ListEntities = (admin = 'Eveliz') => {
               onChange={handleSearch}
               style={{ width: 500 }}
             />
-            <Button className="dropdown-button" icon={<BsThreeDots />} onClick={handleDropdownClick} />
+            
             </div>
-            {isDropdownVisible && (
-            <DropdownMenu>
-              {atributes.map(attribute => (
-              <DropdownItem key={attribute} onClick={() => handleAttributeClick(attribute)}>
-                {attribute}
-              </DropdownItem>
-              ))}
-            </DropdownMenu>
-            )}
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
             Agregar
             </Button>
           </ListHeader>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', borderBottom: '1px solid #d9d9d9', flex: 1 }}>
-            {atributes.map(attribute => (
-            <div
-              key={attribute}
-              style={{
-              padding: '10px',
-              cursor: 'pointer',
-              borderRight: '1px solid #d9d9d9',
-              color: selectedAttribute === attribute ? '#1890ff' : 'black',
-              textDecoration: selectedAttribute === attribute ? 'underline' : 'none',
-              transition: 'color 0.3s'
-              }}
-              onClick={() => handleAttributeClick(attribute)}
-              onMouseEnter={(e) => e.target.style.color = '#1890ff'}
-              onMouseLeave={(e) => e.target.style.color = selectedAttribute === attribute ? '#1890ff' : 'black'}
-            >
-              {attribute}
-            </div>
-            ))}
-          </div>
+                  {atributes.map(attribute => (
+                    <div
+                      key={attribute}
+                      style={{
+                        padding: '10px',
+                        cursor: 'pointer',
+                        borderRight: '1px solid #d9d9d9',
+                        color: selectedAttribute === attribute ? '#1890ff' : 'black',
+                        textDecoration: selectedAttribute === attribute ? 'underline' : 'none',
+                        transition: 'color 0.3s',
+                        flex: '1 0 20%', // Adjust the percentage as needed
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}
+                      onClick={() => handleAttributeClick(attribute)}
+                      onMouseEnter={(e) => e.target.style.color = '#1890ff'}
+                      onMouseLeave={(e) => e.target.style.color = selectedAttribute === attribute ? '#1890ff' : 'black'}
+                    >
+                      {attribute}
+                      <Button
+                        icon={<FaSort />}
+                        onClick={() => handleSort(attribute, 'asc')}
+                        onMouseEnter={(e) => e.target.style.color = '#1890ff'}
+                        onMouseLeave={(e) => e.target.style.color = 'black'}
+                        style={{ marginLeft: '10px' }}
+                      />
+                    </div>
+                  ))}
+                </div>
 
           {loading ? (
             <Spin />
