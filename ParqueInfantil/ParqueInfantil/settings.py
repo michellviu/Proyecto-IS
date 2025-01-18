@@ -140,4 +140,4 @@ CORS_ALLOWED_ORIGINS = []
 #     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 # }
 
-AUTH_USER_MODEL = "api.usuarios"
+AUTH_USER_MODEL = "api.Usuario"
