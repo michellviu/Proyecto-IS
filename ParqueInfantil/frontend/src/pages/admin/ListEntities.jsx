@@ -4,10 +4,33 @@ import { Menu, Button, Input, List, Spin, message, Modal, Form } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ReloadOutlined, CloseOutlined } from '@ant-design/icons';
 import { FaHome } from 'react-icons/fa';
 import { AiOutlineReload } from 'react-icons/ai';
+import { BsThreeDots } from 'react-icons/bs';
 import styled from 'styled-components';
 
 const { Search } = Input;
 const { SubMenu } = Menu;
+
+const DropdownMenu = styled.div`
+    
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 5px;
+  `;
+
+const DropdownItem = styled.div`
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+
+    &:hover {
+      background: rgba(32, 64, 133, 0.05);
+    }
+  `;
 
 const Container = styled.div`
   display: flex;
@@ -99,6 +122,7 @@ const ListEntities = (admin = 'Eveliz') => {
     'Id', 'Nombre', 'Descripción']);
 
   const [selectedEntity, setSelectedEntity] = useState(null);
+  const [selectedAttribute, setSelectedAttribute] = useState(null);
   
   const currentBlock = 0;
   const [instances, setInstances] = useState([]);
@@ -166,7 +190,7 @@ const ListEntities = (admin = 'Eveliz') => {
     const query = e.target.value;
     setLoading(true);
     try {
-      const response = await fetch(`/api/searchInstances?entity=${selectedEntity}&attribute=name&block=${currentBlock}&query=${query}`);
+      const response = await fetch(`/api/searchInstances?entity=${selectedEntity}&attribute=${selectedAttribute}&block=${currentBlock}&query=${query}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -242,6 +266,7 @@ const ListEntities = (admin = 'Eveliz') => {
   const [pendingUsers, setPendingUsers] = useState([]);
 
   const handleUserAuthorizationClick = async () => {
+    setSelectedEntity('user-authorization');
     try {
       const response = await fetch('/api/getPendingUsers');
       if (!response.ok) {
@@ -258,6 +283,7 @@ const ListEntities = (admin = 'Eveliz') => {
 
   const [pendingReservations, setPendingReservations] = useState([]);
   const handleReservationRequestsClick = async () => {
+    setSelectedEntity('reservation-requests');
     try {
       const response = await fetch('/api/getPendingReservations');
       if (!response.ok) {
@@ -271,90 +297,128 @@ const ListEntities = (admin = 'Eveliz') => {
       message.error('No se pudieron obtener las solicitudes de reserva');
     }
   };
-  return (
-    <Container>
+
+
+
+  
+
+  const handleAttributeClick = (attribute) => {
+    setSelectedAttribute(attribute);
+    message.info(`Atributo seleccionado: ${attribute}`);
+  };
+ 
+  
+
+
+    return (
+      <Container>
       <Header>
         <h2>Bienvenido</h2>
         <Nav>
-          <ul>
-            <li>
-              <Link to="/"><FaHome /></Link>
-            </li>
-            <li>
-              <Link to="/admin/list-entities"><AiOutlineReload /></Link>
-            </li>
-          </ul>
+        <ul>
+          <li>
+          <Link to="/"><FaHome /></Link>
+          </li>
+          <li>
+          <Link to="/admin/list-entities"><AiOutlineReload /></Link>
+          </li>
+        </ul>
         </Nav>
       </Header>
 
       <Content>
-        <Sidebar
-          mode="inline"
-        >
-          <Menu.Item key="user-authorization" onClick={() => handleUserAuthorizationClick()}>
-            Autorización de Usuarios
+        <Sidebar mode="inline">
+        <Menu.Item key="user-authorization" onClick={() => handleUserAuthorizationClick()}>
+          Autorización de Usuarios
+        </Menu.Item>
+        <Menu.Item key="reservation-requests" onClick={() => handleReservationRequestsClick()}>
+          Solicitudes de Reserva
+        </Menu.Item>
+        <SubMenu key="entities" title="Entidades">
+          {entities.map(entity => (
+          <Menu.Item key={entity} onClick={() => handleMenuClick(entity)}>
+            {entity}
           </Menu.Item>
-          <Menu.Item key="reservation-requests" onClick={() => handleReservationRequestsClick()}>
-            Solicitudes de Reserva
-          </Menu.Item>
-          <SubMenu key="entities" title="Entidades">
-            {entities.map(entity => (
-              <Menu.Item key={entity} onClick={() => handleMenuClick(entity)}>
-                {entity}
-              </Menu.Item>
-            ))}
-          </SubMenu>
+          ))}
+        </SubMenu>
         </Sidebar>
 
         <InstancesList>
-          {selectedEntity === 'user-authorization' && (
-            <div>
-              <h3>Autorización de Usuarios</h3>
-              {/* Aquí puedes agregar el contenido específico para la autorización de usuarios */}
+        {selectedEntity === 'user-authorization' && (
+          <div>
+          {/* Render pending users */}
+          </div>
+        )}
+        {selectedEntity === 'reservation-requests' && (
+          <div>
+          {/* Render pending reservations */}
+          </div>
+        )}
+        {entities.includes(selectedEntity) && (
+          <>
+          <ListHeader>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Search
+              placeholder="Buscar..."
+              onChange={handleSearch}
+              style={{ width: 500 }}
+            />
+            <Button className="dropdown-button" icon={<BsThreeDots />} onClick={handleDropdownClick} />
             </div>
-          )}
-          {selectedEntity === 'reservation-requests' && (
-            <div>
-              <h3>Solicitudes de Reserva</h3>
-              {/* Aquí puedes agregar el contenido específico para las solicitudes de reserva */}
+            {isDropdownVisible && (
+            <DropdownMenu>
+              {atributes.map(attribute => (
+              <DropdownItem key={attribute} onClick={() => handleAttributeClick(attribute)}>
+                {attribute}
+              </DropdownItem>
+              ))}
+            </DropdownMenu>
+            )}
+            <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            Agregar
+            </Button>
+          </ListHeader>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', borderBottom: '1px solid #d9d9d9', flex: 1 }}>
+            {atributes.map(attribute => (
+            <div
+              key={attribute}
+              style={{
+              padding: '10px',
+              cursor: 'pointer',
+              borderRight: '1px solid #d9d9d9',
+              color: selectedAttribute === attribute ? '#1890ff' : 'black',
+              textDecoration: selectedAttribute === attribute ? 'underline' : 'none',
+              transition: 'color 0.3s'
+              }}
+              onClick={() => handleAttributeClick(attribute)}
+              onMouseEnter={(e) => e.target.style.color = '#1890ff'}
+              onMouseLeave={(e) => e.target.style.color = selectedAttribute === attribute ? '#1890ff' : 'black'}
+            >
+              {attribute}
             </div>
+            ))}
+          </div>
+
+          {loading ? (
+            <Spin />
+          ) : (
+            <List
+            itemLayout="horizontal"
+            dataSource={filteredInstances}
+            renderItem={item => (
+              <List.Item
+              actions={[
+                <Button icon={<EditOutlined />} onClick={() => handleEdit(item)} />,
+                <Button icon={<DeleteOutlined />} onClick={() => handleDelete(item.id)} />
+              ]}
+              >
+              </List.Item>
+            )}
+            />
           )}
-          {entities.includes(selectedEntity) && (
-            <>
-              <ListHeader>
-                <Search
-                  placeholder="Buscar..."
-                  onChange={handleSearch}
-                  style={{ width: 500 }}
-                />
-                <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-                  Agregar
-                </Button>
-              </ListHeader>
-              
-              {loading ? (
-                <Spin />
-              ) : (
-                <List
-                  itemLayout="horizontal"
-                  dataSource={filteredInstances}
-                  renderItem={item => (
-                    <List.Item
-                      actions={[
-                        <Button icon={<EditOutlined />} onClick={() => handleEdit(item)} />,
-                        <Button icon={<DeleteOutlined />} onClick={() => handleDelete(item.id)} />
-                      ]}
-                    >
-                      <List.Item.Meta
-                        title={item.name}
-                        description={item.description}
-                      />
-                    </List.Item>
-                  )}
-                />
-              )}
-            </>
-          )}
+          </>
+        )}
         </InstancesList>
       </Content>
 
@@ -365,32 +429,25 @@ const ListEntities = (admin = 'Eveliz') => {
         footer={null}
         afterClose={() => form.resetFields()}
       >
-        <Form
-          form={form}
-          onFinish={handleSave}
-        >
+        <Form form={form} onFinish={(values) => handleSave(values)}>
+        {atributes.filter(attr => attr !== 'Id').map(attribute => (
           <Form.Item
-            name="name"
-            label="Nombre"
-            rules={[{ required: true, message: 'Por favor ingrese el nombre' }]}
+          key={attribute}
+          name={attribute.toLowerCase()}
+          label={attribute}
+          rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
           >
-            <Input />
+          <Input />
           </Form.Item>
-          <Form.Item
-            name="description"
-            label="Descripción"
-            rules={[{ required: true, message: 'Por favor ingrese la descripción' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }}>
-              Guardar
-            </Button>
-            <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
-              Cancelar
-            </Button>
-          </Form.Item>
+        ))}
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
+          Guardar
+          </Button>
+          <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+          Cancelar
+          </Button>
+        </Form.Item>
         </Form>
       </Modal>
 
@@ -402,36 +459,31 @@ const ListEntities = (admin = 'Eveliz') => {
         afterClose={() => setCurrentInstance(null)}
       >
         <Form
-          key={currentInstance ? currentInstance.id : 'new'}
-          initialValues={currentInstance}
-          onFinish={handleSave}
+        key={currentInstance ? currentInstance.id : 'new'}
+        initialValues={currentInstance}
+        onFinish={(values) => handleSave(values)}
         >
+        {atributes.map(attribute => (
           <Form.Item
-            name="name"
-            label="Nombre"
-            rules={[{ required: true, message: 'Por favor ingrese el nombre' }]}
+          key={attribute}
+          name={attribute.toLowerCase()}
+          label={attribute}
+          rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
           >
-            <Input />
+          <Input />
           </Form.Item>
-          <Form.Item
-            name="description"
-            label="Descripción"
-            rules={[{ required: true, message: 'Por favor ingrese la descripción' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }}>
-              Guardar
-            </Button>
-            <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
-              Cancelar
-            </Button>
-          </Form.Item>
+        ))}
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
+          Guardar
+          </Button>
+          <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+          Cancelar
+          </Button>
+        </Form.Item>
         </Form>
       </Modal>
-    </Container>
-  );
-};
-
+      </Container>
+    );
+  };
 export default ListEntities;
