@@ -17,18 +17,18 @@ import ReservedActivities from './pages/parent/ReservedActivities';*/
 
 const App = () => {
     return (
-        <ParentProfile></ParentProfile>
-        // <Router>
-        //     <Routes>
-        //         <Route path="/" element={<Home />} />
-        //         <Route path="/login" element={<Login />} />
-        //         <Route path="/register" element={<Register />} />
-        //         <Route path="/about" element={<AboutUs />} />
-        //         <Route path="/contact" element={<ContactUs />} />
-        //         <Route path="/admin/list-entities" element={<ListEntities />} />
-        //         <Route path="/activity-catalog" element={<ActivityCatalog />} />
-        //     </Routes>
-        // </Router>
+        //<ParentProfile></ParentProfile>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/contact" element={<ContactUs />} />
+                <Route path="/admin/list-entities" element={<ListEntities />} />
+                <Route path="/activity-catalog" element={<ActivityCatalog />} />
+            </Routes>
+        </Router>
     );
 };
 

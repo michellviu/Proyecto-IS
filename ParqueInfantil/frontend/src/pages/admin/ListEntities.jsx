@@ -3,10 +3,35 @@ import { Link } from 'react-router-dom';
 import { Menu, Button, Input, List, Spin, message, Modal, Form } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ReloadOutlined, CloseOutlined } from '@ant-design/icons';
 import { FaHome } from 'react-icons/fa';
+import { FaSort, FaSearch } from 'react-icons/fa';
 import { AiOutlineReload } from 'react-icons/ai';
+import { BsThreeDots } from 'react-icons/bs';
 import styled from 'styled-components';
 
 const { Search } = Input;
+const { SubMenu } = Menu;
+
+const DropdownMenu = styled.div`
+    
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 5px;
+  `;
+
+const DropdownItem = styled.div`
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+
+    &:hover {
+      background: rgba(32, 64, 133, 0.05);
+    }
+  `;
 
 const Container = styled.div`
   display: flex;
@@ -70,12 +95,37 @@ const ListHeader = styled.div`
   margin-bottom: 20px;
 `;
 
-const ListEntities = () => {
+const ListEntities = (admin = 'Eveliz') => {
   const [form] = Form.useForm();
   const [entities, setEntities] = useState([
     'INSTALACIONES', 'ACTIVIDAD', 'RECURSOS', 'USUARIO', 'PADRE', 'EDUCADOR', 'ADMINISTRADOR', 'ACTIVIDAD_PROGRAMADA', 'RESERVACIÓN', 'CALIFICACIÓN'
   ]);
+
+  useEffect(() => {
+    const fetchEntities = async () => {
+      try {
+        const response = await fetch('/api/getEntities'); // Adjust the endpoint as needed
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setEntities(data);
+      } catch (error) {
+        console.error('Failed to fetch entities:', error);
+        message.error('No se pudieron obtener las entidades, usando valores por defecto.');
+      }
+    };
+
+    fetchEntities();
+  }, []);
+
+  const [atributes, setAtributes] = useState([
+    'Id', 'Nombre', 'Descripción']);
+
   const [selectedEntity, setSelectedEntity] = useState(null);
+  const [selectedAttribute, setSelectedAttribute] = useState(null);
+  
+  const currentBlock = 0;
   const [instances, setInstances] = useState([]);
   const [filteredInstances, setFilteredInstances] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -83,40 +133,77 @@ const ListEntities = () => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [currentInstance, setCurrentInstance] = useState(null);
 
+  const fetchAtributes = async (entity) => {
+    try {
+      const response = await fetch(`/api/getAttributes?entity=${entity}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setAtributes(data);
+    } catch (error) {
+      console.error('Failed to fetch attributes:', error);
+      message.error('No se pudieron obtener los atributos, usando valores por defecto.');
+    }
+  };
+
+  const fetchInstances = async (entity, blockNumber = currentBlock) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/getInstances?entity=${entity}&block=${blockNumber}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setInstances(data);
+      setFilteredInstances(data);
+    } catch (error) {
+      console.error('Failed to fetch instances:', error);
+      message.error('No se pudieron cargar las instancias.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleMenuClick = (entity) => {
     setSelectedEntity(entity);
+    fetchAtributes(entity);
     fetchInstances(entity);
   };
 
-  const fetchInstances = (entity) => {
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/deleteInstance?entity=${selectedEntity}&id=${id}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      fetchInstances(selectedEntity, currentBlock);
+      message.success('Instancia eliminada');
+    } catch (error) {
+      console.error('Failed to delete instance:', error);
+      message.error('No se pudo eliminar la instancia seleccionada');
+    }
+  };
+
+  const handleSearch = async (e) => {
+    const query = e.target.value;
     setLoading(true);
-    // Simulate fetching data
-    setTimeout(() => {
-      const exampleData = [
-        { id: 1, name: 'Example 1', description: 'This is an example instance' },
-        { id: 2, name: 'Example 2', description: 'This is another example instance' }
-      ];
-      setInstances(exampleData);
-      setFilteredInstances(exampleData);
+    try {
+      const response = await fetch(`/api/searchInstances?entity=${selectedEntity}&attribute=${selectedAttribute}&block=${currentBlock}&query=${query}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setInstances(data);
+      setFilteredInstances(data);
+    } catch (error) {
+      console.error('Failed to search instances:', error);
+      message.error('No se pudieron buscar las instancias.');
+    } finally {
       setLoading(false);
-    }, 1000);
-  };
-
-  const handleDelete = (id) => {
-    const updatedInstances = instances.filter(instance => instance.id !== id);
-    setInstances(updatedInstances);
-    setFilteredInstances(updatedInstances);
-    message.success('Instancia eliminada');
-  };
-
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    const filtered = instances.filter(instance =>
-      Object.values(instance).some(val =>
-        String(val).toLowerCase().includes(value.toLowerCase())
-      )
-    );
-    setFilteredInstances(filtered);
+    }
   };
 
   const handleEdit = (instance) => {
@@ -135,90 +222,204 @@ const ListEntities = () => {
     setCurrentInstance(null);
   };
 
-  const handleSave = (values) => {
+  const handleSave = async (values) => {
     if (currentInstance) {
-      const updatedInstances = instances.map(instance =>
-        instance.id === currentInstance.id ? { ...instance, ...values } : instance
-      );
-      setInstances(updatedInstances);
-      setFilteredInstances(updatedInstances);
-      message.success('Instancia actualizada');
+      try {
+        const response = await fetch(`/api/updateInstance?entity=${selectedEntity}&id=${currentInstance.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(values)
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        message.success('Instancia actualizada');
+        fetchInstances(selectedEntity, currentBlock);
+      } catch (error) {
+        console.error('Failed to update instance:', error);
+        message.error('No se pudo actualizar la instancia');
+      }
     } else {
-      const newInstance = { id: instances.length + 1, ...values };
-      const updatedInstances = [...instances, newInstance];
-      setInstances(updatedInstances);
-      setFilteredInstances(updatedInstances);
-      message.success('Instancia agregada');
+      try {
+        const response = await fetch(`/api/addInstance?entity=${selectedEntity}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(values)
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        message.success('Instancia agregada');
+        fetchInstances(selectedEntity, currentBlock);
+      } catch (error) {
+        console.error('Failed to add instance:', error);
+        message.error('No se pudo agregar la instancia');
+      }
     }
     setIsAddModalVisible(false);
     setIsEditModalVisible(false);
     setCurrentInstance(null);
   };
+  const [pendingUsers, setPendingUsers] = useState([]);
 
-  return (
-    <Container>
+  const handleUserAuthorizationClick = async () => {
+    setSelectedEntity('user-authorization');
+    try {
+      const response = await fetch('/api/getPendingUsers');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setPendingUsers(data);
+      message.success('Usuarios pendientes obtenidos exitosamente');
+    } catch (error) {
+      console.error('Failed to fetch pending users:', error);
+      message.error('No se pudieron obtener los usuarios pendientes');
+    }
+  };
+
+  const [pendingReservations, setPendingReservations] = useState([]);
+  const handleReservationRequestsClick = async () => {
+    setSelectedEntity('reservation-requests');
+    try {
+      const response = await fetch('/api/getPendingReservations');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setPendingReservations(data);
+      message.success('Solicitudes de reserva obtenidas exitosamente');
+    } catch (error) {
+      console.error('Failed to fetch reservation requests:', error);
+      message.error('No se pudieron obtener las solicitudes de reserva');
+    }
+  };
+
+  
+
+  const handleAttributeClick = (attribute) => {
+    setSelectedAttribute(attribute);
+    message.info(`Atributo seleccionado: ${attribute}`);
+  };
+ 
+  
+
+
+    return (
+      <Container>
       <Header>
         <h2>Bienvenido</h2>
         <Nav>
-          <ul>
-            <li>
-              <Link to="/"><FaHome /></Link>
-            </li>
-            <li>
-              <Link to="/admin/list-entities"><AiOutlineReload /></Link>
-            </li>
-          </ul>
+        <ul>
+          <li>
+          <Link to="/"><FaHome /></Link>
+          </li>
+          <li>
+          <Link to="/admin/list-entities"><AiOutlineReload /></Link>
+          </li>
+        </ul>
         </Nav>
       </Header>
 
       <Content>
-        <Sidebar
-          mode="inline"
-          onClick={({ key }) => handleMenuClick(key)}
-        >
+        <Sidebar mode="inline">
+        <Menu.Item key="user-authorization" onClick={() => handleUserAuthorizationClick()}>
+          Autorización de Usuarios
+        </Menu.Item>
+        <Menu.Item key="reservation-requests" onClick={() => handleReservationRequestsClick()}>
+          Solicitudes de Reserva
+        </Menu.Item>
+        <SubMenu key="entities" title="Entidades">
           {entities.map(entity => (
-            <Menu.Item key={entity}>
-              {entity}
-            </Menu.Item>
+          <Menu.Item key={entity} onClick={() => handleMenuClick(entity)}>
+            {entity}
+          </Menu.Item>
           ))}
+        </SubMenu>
         </Sidebar>
 
         <InstancesList>
-          {selectedEntity && (
-            <>
-              <ListHeader>
-                <Search
-                  placeholder="Buscar..."
-                  onChange={handleSearch}
-                  style={{ width: 200 }}
-                />
-                <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-                  Agregar
-                </Button>
-              </ListHeader>
-              {loading ? (
-                <Spin />
-              ) : (
-                <List
-                  itemLayout="horizontal"
-                  dataSource={filteredInstances}
-                  renderItem={item => (
-                    <List.Item
-                      actions={[
-                        <Button icon={<EditOutlined />} onClick={() => handleEdit(item)} />,
-                        <Button icon={<DeleteOutlined />} onClick={() => handleDelete(item.id)} />
-                      ]}
+        {selectedEntity === 'user-authorization' && (
+          <div>
+          {/* Render pending users */}
+          </div>
+        )}
+        {selectedEntity === 'reservation-requests' && (
+          <div>
+          {/* Render pending reservations */}
+          </div>
+        )}
+        {entities.includes(selectedEntity) && (
+          <>
+          <ListHeader>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Search
+              placeholder="Buscar..."
+              onChange={handleSearch}
+              style={{ width: 500 }}
+            />
+            
+            </div>
+            <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            Agregar
+            </Button>
+          </ListHeader>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', borderBottom: '1px solid #d9d9d9', flex: 1 }}>
+                  {atributes.map(attribute => (
+                    <div
+                      key={attribute}
+                      style={{
+                        padding: '10px',
+                        cursor: 'pointer',
+                        borderRight: '1px solid #d9d9d9',
+                        color: selectedAttribute === attribute ? '#1890ff' : 'black',
+                        textDecoration: selectedAttribute === attribute ? 'underline' : 'none',
+                        transition: 'color 0.3s',
+                        flex: '1 0 20%', // Adjust the percentage as needed
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}
+                      onClick={() => handleAttributeClick(attribute)}
+                      onMouseEnter={(e) => e.target.style.color = '#1890ff'}
+                      onMouseLeave={(e) => e.target.style.color = selectedAttribute === attribute ? '#1890ff' : 'black'}
                     >
-                      <List.Item.Meta
-                        title={item.name}
-                        description={item.description}
+                      {attribute}
+                      <Button
+                        icon={<FaSort />}
+                        onClick={() => handleSort(attribute, 'asc')}
+                        onMouseEnter={(e) => e.target.style.color = '#1890ff'}
+                        onMouseLeave={(e) => e.target.style.color = 'black'}
+                        style={{ marginLeft: '10px' }}
                       />
-                    </List.Item>
-                  )}
-                />
-              )}
-            </>
+                    </div>
+                  ))}
+                </div>
+
+          {loading ? (
+            <Spin />
+          ) : (
+            <List
+            itemLayout="horizontal"
+            dataSource={filteredInstances}
+            renderItem={item => (
+              <List.Item
+              actions={[
+                <Button icon={<EditOutlined />} onClick={() => handleEdit(item)} />,
+                <Button icon={<DeleteOutlined />} onClick={() => handleDelete(item.id)} />
+              ]}
+              >
+              </List.Item>
+            )}
+            />
           )}
+          </>
+        )}
         </InstancesList>
       </Content>
 
@@ -229,32 +430,25 @@ const ListEntities = () => {
         footer={null}
         afterClose={() => form.resetFields()}
       >
-        <Form
-          form={form}
-          onFinish={handleSave}
-        >
+        <Form form={form} onFinish={(values) => handleSave(values)}>
+        {atributes.filter(attr => attr !== 'Id').map(attribute => (
           <Form.Item
-            name="name"
-            label="Nombre"
-            rules={[{ required: true, message: 'Por favor ingrese el nombre' }]}
+          key={attribute}
+          name={attribute.toLowerCase()}
+          label={attribute}
+          rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
           >
-            <Input />
+          <Input />
           </Form.Item>
-          <Form.Item
-            name="description"
-            label="Descripción"
-            rules={[{ required: true, message: 'Por favor ingrese la descripción' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }}>
-              Guardar
-            </Button>
-            <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
-              Cancelar
-            </Button>
-          </Form.Item>
+        ))}
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
+          Guardar
+          </Button>
+          <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+          Cancelar
+          </Button>
+        </Form.Item>
         </Form>
       </Modal>
 
@@ -266,36 +460,31 @@ const ListEntities = () => {
         afterClose={() => setCurrentInstance(null)}
       >
         <Form
-          key={currentInstance ? currentInstance.id : 'new'}
-          initialValues={currentInstance}
-          onFinish={handleSave}
+        key={currentInstance ? currentInstance.id : 'new'}
+        initialValues={currentInstance}
+        onFinish={(values) => handleSave(values)}
         >
+        {atributes.map(attribute => (
           <Form.Item
-            name="name"
-            label="Nombre"
-            rules={[{ required: true, message: 'Por favor ingrese el nombre' }]}
+          key={attribute}
+          name={attribute.toLowerCase()}
+          label={attribute}
+          rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
           >
-            <Input />
+          <Input />
           </Form.Item>
-          <Form.Item
-            name="description"
-            label="Descripción"
-            rules={[{ required: true, message: 'Por favor ingrese la descripción' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }}>
-              Guardar
-            </Button>
-            <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
-              Cancelar
-            </Button>
-          </Form.Item>
+        ))}
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
+          Guardar
+          </Button>
+          <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+          Cancelar
+          </Button>
+        </Form.Item>
         </Form>
       </Modal>
-    </Container>
-  );
-};
-
+      </Container>
+    );
+  };
 export default ListEntities;
