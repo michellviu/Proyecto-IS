@@ -9,7 +9,10 @@ class GenericRepository(IGenericRepository):
 
     def get_by_id(self, id):
         primary_key = self.model._meta.pk.name
-        return self.model.objects.get(**{primary_key:id})
+        try:
+            return self.model.objects.get(**{primary_key: id})
+        except self.model.DoesNotExist:
+            return None
 
     def create(self, data):
         return self.model.objects.create(**data)

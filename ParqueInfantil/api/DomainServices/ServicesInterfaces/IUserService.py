@@ -1,5 +1,15 @@
 from abc import ABC, abstractmethod
-import IGenericService
+from .IGenericService import IGenericService
 
-class IUserService(IGenericService):
-    pass
+class IUserService(IGenericService, ABC):
+    @abstractmethod
+    def confirm_role(self, id):
+        pass
+
+    @abstractmethod
+    def get_by_role(self, role):
+        pass
+
+    @abstractmethod
+    def get_unconfirmed_users(self):
+        pass
