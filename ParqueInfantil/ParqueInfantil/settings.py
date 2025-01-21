@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # 'coreapi',
     "api",
     "rest_framework",
+    "drf_yasg",
     # 'pgtriggers',
 ]
 
