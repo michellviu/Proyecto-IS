@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from api.models  import Instalacion, Recurso, Usuario, Padre, Educador, Administrador, Actividad_programada, Actividad,Reservacion,Calificacion
+from django.contrib.auth import get_user_model
 
 
 class InstalacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Instalacion
-        # fields = ('id','nombre')
         fields = '__all__'
 
 class ActividadSerializer(serializers.ModelSerializer):
@@ -16,11 +16,6 @@ class ActividadSerializer(serializers.ModelSerializer):
 class RecursoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recurso
-        fields = '__all__'
-
-class UsuarioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Usuario
         fields = '__all__'
 
 class PadreSerializer(serializers.ModelSerializer):
