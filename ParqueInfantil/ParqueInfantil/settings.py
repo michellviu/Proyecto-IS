@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "api",
     "rest_framework",
     'rest_framework.authtoken',
+    "drf_yasg",
     # 'pgtriggers',
 ]
 
@@ -153,3 +154,12 @@ CORS_ALLOWED_ORIGINS = [
 # }
 
 AUTH_USER_MODEL = "api.Usuario"
+
+SWAGGER_SETTINGS = {
+    "DEFAULT_INFO": "path.to.api_info",  # Personalizar la información de la API
+    "USE_SESSION_AUTH": False,  # Desactivar autenticación por sesiones
+    "JSON_EDITOR": True,  # Activar editor JSON en Swagger UI
+    "VALIDATOR_URL": None,  # Evitar validación automática externa
+    "DOC_EXPANSION": "none",  # Control de expansión de secciones ('none', 'list', 'full')
+    "DEFAULT_MODEL_RENDERING": "example",  # Mostrar ejemplos de modelos
+}
