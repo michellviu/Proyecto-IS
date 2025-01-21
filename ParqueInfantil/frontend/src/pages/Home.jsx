@@ -1,9 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import HeaderHome from '../components/headers/HeaderHome';
-import { Carousel }  from 'react-bootstrap';
+import Login from './Login';
+import { FaHome } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import foto1 from '../assets/foto.jpg';
+
+//import LoginForm from './Login';
+
 
 const HomeContainer = styled.div`
     display: flex;
@@ -13,12 +17,6 @@ const HomeContainer = styled.div`
     min-height: 100vh;
 `;
 
-const CarouselContainer = styled.div`
-    width: 38.2%; /* Golden ratio proportion */
-    margin: 100px 0;
-    align-self: flex-end;
-    margin-right: 10%;
-`;
 
 const Footer = styled.footer`
     background-color: #ffcccb;
@@ -29,50 +27,49 @@ const Footer = styled.footer`
     bottom: 0;
 `;
 
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+`;
+
+const Title = styled.h1`
+    font-size: 2.5rem;
+    color: #333;
+`;
+
+const Icon = styled(FaHome)`
+    color: #333;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+`;
+
+const RegisterLink = styled(Link)`
+    margin-top: 1rem;
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
 const Home = () => {
     return (
         <HomeContainer>
             <HeaderHome />
             {/* <img src={logo} alt="The Play Hub Logo" style={{ width: '200px', marginBottom: '20px' }} /> */}
-            <CarouselContainer>
-                <Carousel interval={5000} slide={true}>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src={foto1}
-                            alt="First slide"
-                        />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src={foto1}
-                            alt="Second slide"
-                        />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src={foto1}
-                            alt="Third slide"
-                        />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src={foto1}
-                            alt="Fourth slide"
-                        />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src={foto1}
-                            alt="Fifth slide"
-                        />
-                    </Carousel.Item>
-                </Carousel>
-            </CarouselContainer> 
+            
+            
+            <Container>
+            <Icon />
+            <Title>Login</Title>
+                <Login />
+                <RegisterLink to="/register">¿No tienes una cuenta aún?</RegisterLink>
+            </Container>
             <Footer>
                 <p>© 2025 Parque Infantil. Todos los derechos reservados.</p>
             </Footer>
