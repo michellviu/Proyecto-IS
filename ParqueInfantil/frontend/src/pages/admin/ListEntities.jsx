@@ -105,7 +105,7 @@ const ListEntities = (admin = 'Eveliz') => {
   useEffect(() => {
     const fetchEntities = async () => {
       try {
-        const response = await fetch('/api/getEntities'); // Adjust the endpoint as needed
+        const response = await fetch('http://127.0.0.1:8000/metadata'); // Adjust the endpoint as needed
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
