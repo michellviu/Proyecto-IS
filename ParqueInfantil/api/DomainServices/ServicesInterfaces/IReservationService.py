@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import IGenericService
+from .IGenericService import IGenericService
 
-class IReservationService(IGenericService):
+class IReservationService(IGenericService, ABC):
     pass
