@@ -2,37 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaHome } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import HeaderHome from '../components/headers/HeaderHome';
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-`;
-
-const Title = styled.h1`
-    font-size: 2.5rem;
-    color: #333;
-`;
-
-const Icon = styled(FaHome)`
-    color: #333;
-    font-size: 3rem;
-    margin-bottom: 1rem;
-`;
-
-const RegisterLink = styled(Link)`
-    margin-top: 1rem;
-    color: #007bff;
-    text-decoration: none;
-
-    &:hover {
-        text-decoration: underline;
-    }
-`;
+//import HeaderHome from '../components/headers/HeaderHome';
 
 const Form = styled.form`
     display: flex;
@@ -107,16 +77,18 @@ const LoginForm = () => {
     );
 };
 
-const Login = () => {
-    return (
-        <Container>
-            <HeaderHome />
-            <Icon />
-            <Title>Login</Title>
-            <LoginForm />
-            <RegisterLink to="/register">¿No tienes una cuenta aún?</RegisterLink>
-        </Container>
-    );
-};
+// const Login = () => {
+//     return (
+//         <Container>
+//             <HeaderHome />
+//             <Icon />
+//             <Title>Login</Title>
+//             <LoginForm />
+//             <RegisterLink to="/register">¿No tienes una cuenta aún?</RegisterLink>
+//         </Container>
+//     );
+// };
 
-export default Login;
+// export default Login;
+
+export default LoginForm;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FaSort, FaSearch } from 'react-icons/fa';
 import HeaderHome from '../components/headers/HeaderHome';
 import ActivityContainer from '../components/ActivityContainer';
+import { useEffect } from 'react';
 
 const Container = styled.div`
     padding: 20px;
@@ -115,6 +116,28 @@ const ActivityCatalog = () => {
         { id: 17, name: 'Activity 2', date: '2023-10-05' },
         { id: 18, name: 'Activity 3', date: '2023-10-03' },
     ]);
+
+
+
+
+
+
+    const fetchActivities = async () => {
+        try {
+            const response = await fetch('https://api.example.com/activities');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setActivities(data);
+        } catch (error) {
+            console.error('Failed to fetch activities:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchActivities();
+    }, []);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
     const [currentPage, setCurrentPage] = useState(1);

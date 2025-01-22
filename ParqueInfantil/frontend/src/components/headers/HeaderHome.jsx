@@ -57,7 +57,7 @@ const HeaderHome = () => {
             <Nav>
                 <Ul>
                     <Li><StyledLink to="/" className={location.pathname === '/' ? 'active' : ''}><FaHome />Inicio</StyledLink></Li>
-                    <Li><StyledLink to="/login" className={location.pathname === '/login' ? 'active' : ''}><FaSignInAlt />Login</StyledLink></Li>
+                    {/* <Li><StyledLink to="/login" className={location.pathname === '/login' ? 'active' : ''}><FaSignInAlt />Login</StyledLink></Li> */}
                     <Li><StyledLink to="/activity-catalog" className={location.pathname === '/activity-catalog' ? 'active' : ''}><FaListAlt />Actividades</StyledLink></Li> 
                     <Li><StyledLink to="/contact" className={location.pathname === '/contact' ? 'active' : ''}><FaEnvelope />Contáctenos</StyledLink></Li>
                     <Li><StyledLink to="/about" className={location.pathname === '/about' ? 'active' : ''}><FaInfoCircle />Sobre Nosotros</StyledLink></Li>

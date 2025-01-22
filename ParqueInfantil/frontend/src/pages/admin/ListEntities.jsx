@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { Menu, Button, Input, List, Spin, message, Modal, Form } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ReloadOutlined, CloseOutlined } from '@ant-design/icons';
 import { FaHome } from 'react-icons/fa';
-import { FaSort, FaSearch } from 'react-icons/fa';
+import { FaSort, FaSearch,FaTimes,FaCheck } from 'react-icons/fa';
 import { AiOutlineReload } from 'react-icons/ai';
 import { BsThreeDots } from 'react-icons/bs';
 import styled from 'styled-components';
+import Table from './Table'
 
 const { Search } = Input;
 const { SubMenu } = Menu;
@@ -104,12 +105,12 @@ const ListEntities = (admin = 'Eveliz') => {
   useEffect(() => {
     const fetchEntities = async () => {
       try {
-        const response = await fetch('/api/getEntities'); // Adjust the endpoint as needed
+        const response = await fetch('http://127.0.0.1:8000/metadata'); // Adjust the endpoint as needed
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setEntities(data);
+        setEntities(data.models);
       } catch (error) {
         console.error('Failed to fetch entities:', error);
         message.error('No se pudieron obtener las entidades, usando valores por defecto.');
@@ -159,7 +160,14 @@ const ListEntities = (admin = 'Eveliz') => {
       setFilteredInstances(data);
     } catch (error) {
       console.error('Failed to fetch instances:', error);
-      message.error('No se pudieron cargar las instancias.');
+      message.error('No se pudieron cargar las instancias. Usando ejemplos por defecto.');
+      const exampleInstances = [
+        Object.fromEntries(atributes.map(attr => [attr.toLowerCase(), `Ejemplo ${attr} 1`])),
+        Object.fromEntries(atributes.map(attr => [attr.toLowerCase(), `Ejemplo ${attr} 2`])),
+        Object.fromEntries(atributes.map(attr => [attr.toLowerCase(), `Ejemplo ${attr} 3`]))
+      ];
+      setInstances(exampleInstances);
+      setFilteredInstances(exampleInstances);
     } finally {
       setLoading(false);
     }
@@ -265,6 +273,14 @@ const ListEntities = (admin = 'Eveliz') => {
     setCurrentInstance(null);
   };
   const [pendingUsers, setPendingUsers] = useState([]);
+  useEffect(() => {
+    const exampleUsers = [
+      { id: 1, nombre: 'Juan Perez', descripcion: 'Usuario pendiente 1' },
+      { id: 2, nombre: 'Maria Lopez', descripcion: 'Usuario pendiente 2' },
+      { id: 3, nombre: 'Carlos Sanchez', descripcion: 'Usuario pendiente 3' }
+    ];
+    setPendingUsers(exampleUsers);
+  }, []);
 
   const handleUserAuthorizationClick = async () => {
     setSelectedEntity('user-authorization');
@@ -282,7 +298,40 @@ const ListEntities = (admin = 'Eveliz') => {
     }
   };
 
-  const [pendingReservations, setPendingReservations] = useState([]);
+  const [resources, setResources] = useState([]);
+  useEffect(() => {
+    const exampleResources = [
+      { id: 1, nombre: 'Recurso 1', descripcion: 'Descripción del recurso 1' },
+      { id: 2, nombre: 'Recurso 2', descripcion: 'Descripción del recurso 2' },
+      { id: 3, nombre: 'Recurso 3', descripcion: 'Descripción del recurso 3' }
+    ];
+    setResources(exampleResources);
+  }, []);
+
+  const handleResourceClick = async () => {
+    setSelectedEntity('resource');
+    try {
+      const response = await fetch('/api/getResourcesInUse');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setResources(data);
+      message.success('Recursos en uso obtenidos exitosamente');
+    } catch (error) {
+      console.error('Failed to fetch resources in use:', error);
+      message.error('No se pudieron obtener los recursos en uso, usando valores por defecto.');
+      const exampleResources = [
+        { id: 1, nombre: 'Recurso 1', descripcion: 'Descripción del recurso 1' },
+        { id: 2, nombre: 'Recurso 2', descripcion: 'Descripción del recurso 2' },
+        { id: 3, nombre: 'Recurso 3', descripcion: 'Descripción del recurso 3' }
+      ];
+      setResources(exampleResources);
+    }
+  };
+
+  const [pendingReservations, setPendingReservations] = useState([])
+  ;
   const handleReservationRequestsClick = async () => {
     setSelectedEntity('reservation-requests');
     try {
@@ -305,184 +354,242 @@ const ListEntities = (admin = 'Eveliz') => {
     setSelectedAttribute(attribute);
     message.info(`Atributo seleccionado: ${attribute}`);
   };
+
+  
+  const handleAcceptUser = async (user) => {
+    try {
+      const response = await fetch('/api/acceptUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      message.success('Usuario aceptado exitosamente');
+      handleUserAuthorizationClick();
+    } catch (error) {
+      console.error('Failed to accept user:', error);
+      message.error('No se pudo aceptar al usuario');
+    }
+  };
+
  
+const handleRejectUser = async (user) => {
+  try {
+    const response = await fetch('/api/rejectUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    message.success('Usuario rechazado exitosamente');
+    handleUserAuthorizationClick();
+  } catch (error) {
+    console.error('Failed to reject user:', error);
+    message.error('No se pudo rechazar al usuario');
+  }
+};
   
 
 
     return (
       <Container>
       <Header>
-        <h2>Bienvenido</h2>
-        <Nav>
-        <ul>
-          <li>
-          <Link to="/"><FaHome /></Link>
-          </li>
-          <li>
-          <Link to="/admin/list-entities"><AiOutlineReload /></Link>
-          </li>
-        </ul>
-        </Nav>
+      <h2>Bienvenido</h2>
+      <Nav>
+      <ul>
+        <li>
+        <Link to="/"><FaHome /></Link>
+        </li>
+        <li>
+        <Link to="/admin/list-entities"><AiOutlineReload /></Link>
+        </li>
+      </ul>
+      </Nav>
       </Header>
 
       <Content>
-        <Sidebar mode="inline">
-        <Menu.Item key="user-authorization" onClick={() => handleUserAuthorizationClick()}>
-          Autorización de Usuarios
+      <Sidebar mode="inline">
+      <Menu.Item key="user-authorization" onClick={() => handleUserAuthorizationClick()}>
+        Autorización de Usuarios
+      </Menu.Item>
+      <Menu.Item key="resource" onClick={() => handleResourceClick()}>
+         Recursos en Uso
+      </Menu.Item>
+      <Menu.Item key="reservation-requests" onClick={() => handleReservationRequestsClick()}>
+        Solicitudes de Reserva
+      </Menu.Item>
+      <SubMenu key="entities" title="Entidades">
+        {entities.map(entity => (
+        <Menu.Item key={entity} onClick={() => handleMenuClick(entity)}>
+        {entity}
         </Menu.Item>
-        <Menu.Item key="reservation-requests" onClick={() => handleReservationRequestsClick()}>
-          Solicitudes de Reserva
-        </Menu.Item>
-        <SubMenu key="entities" title="Entidades">
-          {entities.map(entity => (
-          <Menu.Item key={entity} onClick={() => handleMenuClick(entity)}>
-            {entity}
-          </Menu.Item>
+        ))}
+      </SubMenu>
+      </Sidebar>
+
+      <InstancesList>
+      {selectedEntity === 'user-authorization' && (
+        <div>
+        <ListHeader>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Search
+          placeholder="Buscar..."
+          onChange={handleSearch}
+          style={{ width: 500 }}
+        />
+        </div>
+        </ListHeader>
+        <List
+        itemLayout="horizontal"
+        dataSource={pendingUsers}
+        renderItem={user => (
+        <List.Item
+          actions={[
+          <Button icon={<FaCheck />} onClick={() => handleAcceptUser(user)} />,
+          <Button icon={<FaTimes />} onClick={() => handleRejectUser(user)} />
+          ]}
+        >
+          <List.Item.Meta
+          title={Object.keys(user).map(key => (
+          <span key={key} style={{ display: 'block' }}>
+            <strong>{key}:</strong> {user[key]}
+          </span>
           ))}
-        </SubMenu>
-        </Sidebar>
-
-        <InstancesList>
-        {selectedEntity === 'user-authorization' && (
-          <div>
-          {/* Render pending users */}
-          </div>
+          />
+        </List.Item>
         )}
-        {selectedEntity === 'reservation-requests' && (
-          <div>
-          {/* Render pending reservations */}
-          </div>
+        />
+        </div>
+      )}
+      {selectedEntity === 'resource' && (
+        <div> <ListHeader>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Search
+          placeholder="Buscar..."
+          onChange={handleSearch}
+          style={{ width: 500 }}
+        />
+        </div>
+        </ListHeader>
+        <List
+        itemLayout="horizontal"
+        dataSource={resources}
+        renderItem={resource => (
+        <List.Item
+        >
+          <List.Item.Meta
+          title={Object.keys(resource).map(key => (
+          <span key={key} style={{ display: 'block' }}>
+            <strong>{key}:</strong> {resource[key]}
+          </span>
+          ))}
+          />
+        </List.Item>
         )}
-        {entities.includes(selectedEntity) && (
-          <>
-          <ListHeader>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Search
-              placeholder="Buscar..."
-              onChange={handleSearch}
-              style={{ width: 500 }}
-            />
-            
-            </div>
-            <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-            Agregar
-            </Button>
-          </ListHeader>
+        />
+       
+        </div>
+      )}
+      {selectedEntity === 'reservation-requests' && (
+        <div>
+        <h1>Hito 2</h1>
+        </div>
+      )}
+      {entities.includes(selectedEntity) && (
+        <>
+        <ListHeader>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Search
+          placeholder="Buscar..."
+          onChange={handleSearch}
+          style={{ width: 500 }}
+        />
+        </div>
+        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+        Agregar
+        </Button>
+        </ListHeader>
 
-                <div style={{ display: 'flex', flexWrap: 'wrap', borderBottom: '1px solid #d9d9d9', flex: 1 }}>
-                  {atributes.map(attribute => (
-                    <div
-                      key={attribute}
-                      style={{
-                        padding: '10px',
-                        cursor: 'pointer',
-                        borderRight: '1px solid #d9d9d9',
-                        color: selectedAttribute === attribute ? '#1890ff' : 'black',
-                        textDecoration: selectedAttribute === attribute ? 'underline' : 'none',
-                        transition: 'color 0.3s',
-                        flex: '1 0 20%', // Adjust the percentage as needed
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                      }}
-                      onClick={() => handleAttributeClick(attribute)}
-                      onMouseEnter={(e) => e.target.style.color = '#1890ff'}
-                      onMouseLeave={(e) => e.target.style.color = selectedAttribute === attribute ? '#1890ff' : 'black'}
-                    >
-                      {attribute}
-                      <Button
-                        icon={<FaSort />}
-                        onClick={() => handleSort(attribute, 'asc')}
-                        onMouseEnter={(e) => e.target.style.color = '#1890ff'}
-                        onMouseLeave={(e) => e.target.style.color = 'black'}
-                        style={{ marginLeft: '10px' }}
-                      />
-                    </div>
-                  ))}
-                </div>
-
-          {loading ? (
-            <Spin />
-          ) : (
-            <List
-            itemLayout="horizontal"
-            dataSource={filteredInstances}
-            renderItem={item => (
-              <List.Item
-              actions={[
-                <Button icon={<EditOutlined />} onClick={() => handleEdit(item)} />,
-                <Button icon={<DeleteOutlined />} onClick={() => handleDelete(item.id)} />
-              ]}
-              >
-              </List.Item>
-            )}
-            />
-          )}
-          </>
-        )}
-        </InstancesList>
+        <Table
+        headers={atributes}
+        data={instances}
+        onHeaderClick={handleAttributeClick}
+        onDeleteClick={handleDelete}
+        onEditClick={handleEdit}
+        />
+        </>
+      )}
+      </InstancesList>
       </Content>
 
       <Modal
-        title="Agregar Instancia"
-        open={isAddModalVisible}
-        onCancel={handleCancel}
-        footer={null}
-        afterClose={() => form.resetFields()}
+      title="Agregar Instancia"
+      open={isAddModalVisible}
+      onCancel={handleCancel}
+      footer={null}
+      afterClose={() => form.resetFields()}
       >
-        <Form form={form} onFinish={(values) => handleSave(values)}>
-        {atributes.filter(attr => attr !== 'Id').map(attribute => (
-          <Form.Item
-          key={attribute}
-          name={attribute.toLowerCase()}
-          label={attribute}
-          rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
-          >
-          <Input />
-          </Form.Item>
-        ))}
-        <Form.Item>
-          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
-          Guardar
-          </Button>
-          <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
-          Cancelar
-          </Button>
+      <Form form={form} onFinish={(values) => handleSave(values)}>
+      {atributes.filter(attr => attr !== 'Id').map(attribute => (
+        <Form.Item
+        key={attribute}
+        name={attribute.toLowerCase()}
+        label={attribute}
+        rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
+        >
+        <Input />
         </Form.Item>
-        </Form>
+      ))}
+      <Form.Item>
+        <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
+        Guardar
+        </Button>
+        <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+        Cancelar
+        </Button>
+      </Form.Item>
+      </Form>
       </Modal>
 
       <Modal
-        title="Editar Instancia"
-        open={isEditModalVisible}
-        onCancel={handleCancel}
-        footer={null}
-        afterClose={() => setCurrentInstance(null)}
+      title="Editar Instancia"
+      open={isEditModalVisible}
+      onCancel={handleCancel}
+      footer={null}
+      afterClose={() => setCurrentInstance(null)}
       >
-        <Form
-        key={currentInstance ? currentInstance.id : 'new'}
-        initialValues={currentInstance}
-        onFinish={(values) => handleSave(values)}
+      <Form
+      key={currentInstance ? currentInstance.id : 'new'}
+      initialValues={currentInstance}
+      onFinish={(values) => handleSave(values)}
+      >
+      {atributes.map(attribute => (
+        <Form.Item
+        key={attribute}
+        name={attribute.toLowerCase()}
+        label={attribute}
+        rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
         >
-        {atributes.map(attribute => (
-          <Form.Item
-          key={attribute}
-          name={attribute.toLowerCase()}
-          label={attribute}
-          rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
-          >
-          <Input />
-          </Form.Item>
-        ))}
-        <Form.Item>
-          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
-          Guardar
-          </Button>
-          <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
-          Cancelar
-          </Button>
+        <Input />
         </Form.Item>
-        </Form>
+      ))}
+      <Form.Item>
+        <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
+        Guardar
+        </Button>
+        <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+        Cancelar
+        </Button>
+      </Form.Item>
+      </Form>
       </Modal>
       </Container>
     );
