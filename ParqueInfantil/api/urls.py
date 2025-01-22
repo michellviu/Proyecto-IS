@@ -7,12 +7,20 @@ from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
 from .views.activityView import ActividadView, ActividadDetailView
 from .views.resourceView import RecursoView, RecursoDetailView
-from .views.userView import UserByRoleView, UserView,UserDetailView,UnconfirmedUsersView
+from .views.userView import (
+    UserByRoleView,
+    UserView,
+    UserDetailView,
+    UnconfirmedUsersView,
+)
 from .views.confirmRoleView import ConfirmRoleView
 from .views.attributesView import AttributesView
-from .views.sheduledActView import ScheduledActView, ScheduledActDetailView,ScheduledActRealTimeView
+from .views.sheduledActView import (
+    ScheduledActView,
+    ScheduledActDetailView,
+    ScheduledActRealTimeView,
+)
 from .views.views import (
-   
     ReservacionView,
     CalificacionView,
 )
@@ -35,32 +43,25 @@ urlpatterns = [
         name="schema-json",
     ),
     # Metadata
-    path("api/metadata/", metadata_view, name="metadata"),
-    path('api/atributes/<str:table_name>/', AttributesView.as_view()),
+    path("metadata/", metadata_view, name="metadata"),
+    path("atributes/<str:table_name>/", AttributesView.as_view()),
     # Models
-    path('api/register/', RegistroView.as_view()),
-    path('api/login/', LoginView.as_view()),
-
-    path("api/instalacion/", InstalacionView.as_view()),
-    path("api/instalacion/<int:pk>/", InstalacionDetailView.as_view()),
-
-    path("api/actividad/", ActividadView.as_view()),
-    path("api/actividad/<int:pk>/", ActividadDetailView.as_view()),
-    
-    path("api/actividadprogramada/", ScheduledActView.as_view()),
-    path("api/actividadprogramada/<int:pk>/", ScheduledActDetailView.as_view()),
-    path("api/actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
-
-    path("api/recurso/", RecursoView.as_view()),
-    path("api/recurso/<int:pk>/", RecursoDetailView.as_view()),
-
-    path("api/usuario/", UserView.as_view()),
-    path('api/usuario/noconfirmado/', UnconfirmedUsersView.as_view()),
-    path('api/usuario/<int:pk>/', UserDetailView.as_view()),
-    path("api/usuario/<str:role>/", UserByRoleView.as_view()),
-    path('api/usuario/confirmarrol/<int:idU>/', ConfirmRoleView.as_view()),
-
-    
+    path("register/", RegistroView.as_view()),
+    path("login/", LoginView.as_view()),
+    path("instalacion/", InstalacionView.as_view()),
+    path("instalacion/<int:pk>/", InstalacionDetailView.as_view()),
+    path("actividad/", ActividadView.as_view()),
+    path("actividad/<int:pk>/", ActividadDetailView.as_view()),
+    path("actividadprogramada/", ScheduledActView.as_view()),
+    path("actividadprogramada/<int:pk>/", ScheduledActDetailView.as_view()),
+    path("actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
+    path("recurso/", RecursoView.as_view()),
+    path("recurso/<int:pk>/", RecursoDetailView.as_view()),
+    path("usuario/", UserView.as_view()),
+    path("usuario/noconfirmado/", UnconfirmedUsersView.as_view()),
+    path("usuario/<int:pk>/", UserDetailView.as_view()),
+    path("usuario/<str:role>/", UserByRoleView.as_view()),
+    path("usuario/confirmarrol/<int:idU>/", ConfirmRoleView.as_view()),
     path("reservacion", ReservacionView.as_view()),
     path("calificacion", CalificacionView.as_view()),
 ]
