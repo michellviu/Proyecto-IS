@@ -52,7 +52,7 @@ const AboutUs = () => {
         <AboutUsContainer>
             <HeaderHome />
             { /*<Logo src={logo} alt="Logo del Parque" />*/}
-            <Link to="/admin/list-entities" className="nav-link">
+            <Link to="/adminPage" className="nav-link">
                 <FaUser /> ADMIN
             </Link>
             <Title>Sobre Nosotros</Title>
