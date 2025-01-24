@@ -62,7 +62,7 @@ const AboutUs = () => {
             <Paragraph>¡Gracias por visitarnos! Esperamos que usted y sus hijos tengan un tiempo maravilloso.</Paragraph>
 
             <CarouselContainer>
-                <Carousel interval={5000} slide={true}>
+                <Carousel interval={3000} slide={true}>
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
