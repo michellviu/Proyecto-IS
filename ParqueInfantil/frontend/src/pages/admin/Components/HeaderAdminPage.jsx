@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 import { AiOutlineReload } from 'react-icons/ai';
+import { FiLogOut } from 'react-icons/fi';
+import { handleLogOut } from '../HandlersRequests';
 
 const Header = styled.header`
   display: flex;
@@ -39,22 +41,28 @@ const Nav = styled.nav`
 `;
 
 const HeaderAdminPage = () => {
-    
-    return (
-        <Header>
-            <h2>Bienvenido</h2>
-            <Nav>
-                <ul>
-                    <li>
-                        <Link to="/"><FaHome /></Link>
-                    </li>
-                    <li>
-                        <Link to="/admin/list-entities"><AiOutlineReload /></Link>
-                    </li>
-                </ul>
-            </Nav>
-        </Header>
-    );
+
+  return (
+    <Header>
+      <h2>Bienvenido</h2>
+      <Nav>
+        <ul>
+          <li>
+            <Link to="/"><FaHome /></Link>
+          </li>
+          <li>
+            <Link to="/adminPage"><AiOutlineReload /></Link>
+          </li>
+          <li>
+            <Link onClick={handleLogOut}>
+              <FiLogOut />
+            </Link>
+
+          </li>
+        </ul>
+      </Nav>
+    </Header>
+  );
 };
 
 export default HeaderAdminPage;

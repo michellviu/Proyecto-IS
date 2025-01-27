@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { useNavigate ,Link} from 'react-router-dom';
 
 
 //Get
@@ -211,6 +212,29 @@ const fetchPendingReservations = async (setPendingReservations) => {
 
 };
 
+const handleLogOut = async () => {
+    try {
+        
+        const response = await fetch('/api/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        localStorage.removeItem('authToken'); // Eliminar el token de localStorage
+        message.success('Sesión cerrada exitosamente');
+        // Redirigir al usuario a la página de inicio de sesión u otra acción necesaria
+       Navigate('.')
+    } catch (error) {
+        console.error('Failed to log out:', error);
+        message.error('No se pudo cerrar la sesión');
+      
+    }
+};
+
 
 
 export {
@@ -218,5 +242,6 @@ export {
     handleDeleteRequest, fetchSearch, handleEdit, handleAdd, // Metodos Crud
     fetchPendingUsers, handleAcceptUser, handleRejectUser, // Metodos Asignacion de Rol
     fetchResourcesInUse, // Metodos de Gestion de Recursos
-    fetchPendingReservations // Metodos de Gestion de Reservas
+    fetchPendingReservations, // Metodos de Gestion de Reservas
+    handleLogOut
 };
