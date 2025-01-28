@@ -51,3 +51,9 @@ class CalificacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Calificacion
         fields = '__all__'
+
+
+class ModelNameSerializer(serializers.Serializer):
+    models = serializers.ListField(
+        child=serializers.CharField()
+    )
