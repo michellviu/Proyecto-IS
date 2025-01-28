@@ -1,7 +1,7 @@
 from django.urls import path, include, re_path
 from api import views
 from .views.swagger_doc import schema_view
-from .views.metadata import metadata_view
+from .views.metadata import MetadataView
 from .views.registerView import RegistroView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
@@ -51,7 +51,7 @@ urlpatterns = [
         name="schema-json",
     ),
     # Metadata
-    path("metadata/", metadata_view, name="metadata"),
+    path("metadata/", MetadataView.as_view()),
     path("atributes/<str:table_name>/", AttributesView.as_view()),
     # Models
    
