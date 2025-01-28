@@ -120,7 +120,7 @@ class ScheduledActCatalogView(generics.ListAPIView):
     
 
 class ScheduledActRealizView(generics.ListAPIView):
-    serializer_class = Actividad_programadaSerializer
+    serializer_class = ScheduledActSerializer
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -131,7 +131,7 @@ class ScheduledActRealizView(generics.ListAPIView):
     
 
 class ScheduledActFuturaView(generics.ListAPIView):
-    serializer_class = Actividad_programadaSerializer
+    serializer_class = ScheduledActSerializer
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

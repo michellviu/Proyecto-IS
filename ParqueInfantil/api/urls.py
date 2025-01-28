@@ -6,7 +6,7 @@ from .views.registerView import RegistroView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
 from .views.activityView import ActividadView, ActividadDetailView
-from .views.resourceView import RecursoView, RecursoDetailView
+from .views.resourceView import RecursoView, RecursoDetailView,ResourceInUseView
 from .views.userView import (
     UserByRoleView,
     UserView,
@@ -69,6 +69,7 @@ urlpatterns = [
     path("actividadprogramada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
     path("recurso/", RecursoView.as_view()),
+      path("recurso/enuso", ResourceInUseView.as_view()),
     path("recurso/<int:pk>/", RecursoDetailView.as_view()),
     path("usuario/", UserView.as_view()),
     path("usuario/noconfirmado/", UnconfirmedUsersView.as_view()),

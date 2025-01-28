@@ -8,6 +8,7 @@ from drf_yasg import openapi
 from ..serializers.serializer import RecursoSerializer
 from api.AppServices.ResourceService import ResourceService
 from api.InfrastructurePersistence.ResourceRepository import ResourceRepository
+from api.InfrastructurePersistence.ScheduledActRepository import ScheduledActRepository
 
 
 # vista para crear o listar todos los recursos
@@ -17,7 +18,7 @@ class RecursoView(generics.ListCreateAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.resource_service = ResourceService(ResourceRepository())
+        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository()))
 
     @swagger_auto_schema(
         operation_description="Listar todos los recursos",
@@ -41,6 +42,19 @@ class RecursoView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class ResourceInUseView(generics.ListAPIView):
+    serializer_class = RecursoSerializer
+    permission_classes = [IsAdmin]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository()))
+
+    def get_queryset(self):
+        obj = self.resource_service.get_resource_in_use()
+        if obj is None:
+            raise Http404("Resource not found")
+        return obj
    
 
 
@@ -51,7 +65,7 @@ class RecursoDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.resource_service = ResourceService(ResourceRepository())
+        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository()))
 
     @swagger_auto_schema(
         operation_description="Obtener los detalles de un recurso",

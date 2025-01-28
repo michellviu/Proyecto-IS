@@ -18,7 +18,7 @@ class ScheduledActRepository(GenericRepository, IScheduledActRepository):
         # Obtener la hora actual en UTC-5
         now = timezone.now().astimezone(cuba_tz)
         # Obtener todas las actividades programadas junto con la información de actividad
-        actividades_programadas = Actividad_programada.objects.select_related('idA')
+        actividades_programadas = Actividad_programada.objects.select_related('idA__idI')
         actividades_programadas=actividades_programadas.filter(fecha_hora__lte=now, fecha_hora__gte=now - F('idA__duracion'))
         return actividades_programadas
     
