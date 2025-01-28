@@ -9,6 +9,7 @@ import ModalEdit from './Components/ModalEdit';
 import ModalAdd from './Components/ModalAdd';
 import UserAuthorization from './Components/UserAuthorization'
 import ResourceView from './Components/ResourceView';
+import ReservationRequestsView from './Components/ReservationrequestsView';
 import EntityView from './Components/EntityView';
 
 //Handlers API
@@ -184,7 +185,11 @@ const AdminPage = (admin = 'Eveliz') => {
           )}
           {selectedEntity === 'reservation-requests' && (
             <div>
-              <h1>Hito 2</h1>
+              <ReservationRequestsView 
+              handleSearch={handleSearch}
+              handleAdd={handleAddModal}
+              reservations={pendingReservations}
+              />
             </div>
           )}
           {entities.includes(selectedEntity) && (

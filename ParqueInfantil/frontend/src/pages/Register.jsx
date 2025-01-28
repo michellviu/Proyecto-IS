@@ -171,9 +171,9 @@ const Register = () => {
                         style={{ flex: 1, border: 'none', outline: 'none', padding: '0.5rem', borderRadius: '4px', borderColor: errors.rol ? 'red' : '#ccc' }}
                     >
                         <option value="" disabled>Selecciona tu rol</option>
-                        <option value="Padre">Padre</option>
-                        <option value="Educador">Educador</option>
-                        <option value="Admin">Administrador</option>
+                        <option value="padre">Padre</option>
+                        <option value="educador">Educador</option>
+                        <option value="admin">Administrador</option>
                     </select>
                 </InputGroup>
                 {errors.rol && <p style={{ color: 'red' }}>{errors.rol}</p>}
