@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaSort, FaSearch } from 'react-icons/fa';
 import HeaderHome from '../components/headers/HeaderHome';
 import ActivityContainer from '../components/ActivityContainer';
-import { useEffect } from 'react';
+
 
 const Container = styled.div`
     padding: 20px;

@@ -5,7 +5,7 @@ import { useNavigate ,Link} from 'react-router-dom';
 //Get
 const fetchEntities = async (setEntities) => {
     try {
-        const response = await fetch('http://127.0.0.1:8000/metadata/');
+        const response = await fetch(`http://127.0.0.1:8000/api/metadata/`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -20,7 +20,7 @@ const fetchEntities = async (setEntities) => {
 
 const fetchAtributes = async (entity, setAtributes) => {
     try {
-        const response = await fetch(`/api/getAttributes?entity=${entity}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/atributes/${entity.toLower()}/?format=json`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -34,7 +34,7 @@ const fetchAtributes = async (entity, setAtributes) => {
 
 const fetchInstances = async (entity, setInstances, setFilteredInstances, blockNumber = 0) => {
     try {
-        const response = await fetch(`/api/getInstances?entity=${entity}&block=${blockNumber}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/?format=json`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -50,7 +50,7 @@ const fetchInstances = async (entity, setInstances, setFilteredInstances, blockN
 //CRUD
 const handleDeleteRequest = async (entity, instance) => {
     try {
-        const response = await fetch(`/api/deleteInstance?entity=${entity}&id=${instance.id}`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/${instance.Id}/`, {
             method: 'DELETE'
         });
         if (!response.ok) {
@@ -65,9 +65,9 @@ const handleDeleteRequest = async (entity, instance) => {
 };
 
 const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstances) => {
-    const query = e.target.value;
+    const query = e.target.value;// acordarme de que la query la tengo que pasar por json
     try {
-        const response = await fetch(`/api/searchInstances?entity=${entity}&attribute=${attribute}&block=${currentBlock}&query=${query}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/search/${entity.toLower()}/${attribute}/`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -82,7 +82,7 @@ const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstan
 
 const handleEdit = async (entity, instance) => {
     try {
-        const response = await fetch(`/api/updateInstance?entity=${entity}&id=${instance.id}`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/${instance.Id}/`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ const handleEdit = async (entity, instance) => {
 
 const handleAdd = async (entity, instance) => {
     try {
-        const response = await fetch(`/api/addInstance?entity=${selectedEntity}`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -123,7 +123,7 @@ const handleAdd = async (entity, instance) => {
 
 const fetchPendingUsers = async (setPendingUsers) => {
     try {
-        const response = await fetch('/api/getPendingUsers');
+        const response = await fetch(`http://127.0.0.1:8000/api/usuario`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -138,7 +138,7 @@ const fetchPendingUsers = async (setPendingUsers) => {
 
 const handleAcceptUser = async (user) => {
     try {
-      const response = await fetch('/api/acceptUser', {
+      const response = await fetch(`http://127.0.0.1:8000/api/Usuario/${user.Id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -158,7 +158,7 @@ const handleAcceptUser = async (user) => {
   
 const handleRejectUser = async (user) => {
     try {
-        const response = await fetch('/api/rejectUser', {
+        const response = await fetch(`http://127.0.0.1:8000/api/Usuario/${user.Id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -180,7 +180,7 @@ const handleRejectUser = async (user) => {
 
 const fetchResourcesInUse = async (setResources) => {
     try {
-        const response = await fetch('/api/getResourcesInUse');
+        const response = await fetch(`http://127.0.0.1:8000/api/Resource`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -198,7 +198,7 @@ const fetchResourcesInUse = async (setResources) => {
 
 const fetchPendingReservations = async (setPendingReservations) => {
     try {
-        const response = await fetch('/api/getPendingReservations');
+        const response = await fetch(`http://127.0.0.1:8000/api/Reservations`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -215,7 +215,7 @@ const fetchPendingReservations = async (setPendingReservations) => {
 const handleLogOut = async () => {
     try {
         
-        const response = await fetch('/api/logout', {
+        const response = await fetch(`http://127.0.0.1:8000/logout/${user.Id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
