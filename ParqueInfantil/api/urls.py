@@ -1,12 +1,12 @@
 from django.urls import path, include, re_path
-from api import views
+from api.views.views import home
 from .views.swagger_doc import schema_view
 from .views.metadata import metadata_view
 from .views.registerView import RegistroView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
 from .views.activityView import ActividadView, ActividadDetailView
-from .views.resourceView import RecursoView, RecursoDetailView,ResourceInUseView
+from .views.resourceView import RecursoView, RecursoDetailView, ResourceInUseView
 from .views.userView import (
     UserByRoleView,
     UserView,
@@ -23,9 +23,16 @@ from .views.sheduledActView import (
     ScheduledActRealizView,
     ScheduledActFuturaView,
 )
-from .views.views import (
+from .views.reservationView import (
     ReservacionView,
-    CalificacionView,
+    ReservacionDetailView,
+    ReservacionesPorPadreView,
+    UnconfirmedReservationsView,
+)
+from .views.qualificationView import (
+    QualificationView,
+    QualificationDetailView,
+    QualificationByActivityView,
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -37,7 +44,7 @@ from .views.CustomTokenObtainPairView import CustomTokenObtainPairView
 # router.register(r'instalacion', views.InstalacionView, 'instalacion')
 urlpatterns = [
     # Home page
-    path("", views.views.home, name="home"),
+    path("", home, name="home"),
     # API documentation
     path(
         "swagger/",
@@ -54,28 +61,40 @@ urlpatterns = [
     path("metadata/", metadata_view, name="metadata"),
     path("atributes/<str:table_name>/", AttributesView.as_view()),
     # Models
-   
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # Login
+    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("register/", RegistroView.as_view()),
     path("login/", LoginView.as_view()),
+    # Instalacion
     path("instalacion/", InstalacionView.as_view()),
     path("instalacion/<int:pk>/", InstalacionDetailView.as_view()),
+    # Actividad
     path("actividad/", ActividadView.as_view()),
     path("actividad/<int:pk>/", ActividadDetailView.as_view()),
+    # Actividad programada
     path("actividadprogramada/", ScheduledActView.as_view()),
     path("actividadprogramada/realizada/", ScheduledActRealizView.as_view()),
     path("actividadprogramada/futura/", ScheduledActFuturaView.as_view()),
     path("actividadprogramada/catalog/", ScheduledActCatalogView.as_view()),
     path("actividadprogramada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
+    # Recurso
     path("recurso/", RecursoView.as_view()),
-      path("recurso/enuso", ResourceInUseView.as_view()),
+    path("recurso/enuso", ResourceInUseView.as_view()),
     path("recurso/<int:pk>/", RecursoDetailView.as_view()),
+    # Usuario
     path("usuario/", UserView.as_view()),
     path("usuario/noconfirmado/", UnconfirmedUsersView.as_view()),
     path("usuario/<int:pk>/", UserDetailView.as_view()),
     path("usuario/<str:role>/", UserByRoleView.as_view()),
     path("usuario/confirmarrol/<int:idU>/", ConfirmRoleView.as_view()),
+    # Reservacion
     path("reservacion", ReservacionView.as_view()),
-    path("calificacion", CalificacionView.as_view()),
+    path("reservacion/<str:pk>/", ReservacionDetailView.as_view()),
+    path("reservacion/porpadre/<int:pk>/", ReservacionesPorPadreView.as_view()),
+    path("reservacion/noconfirmado/", UnconfirmedReservationsView.as_view()),
+    # Calificacion
+    path("calificacion", QualificationView.as_view()),
+    path("calificacion/<int:pk>/", QualificationDetailView.as_view()),
+    path("calificacion/poractividad/<int:pk>/", QualificationByActivityView.as_view()),
 ]

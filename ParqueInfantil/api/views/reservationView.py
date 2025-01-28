@@ -7,7 +7,11 @@ from drf_yasg import openapi
 from ..serializers.ReservationSerializer import ReservacionSerializer
 from api.AppServices.ReservationService import ReservationService
 from api.InfrastructurePersistence.ReservationRepository import ReservationRepository
-from .permissions.permissions_by_roles import IsAdmin, IsPadre, IsEducador
+from .permissions.permissions_by_roles import (
+    IsAdmin,
+    IsPadre,
+    MySelf,
+)
 
 
 # vista para crear o listar todas las reservaciones
@@ -21,7 +25,6 @@ class ReservacionView(generics.ListCreateAPIView):
 
     # Método para obtener el conjunto de todas las reservaciones
     def get_queryset(self):
-        # Logica para verificar que el usuario es Admin
         return self.reservation_service.get_all()
 
     @swagger_auto_schema(
@@ -32,13 +35,30 @@ class ReservacionView(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # Logica para verificar que el usuario es Admin o Padre
         self.reservation_service.create(serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_permissions(self):
+        """
+        Determine the permissions required for different HTTP methods.
+
+        - For POST requests, the user must be either an admin or a parent modifiying his own reservation.
+        - For GET requests, the user must be an admin.
+        - For other requests, use the default permissions.
+
+        Returns:
+            list: A list of permission instances.
+        """
+        if self.request.method == "POST":
+            return [IsAdmin() or (IsPadre() and MySelf())]
+        elif self.request.method == "GET":
+            return [IsAdmin()]
+        return super().get_permissions()
 
 
 class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReservacionSerializer
+    permission_classes = [IsAdmin() or (IsPadre() and MySelf())]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -57,7 +77,6 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         serializer = self.get_serializer(reservation, data=request.data)
         serializer.is_valid(raise_exception=True)
-        # Logica para verificar que el usuario es Admin o Padre
         self.reservation_service.update(kwargs["pk"], serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -71,7 +90,6 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
         except Http404:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        # Logica para verificar que el usuario es Admin o Padre
         self.reservation_service.delete(kwargs["pk"])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -85,21 +103,20 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
         except Http404:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        # Logica para verificar que el usuario es Admin o Padre
         serializer = self.get_serializer(reservation)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ReservacionesPorPadreView(generics.ListAPIView):
     serializer_class = ReservacionSerializer
-    permission_classes = [IsPadre]
+    permission_classes = [IsAdmin() or (IsPadre() and MySelf())]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.reservation_service = ReservationService(ReservationRepository())
 
     def get_queryset(self):
-        padre_id = self.kwargs.get("idP")
+        padre_id = self.kwargs.get("id")
         return self.reservation_service.get_reservations_by_user(padre_id)
 
     @swagger_auto_schema(
@@ -112,7 +129,7 @@ class ReservacionesPorPadreView(generics.ListAPIView):
 
 class UnconfirmedReservationsView(generics.ListAPIView):
     serializer_class = ReservacionSerializer
-    # permission_classes = [IsAdmin]
+    permission_classes = [IsAdmin]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
