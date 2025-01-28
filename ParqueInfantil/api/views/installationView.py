@@ -18,7 +18,11 @@ class InstalacionView(generics.ListCreateAPIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.installation_service = InstallationService(InstallationRepository())
-
+    
+    @swagger_auto_schema(
+        operation_description="Listar todas las instalaciones",
+        responses={200: InstalacionSerializer(many=True)},
+    )
     def get_queryset(self):
         return self.installation_service.get_all()
 
@@ -33,14 +37,7 @@ class InstalacionView(generics.ListCreateAPIView):
         self.installation_service.create(serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(
-        operation_description="Listar todas las instalaciones",
-        responses={200: InstalacionSerializer(many=True)},
-    )
-    def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+  
 
 
 # vista para ver, actualizar o eliminar una instalacion
@@ -52,20 +49,16 @@ class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
         super().__init__(**kwargs)
         self.installation_service = InstallationService(InstallationRepository())
 
-    def get_object(self):
-        obj = self.installation_service.get_by_id(self.kwargs["pk"])
-        if obj is None:
-            raise Http404("Installation not found")
-        return obj
 
     @swagger_auto_schema(
         operation_description="Obtener los detalles de una instalación",
         responses={200: InstalacionSerializer},
     )
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+    def get_object(self):
+        obj = self.installation_service.get_by_id(self.kwargs["pk"])
+        if obj is None:
+            raise Http404("Installation not found")
+        return obj
 
     @swagger_auto_schema(
         operation_description="Actualizar una instalación existente",

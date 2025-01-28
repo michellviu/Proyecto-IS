@@ -19,6 +19,7 @@ from .views.sheduledActView import (
     ScheduledActView,
     ScheduledActDetailView,
     ScheduledActRealTimeView,
+    ScheduledActCatalogView,
 )
 from .views.views import (
     ReservacionView,
@@ -60,6 +61,7 @@ urlpatterns = [
     path("actividad/", ActividadView.as_view()),
     path("actividad/<int:pk>/", ActividadDetailView.as_view()),
     path("actividadprogramada/", ScheduledActView.as_view()),
+    path("actividadprogramada/catalog/", ScheduledActCatalogView.as_view()),
     path("actividadprogramada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
     path("recurso/", RecursoView.as_view()),
