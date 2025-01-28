@@ -24,6 +24,11 @@ from .views.views import (
     ReservacionView,
     CalificacionView,
 )
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from .views.CustomTokenObtainPairView import CustomTokenObtainPairView
 
 # router = routers.DefaultRouter()
 # router.register(r'instalacion', views.InstalacionView, 'instalacion')
@@ -46,6 +51,8 @@ urlpatterns = [
     path("metadata/", metadata_view, name="metadata"),
     path("atributes/<str:table_name>/", AttributesView.as_view()),
     # Models
+   
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path("register/", RegistroView.as_view()),
     path("login/", LoginView.as_view()),
     path("instalacion/", InstalacionView.as_view()),

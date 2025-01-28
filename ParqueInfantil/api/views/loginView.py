@@ -6,9 +6,10 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from ..serializers.LoginSerializer import LoginSerializer
 from rest_framework.permissions import AllowAny
+
+from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
 
 class LoginView(ObtainAuthToken):
     permission_classes = [AllowAny]  # Permitir acceso sin autenticación
@@ -45,15 +46,13 @@ class LoginView(ObtainAuthToken):
             password=serializer.validated_data["password"],
         )
         if user:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response(
-                {
-                    "token": token.key,
-                    "user_id": user.pk,
-                    "email": user.email,
-                    "rol": user.rol,
-                }
-            )
-        return Response(
-            {"error": "Invalid Credentials"}, status=status.HTTP_400_BAD_REQUEST
-        )
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user_id': user.pk,
+                'email': user.email,
+                'rol': user.rol
+            })
+        return Response({"error": "Invalid Credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
