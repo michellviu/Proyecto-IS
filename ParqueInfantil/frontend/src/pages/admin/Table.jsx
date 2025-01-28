@@ -57,12 +57,12 @@ const Table = ({ headers, data, onHeaderClick, onDeleteClick, onEditClick }) => 
                 <tbody>
                     {data.map((row, index) => (
                         <TableRow key={index}>
-                            {headers.map((header) => (
-                                <TableCell key={header}>{row[header]}</TableCell>
+                            {headers.map((header, colIndex) => (
+                                <TableCell key={colIndex}>{row[header]}</TableCell>
                             ))}
                             <OptionsCell style={{ justifyContent: 'center' }}>
                                 <Button icon={<EditOutlined />} onClick={() => onEditClick(row)} />
-                                <Button icon={<DeleteOutlined />} onClick={() => onDeleteClick(row.id)} />
+                                <Button icon={<DeleteOutlined />} onClick={() => onDeleteClick(row)} />
                             </OptionsCell>
                         </TableRow>
                     ))}
