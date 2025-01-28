@@ -5,8 +5,7 @@ from rest_framework import status
 from api.serializers.UserSerializer import UserSerializer
 from api.AppServices.UserService import UserService
 from api.InfrastructurePersistence.UserRepository import UserRepository
-from .permissions.permissions_by_roles import IsAdmin,IsAdminOrSelf
-
+from .permissions.permissions_by_roles import IsAdmin, IsAdminOrSelf
 
 
 class UserView(generics.ListAPIView):
@@ -19,7 +18,8 @@ class UserView(generics.ListAPIView):
 
     def get_queryset(self):
         return self.user_service.get_all()
-    
+
+
 class UnconfirmedUsersView(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAdmin]
@@ -30,7 +30,7 @@ class UnconfirmedUsersView(generics.ListAPIView):
 
     def get_queryset(self):
         return self.user_service.get_unconfirmed_users()
-    
+
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
@@ -41,7 +41,7 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         self.user_service = UserService(UserRepository())
 
     def get_object(self):
-        user_id = self.kwargs['pk']
+        user_id = self.kwargs["pk"]
         user = self.user_service.get_by_id(user_id)
         if user is None:
             raise Http404("User not found")
@@ -60,13 +60,13 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(request, user)
         self.user_service.delete(user.idU)
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
     def get_permissions(self):
-        if self.request.method == 'GET':
+        if self.request.method == "GET":
             return [IsAdmin()]
-        elif self.request.method == 'PUT':
+        elif self.request.method == "PUT":
             return [IsAdminOrSelf()]
-        elif self.request.method == 'DELETE':
+        elif self.request.method == "DELETE":
             return [IsAdminOrSelf()]
         return super().get_permissions()
 
@@ -80,5 +80,5 @@ class UserByRoleView(generics.ListAPIView):
         self.user_service = UserService(UserRepository())
 
     def get_queryset(self):
-        role = self.kwargs['role']
+        role = self.kwargs["role"]
         return self.user_service.get_by_role(role)

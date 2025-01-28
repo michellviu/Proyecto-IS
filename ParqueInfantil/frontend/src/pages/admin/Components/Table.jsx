@@ -55,10 +55,17 @@ const Table = ({ headers, data, onHeaderClick, onDeleteClick, onEditClick }) => 
                     </tr>
                 </thead>
                 <tbody>
+<<<<<<< HEAD:ParqueInfantil/frontend/src/pages/admin/Components/Table.jsx
                     {data.map((row) => (
                         <TableRow key={row}>
                             {headers.map((header) => (
                                 <TableCell key={header}>{row[header]}</TableCell>
+=======
+                    {data.map((row, index) => (
+                        <TableRow key={index}>
+                            {headers.map((header, colIndex) => (
+                                <TableCell key={colIndex}>{row[header]}</TableCell>
+>>>>>>> 4200e5e11fa14df3585cffe74276052b091ceb7c:ParqueInfantil/frontend/src/pages/admin/Table.jsx
                             ))}
                             <OptionsCell style={{ justifyContent: 'center' }}>
                                 <Button icon={<EditOutlined />} onClick={() => onEditClick(row)} />
