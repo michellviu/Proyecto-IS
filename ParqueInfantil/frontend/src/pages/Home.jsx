@@ -57,18 +57,26 @@ const RegisterLink = styled(Link)`
 `;
 
 const Home = () => {
+
+    const authToken = localStorage.getItem('authToken');
+    
     return (
         <HomeContainer>
             <HeaderHome />
             {/* <img src={logo} alt="The Play Hub Logo" style={{ width: '200px', marginBottom: '20px' }} /> */}
             
-            
-            <Container>
-            <Icon />
-            <Title>Login</Title>
-                <Login />
-                <RegisterLink to="/register">¿No tienes una cuenta aún?</RegisterLink>
-            </Container>
+            {!authToken ? (
+                <Container>
+                    <Icon />
+                    <Title>Login</Title>
+                    <Login />
+                    <RegisterLink to="/register">¿No tienes una cuenta aún?</RegisterLink>
+                </Container>
+            ) : (
+                <Container>
+                    <Title>Bienvenido de nuevo</Title>
+                </Container>
+            )}
             <Footer>
                 <p>© 2025 Parque Infantil. Todos los derechos reservados.</p>
             </Footer>

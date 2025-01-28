@@ -52,7 +52,7 @@ const AboutUs = () => {
         <AboutUsContainer>
             <HeaderHome />
             { /*<Logo src={logo} alt="Logo del Parque" />*/}
-            <Link to="/admin/list-entities" className="nav-link">
+            <Link to="/adminPage" className="nav-link">
                 <FaUser /> ADMIN
             </Link>
             <Title>Sobre Nosotros</Title>
@@ -62,7 +62,7 @@ const AboutUs = () => {
             <Paragraph>¡Gracias por visitarnos! Esperamos que usted y sus hijos tengan un tiempo maravilloso.</Paragraph>
 
             <CarouselContainer>
-                <Carousel interval={5000} slide={true}>
+                <Carousel interval={3000} slide={true}>
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
