@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaHome } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import Redirect from './Utils';
+import { useNavigate } from 'react-router-dom';
 
 
 const Form = styled.form`
@@ -44,54 +44,57 @@ const ErrorMessage = styled.p`
 `;
 
 const LoginForm = () => {
-    const [email, setEmail] = useState('');
+    const navigate = useNavigate();
+    const [username, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const history = useNavigate();
 
-    const login = async (email, password) => {
+    const login = async (username, password) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ username, password }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                const { token, role } = data;
+                const token = data.access;
+
+                const rol = data.rol;
+                localStorage.clear();
+                localStorage.setItem('AuthToken',token);
+        
                 message.success('Inicio de sesión exitoso');
-                if (role === 'admin') {
-                    history(`/admin?token=${token}`);
-                } else if (role === 'user') {
-                    history(`/user?token=${token}`);
-                }
+                navigate('/adminPage');
+            //    Redirect(rol);
+        
             } else {
-                message.error(data.message || 'Error en el inicio de sesión');
+                message.error( data.message ||'Error en el inicio de sesión');
             }
         } catch (error) {
-            message.error('Error al contactar con la API');
+            message.error(rol);
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!email || !password) {
+        if (!username || !password) {
             setError('Por favor, complete todos los campos.');
         } else {
             setError('');
-            login(email, password);
+            login(username, password);
         }
     };
     return ( 
         <Form onSubmit={handleSubmit}>
             <Input
                 type="text"
-                placeholder="Correo electrónico o Nombre de Usuario"
-                value={email}
+                placeholder="Nombre de Usuario"
+                value={username}
                 onChange={(e) => setEmail(e.target.value)}
             />
             <Input

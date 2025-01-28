@@ -5,7 +5,14 @@ import { useNavigate ,Link} from 'react-router-dom';
 //Get
 const fetchEntities = async (setEntities) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/metadata/`);
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        message.success(token);
+        const response = await fetch(`http://127.0.0.1:8000/api/metadata/`,{
+            method: 'GET',
+            Authorization: token
+
+        }
+    ); 
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
