@@ -4,19 +4,22 @@ from django.contrib.auth import get_user_model
 
 
 class InstalacionSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='idI',required=False)
     class Meta:
         model = Instalacion
-        fields = '__all__'
+        fields =[ 'id','nombre', 'tipo', 'ubicacion', 'capacidad']
 
 class ActividadSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='idA',required=False)
     class Meta:
         model = Actividad
-        fields = '__all__'
+        fields = ['id','idI', 'nombre', 'edad_recomendada', 'duracion', 'num_participantes', 'descripcion']
 
 class RecursoSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='idR',required=False)
     class Meta:
         model = Recurso
-        fields = '__all__'
+        fields = ['id','estado', 'tipo', 'frecuencia_uso', 'idI']
 
 class PadreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,9 +37,10 @@ class AdministradorSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Actividad_programadaSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='idAP',required=False)
     class Meta:
         model = Actividad_programada
-        fields = '__all__'
+        fields = ['id','idA','idE', 'fecha_hora']
 
 class ReservacionSerializer(serializers.ModelSerializer):
     class Meta:

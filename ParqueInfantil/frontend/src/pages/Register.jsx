@@ -2,6 +2,7 @@ import React from 'react';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import styled from 'styled-components';
 import HeaderHome from '../components/headers/HeaderHome';
+import { message} from 'antd';
 
 const Container = styled.div`
     display: flex;
@@ -68,26 +69,116 @@ const Button = styled.button`
     }
 `;
 
+
+import { useState } from 'react';
+
 const Register = () => {
+    const [formData, setFormData] = useState({
+        nombre: '',
+        correo: '',
+        contraseña: '',
+        rol: ''
+    });
+
+    const [errors, setErrors] = useState({});
+    const [apiError, setApiError] = useState('');
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrors({});
+        
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                setErrors(result.errors || {});
+            } else {
+                // Handle successful registration
+                message.success('Registro exitoso');
+            }
+        } catch (error) {
+            message.error('No se pudo establecer contacto con la API');
+        }
+    };
+
     return (
         <Container>
             <HeaderHome />
             <Icon1 />
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Title>Registrarse</Title>
                 <InputGroup>
                     <Icon><FaUser /></Icon>
-                    <Input type="text" placeholder="Nombre" required />
+                    <Input
+                        type="text"
+                        name="nombre"
+                        placeholder="Nombre"
+                        value={formData.nombre}
+                        onChange={handleChange}
+                        required
+                        style={{ borderColor: errors.nombre ? 'red' : '#ccc' }}
+                    />
                 </InputGroup>
+                {errors.nombre && <p style={{ color: 'red' }}>{errors.nombre}</p>}
                 <InputGroup>
                     <Icon><FaEnvelope /></Icon>
-                    <Input type="email" placeholder="Correo Electrónico" required />
+                    <Input
+                        type="email"
+                        name="correo"
+                        placeholder="Correo Electrónico"
+                        value={formData.correo}
+                        onChange={handleChange}
+                        required
+                        style={{ borderColor: errors.correo ? 'red' : '#ccc' }}
+                    />
                 </InputGroup>
+                {errors.correo && <p style={{ color: 'red' }}>{errors.correo}</p>}
                 <InputGroup>
                     <Icon><FaLock /></Icon>
-                    <Input type="password" placeholder="Contraseña" required />
+                    <Input
+                        type="password"
+                        name="contraseña"
+                        placeholder="Contraseña"
+                        value={formData.contraseña}
+                        onChange={handleChange}
+                        required
+                        style={{ borderColor: errors.contraseña ? 'red' : '#ccc' }}
+                    />
                 </InputGroup>
+                {errors.contraseña && <p style={{ color: 'red' }}>{errors.contraseña}</p>}
+                <InputGroup>
+                    <Icon><FaUser /></Icon>
+                    <select
+                        name="rol"
+                        value={formData.rol}
+                        onChange={handleChange}
+                        required
+                        style={{ flex: 1, border: 'none', outline: 'none', padding: '0.5rem', borderRadius: '4px', borderColor: errors.rol ? 'red' : '#ccc' }}
+                    >
+                        <option value="" disabled>Selecciona tu rol</option>
+                        <option value="padre">Padre</option>
+                        <option value="educador">Educador</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </InputGroup>
+                {errors.rol && <p style={{ color: 'red' }}>{errors.rol}</p>}
                 <Button type="submit">Registrarse</Button>
+                {apiError && <p style={{ color: 'red' }}>{apiError}</p>}
             </Form>
         </Container>
     );

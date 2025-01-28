@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
-import ListEntities from './pages/admin/ListEntities';
+import AdminPage from './pages/admin/AdminPage';
 import ActivityCatalog from './pages/ActivityCatalog';
 import ParentProfile from './pages/parent/ParentProfile';
 /*
@@ -22,10 +22,10 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 {/* <Route path="/login" element={<Login />} /> */}
-                {/* <Route path="/register" element={<Register />} /> */}
+                <Route path="/register" element={<Register />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/contact" element={<ContactUs />} />
-                <Route path="/admin/list-entities" element={<ListEntities />} />
+                <Route path="/adminPage" element={<AdminPage />} />
                 <Route path="/activity-catalog" element={<ActivityCatalog />} />
             </Routes>
         </Router>

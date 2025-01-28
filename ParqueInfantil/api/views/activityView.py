@@ -19,6 +19,10 @@ class ActividadView(generics.ListCreateAPIView):
         super().__init__(**kwargs)
         self.activity_service = ActivityService(ActivityRepository())
 
+    @swagger_auto_schema(
+        operation_description="Listar todas las actividades",
+        responses={200: ActividadSerializer(many=True)},
+    )
     def get_queryset(self):
         return self.activity_service.get_all()
 

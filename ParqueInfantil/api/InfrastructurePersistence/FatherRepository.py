@@ -1,12 +1,9 @@
-from api.models.usuario import Padre,Usuario
-from api.DomainServices.RepositoryInterfaces.IUserRepository import (
-    IUserRepository,
-)
+from api.models.usuario import Padre
 from .GenericRepository import GenericRepository
-from .UserRepository import UserRepository
+from api.DomainServices.RepositoryInterfaces.IFatherRepository import IFatherRepository
 
 
-class FatherRepository(GenericRepository,IUserRepository):
+class FatherRepository(GenericRepository,IFatherRepository):
     def __init__(self):
         super().__init__(Padre)
     

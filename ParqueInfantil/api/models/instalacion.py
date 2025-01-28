@@ -13,4 +13,4 @@ class Instalacion(models.Model):
     capacidad = models.IntegerField()
 
     def __str__(self):
-        return self.nombre
+        return self.idI.__str__()

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaHome } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-//import HeaderHome from '../components/headers/HeaderHome';
+import { Link, useNavigate } from 'react-router-dom';
+import { message } from 'antd';
+
 
 const Form = styled.form`
     display: flex;
@@ -46,6 +47,35 @@ const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const history = useNavigate();
+
+    const login = async (email, password) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/login/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                const { token, role } = data;
+                message.success('Inicio de sesión exitoso');
+                if (role === 'admin') {
+                    history(`/admin?token=${token}`);
+                } else if (role === 'user') {
+                    history(`/user?token=${token}`);
+                }
+            } else {
+                message.error(data.message || 'Error en el inicio de sesión');
+            }
+        } catch (error) {
+            message.error('Error al contactar con la API');
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -53,16 +83,14 @@ const LoginForm = () => {
             setError('Por favor, complete todos los campos.');
         } else {
             setError('');
-            // login crud
+            login(email, password);
         }
     };
-
-    return (
+    return ( 
         <Form onSubmit={handleSubmit}>
-            {error && <ErrorMessage>{error}</ErrorMessage>}
             <Input
-                type="email"
-                placeholder="Correo electrónico"
+                type="text"
+                placeholder="Correo electrónico o Nombre de Usuario"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
             />
@@ -72,23 +100,10 @@ const LoginForm = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
+            {error && <ErrorMessage>{error}</ErrorMessage>}
             <Button type="submit">Iniciar sesión</Button>
         </Form>
     );
 };
-
-// const Login = () => {
-//     return (
-//         <Container>
-//             <HeaderHome />
-//             <Icon />
-//             <Title>Login</Title>
-//             <LoginForm />
-//             <RegisterLink to="/register">¿No tienes una cuenta aún?</RegisterLink>
-//         </Container>
-//     );
-// };
-
-// export default Login;
 
 export default LoginForm;

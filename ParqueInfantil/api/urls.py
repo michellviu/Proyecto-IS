@@ -6,7 +6,7 @@ from .views.registerView import RegistroView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
 from .views.activityView import ActividadView, ActividadDetailView
-from .views.resourceView import RecursoView, RecursoDetailView
+from .views.resourceView import RecursoView, RecursoDetailView,ResourceInUseView
 from .views.userView import (
     UserByRoleView,
     UserView,
@@ -19,11 +19,19 @@ from .views.sheduledActView import (
     ScheduledActView,
     ScheduledActDetailView,
     ScheduledActRealTimeView,
+    ScheduledActCatalogView,
+    ScheduledActRealizView,
+    ScheduledActFuturaView,
 )
 from .views.views import (
     ReservacionView,
     CalificacionView,
 )
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from .views.CustomTokenObtainPairView import CustomTokenObtainPairView
 
 # router = routers.DefaultRouter()
 # router.register(r'instalacion', views.InstalacionView, 'instalacion')
@@ -46,6 +54,8 @@ urlpatterns = [
     path("metadata/", metadata_view, name="metadata"),
     path("atributes/<str:table_name>/", AttributesView.as_view()),
     # Models
+   
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path("register/", RegistroView.as_view()),
     path("login/", LoginView.as_view()),
     path("instalacion/", InstalacionView.as_view()),
@@ -53,9 +63,13 @@ urlpatterns = [
     path("actividad/", ActividadView.as_view()),
     path("actividad/<int:pk>/", ActividadDetailView.as_view()),
     path("actividadprogramada/", ScheduledActView.as_view()),
+    path("actividadprogramada/realizada/", ScheduledActRealizView.as_view()),
+    path("actividadprogramada/futura/", ScheduledActFuturaView.as_view()),
+    path("actividadprogramada/catalog/", ScheduledActCatalogView.as_view()),
     path("actividadprogramada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
     path("recurso/", RecursoView.as_view()),
+      path("recurso/enuso", ResourceInUseView.as_view()),
     path("recurso/<int:pk>/", RecursoDetailView.as_view()),
     path("usuario/", UserView.as_view()),
     path("usuario/noconfirmado/", UnconfirmedUsersView.as_view()),
