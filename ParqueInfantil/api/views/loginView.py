@@ -6,6 +6,7 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from ..serializers.LoginSerializer import LoginSerializer
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class LoginView(ObtainAuthToken):
     permission_classes = [AllowAny]  # Permitir acceso sin autenticación
@@ -16,9 +17,10 @@ class LoginView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = authenticate(username=serializer.validated_data['username'], password=serializer.validated_data['password'])
         if user:
-            token, created = Token.objects.get_or_create(user=user)
+            refresh = RefreshToken.for_user(user)
             return Response({
-                'token': token.key,
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
                 'user_id': user.pk,
                 'email': user.email,
                 'rol': user.rol

@@ -1,10 +1,7 @@
 from api.models.usuario import Administrador
-from api.DomainServices.RepositoryInterfaces.IUserRepository import (
-    IUserRepository,
-)
 from .GenericRepository import GenericRepository
+from api.DomainServices.RepositoryInterfaces.IAdminRepository import IAdminRepository
 
-
-class AdminRepository(GenericRepository, IUserRepository):
+class AdminRepository(GenericRepository,IAdminRepository):
     def __init__(self):
         super().__init__(Administrador)
