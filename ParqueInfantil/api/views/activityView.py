@@ -37,7 +37,6 @@ class ActividadView(generics.ListCreateAPIView):
         self.activity_service.create(serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
     def get_permissions(self):
         if self.request.method == "POST":
             return [IsAdmin()]
