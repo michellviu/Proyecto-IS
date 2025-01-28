@@ -1,32 +1,69 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaHome, FaListAlt, FaUser, FaTasks, FaChartBar } from 'react-icons/fa';
+import styled from 'styled-components';
+import { FaSignInAlt, FaEnvelope, FaInfoCircle, FaListAlt, FaHome } from 'react-icons/fa';
+import { Link, useLocation } from 'react-router-dom';
 
+const Header = styled.header`
+    background-color:rgb(172, 190, 172);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
 
-const HeaderEducator = ({ username }) => {
+const Nav = styled.nav`
+    display: flex;
+    align-items: center;
+`;
+
+const Ul = styled.ul`
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+`;
+
+const Li = styled.li`
+    margin: 0 15px;
+`;
+
+const StyledLink = styled(Link)`
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    position: relative;
+
+    &:hover {
+        color: #333;
+    }
+
+    svg {
+        margin-right: 8px;
+    }
+
+    &.active {
+        color: #333;
+        text-decoration: underline;
+    }
+`;
+
+const HeaderEducator = () => {
+    const location = useLocation();
+
     return (
-        <header className="header-educator">
-            <div className="welcome-message">
-                <h1>Bienvenido, {username}</h1>
-            </div>
-            <nav className="nav-links">
-                <Link to="/home" className="nav-link">
-                    <FaHome /> Home
-                </Link>
-                <Link to="/catalogo-actividades" className="nav-link">
-                    <FaListAlt /> Catálogo de Actividades
-                </Link>
-                <Link to="/perfil" className="nav-link">
-                    <FaUser /> Perfil
-                </Link>
-                <Link to="/actividades-responsable" className="nav-link">
-                    <FaTasks /> Actividades Responsables
-                </Link>
-                <Link to="/solicitar-estadisticas" className="nav-link">
-                    <FaChartBar /> Solicitar Estadísticas
-                </Link>
-            </nav>
-        </header>
+        <Header>
+            <Nav>
+                <Ul>
+                    <Li><StyledLink to="/" className={location.pathname === '/' ? 'active' : ''}><FaHome />Inicio</StyledLink></Li>
+                    {/* <Li><StyledLink to="/login" className={location.pathname === '/login' ? 'active' : ''}><FaSignInAlt />Login</StyledLink></Li> */}
+                    <Li><StyledLink to="/activity-catalog" className={location.pathname === '/activity-catalog' ? 'active' : ''}><FaListAlt />Actividades</StyledLink></Li> 
+                    <Li><StyledLink to="/contact" className={location.pathname === '/contact' ? 'active' : ''}><FaEnvelope />Contáctenos</StyledLink></Li>
+                    <Li><StyledLink to="/about" className={location.pathname === '/about' ? 'active' : ''}><FaInfoCircle />Sobre Nosotros</StyledLink></Li>
+                </Ul>
+            </Nav>
+        </Header>
     );
 };
 

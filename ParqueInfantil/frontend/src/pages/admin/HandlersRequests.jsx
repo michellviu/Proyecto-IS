@@ -6,11 +6,12 @@ import { useNavigate ,Link} from 'react-router-dom';
 const fetchEntities = async (setEntities) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        message.success(token);
         const response = await fetch(`http://127.0.0.1:8000/api/metadata/`,{
             method: 'GET',
-            Authorization: token
-
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : token
+            }
         }
     ); 
         if (!response.ok) {
@@ -27,7 +28,14 @@ const fetchEntities = async (setEntities) => {
 
 const fetchAtributes = async (entity, setAtributes) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/atributes/${entity.toLower()}/?format=json`);
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(`http://127.0.0.1:8000/api/atributes/${entity.toLower()}/`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : token
+            }
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
