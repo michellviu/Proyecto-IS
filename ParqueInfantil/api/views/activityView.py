@@ -33,15 +33,6 @@ class ActividadView(generics.ListCreateAPIView):
         self.activity_service.create(serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @swagger_auto_schema(
-        operation_description="Listar todas las actividades",
-        responses={200: ActividadSerializer(many=True)},
-    )
-    def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
     def get_permissions(self):
         if self.request.method == "POST":
             return [IsAdmin()]
