@@ -9,3 +9,9 @@ class ScheduledActService(GenericService, IScheduledActService):
     
     def get_actividades_en_tiempo_real(self):
        return self.scheduled_act_repository.get_actividades_en_tiempo_real()
+    
+    def get_actividades_realizadas(self):
+        return self.scheduled_act_repository.get_actividades_realizadas()
+    
+    def get_actividades_futuras(self):
+        return self.scheduled_act_repository.get_actividades_futuras()

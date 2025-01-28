@@ -117,3 +117,25 @@ class ScheduledActCatalogView(generics.ListAPIView):
     )
     def get_queryset(self):
         return self.scheduled_act_service.get_all()
+    
+
+class ScheduledActRealizView(generics.ListAPIView):
+    serializer_class = Actividad_programadaSerializer
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.scheduled_act_service = ScheduledActService(ScheduledActRepository())
+
+    def get_queryset(self):
+        return self.scheduled_act_service.get_actividades_realizadas()
+    
+
+class ScheduledActFuturaView(generics.ListAPIView):
+    serializer_class = Actividad_programadaSerializer
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.scheduled_act_service = ScheduledActService(ScheduledActRepository())
+
+    def get_queryset(self):
+        return self.scheduled_act_service.get_actividades_futuras()
