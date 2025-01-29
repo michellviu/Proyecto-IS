@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
+// import AdminPage from './pages/parent/ParentPage';
 import AdminPage from './pages/admin/AdminPage';
 import ActivityCatalog from './pages/ActivityCatalog';
 import ParentProfile from './pages/parent/ParentProfile';

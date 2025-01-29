@@ -7,7 +7,8 @@ import ActivityContainer from '../components/ActivityContainer';
 
 const Container = styled.div`
     padding: 20px;
-    background-color: #f0f8ff;
+    background-color: #f5f5dc
+    //  #f0f8ff;
 `;
 
 const SearchBar = styled.div`
@@ -81,7 +82,7 @@ const Pagination = styled.div`
     button {
         padding: 10px;
         margin: 0 5px;
-        background-color: #007bff;
+        background-color:rgb(215, 148, 86);
         color: white;
         border: none;
         border-radius: 5px;
@@ -180,7 +181,6 @@ const ActivityCatalog = () => {
 
     return (
         <Container>
-            <HeaderHome />
             <SearchBar>
                 <input
                     type="text"

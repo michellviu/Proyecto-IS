@@ -9,12 +9,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginForm from './Login';
 
 
+import homeImage from '../assets/home.jpg';
+
 const HomeContainer = styled.div`
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    background-color: #f0f8ff;
+  //  background-image: url(${homeImage});
+    background-size: cover;
+    background-position: center;
     min-height: 100vh;
+    background-filter: blur(100px);
 `;
 
 

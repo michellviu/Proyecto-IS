@@ -159,7 +159,7 @@ const Info = styled.div`
 `;
 
 const Button = styled.button`
-    background: #007bff;
+    background:rgb(196, 120, 49);
     border: none;
     color: white;
     padding: 10px;
@@ -172,7 +172,7 @@ const Button = styled.button`
     font-size: 16px;
     position: relative;
     &:hover {
-        background: #0056b3;
+        background: #rgba(196, 132, 49, 0.77);
     }
 `;
 
