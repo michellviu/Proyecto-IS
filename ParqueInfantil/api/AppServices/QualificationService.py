@@ -11,6 +11,7 @@ class QualificationService(GenericService, IQualificationService):
 
     def __init__(self, qualification_repository: IQualificationRepository):
         super().__init__(qualification_repository)
+        self.qualification_repository = qualification_repository
 
     def get_qualifications_by_activity(self, activity_id):
         """
@@ -22,4 +23,4 @@ class QualificationService(GenericService, IQualificationService):
         Returns:
             list: A list of qualifications associated with the specified activity.
         """
-        return self.repository.get_qualifications_by_activity(activity_id)
+        return self.qualification_repository.get_qualifications_by_activity(activity_id)

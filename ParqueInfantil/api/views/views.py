@@ -42,7 +42,7 @@ from drf_yasg import openapi
 
 
 def home(request):
-    return HttpResponse("Hello World")
+    return HttpResponse("This is the PlayHub Project API")
 
 
 # class PadreView(generics.ListCreateAPIView):
