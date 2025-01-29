@@ -1,31 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { fetchResponsibleActivities } from '../../api/HandlersAPI';
-import HeaderEducator from '../../components/HeaderEducator';
+import { fetchResponsibleActivities } from './HandlersAPI';
+import HeaderEducator from '../../components/headers/header-educator';
 import { FaBook } from 'react-icons/fa';
 
 const ResponsibleActivities = () => {
     const [activities, setActivities] = useState([]);
 
     useEffect(() => {
-        const getActivities = async () => {
-            const response = await fetchResponsibleActivities(educatorId);
-            setActivities(response);
-        };
-
-        getActivities();
-    }, [educatorId]);
+        fetchResponsibleActivities(setActivities);
+    });
 
     return (
         <Container>
             <HeaderEducator />
             <Catalog>
                 {activities.map((activity) => (
-                    <ActivityCard key={activity.id}>
+                    <ActivityCard key={activity.Id}>
                         <FaBook size={50} />
                         <ActivityInfo>
-                            <h3>{activity.title}</h3>
-                            <p>{activity.description}</p>
+                            <h3>{activity.Nombre}</h3>
+                            <p>{activity.Descripcion}</p>
                         </ActivityInfo>
                     </ActivityCard>
                 ))}

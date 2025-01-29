@@ -279,8 +279,9 @@ const fetchPendingReservations = async (setPendingReservations) => {
 };
 
 const handleLogOut = async () => {
+    
     try {
-        const navigate = useNavigate();
+       
         
         // const response = await fetch(`http://127.0.0.1:8000/logout/${user.Id}`, {
         //     method: 'POST',
@@ -292,8 +293,7 @@ const handleLogOut = async () => {
         //     throw new Error('Network response was not ok');
         // }
         localStorage.removeItem('AuthToken'); // Eliminar el token de localStorage
-        navigate("/");
-        message.success('Sesión cerrada exitosamente');
+        message.success('Sesión cerrada exitosamente');    
         
     } catch (error) {
         console.error('Failed to log out:', error);
