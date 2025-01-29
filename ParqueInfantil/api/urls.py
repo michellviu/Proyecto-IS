@@ -3,6 +3,7 @@ from api import views
 from .views.swagger_doc import schema_view
 from .views.metadata import MetadataView
 from .views.registerView import RegistroView
+from .views.SearchView import SearchView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
 from .views.activityView import ActividadView, ActividadDetailView
@@ -69,13 +70,14 @@ urlpatterns = [
     path("actividadprogramada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
     path("recurso/", RecursoView.as_view()),
-      path("recurso/enuso", ResourceInUseView.as_view()),
+    path("recurso/enuso/", ResourceInUseView.as_view()),
     path("recurso/<int:pk>/", RecursoDetailView.as_view()),
     path("usuario/", UserView.as_view()),
     path("usuario/noconfirmado/", UnconfirmedUsersView.as_view()),
     path("usuario/<int:pk>/", UserDetailView.as_view()),
     path("usuario/<str:role>/", UserByRoleView.as_view()),
     path("usuario/confirmarrol/<int:idU>/", ConfirmRoleView.as_view()),
+    path("search/", SearchView.as_view()),
     path("reservacion", ReservacionView.as_view()),
     path("calificacion", CalificacionView.as_view()),
 ]
