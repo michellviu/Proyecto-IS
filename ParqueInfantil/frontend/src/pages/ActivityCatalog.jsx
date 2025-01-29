@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FaSort, FaSearch } from 'react-icons/fa';
 import HeaderHome from '../components/headers/HeaderHome';
 import ActivityContainer from '../components/ActivityContainer';
+import { message } from 'antd';
 
 
 const Container = styled.div`
@@ -125,13 +126,21 @@ const ActivityCatalog = () => {
 
     const fetchActivities = async () => {
         try {
-            const response = await fetch('https://api.example.com/activities');
+            const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+            const response = await fetch('http://127.0.0.1:8000/api/actividadprogramada/catalog/',{
+                method: 'GET',
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+                }
+            });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
             setActivities(data);
         } catch (error) {
+            message.error('no se pudieron obtener las actividades');
             console.error('Failed to fetch activities:', error);
         }
     };

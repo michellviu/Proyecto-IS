@@ -10,11 +10,11 @@ const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance, curre
             footer={null}
             afterClose={() => {
                 form.resetFields();
-                setCurrentInstance(null);
+                //setCurrentInstance(null);
             }}
         >
             <Form
-                key={currentInstance ? currentInstance.Id : 'new'}
+                key={currentInstance ? currentInstance.id : 'new'}
                 initialValues={currentInstance}
                 onFinish={(values) => handleSave(values)}
             >

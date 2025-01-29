@@ -28,6 +28,8 @@ const fetchEntities = async (setEntities) => {
 
 const fetchAtributes = async (entity, setAtributes) => {
     try {
+        
+        
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/atributes/${entity}/`,{
             method: 'GET',
@@ -49,8 +51,17 @@ const fetchAtributes = async (entity, setAtributes) => {
 
 const fetchInstances = async (entity, setInstances, setFilteredInstances, blockNumber = 0) => {
     try {
+        var ruta = `http://127.0.0.1:8000/api/${entity.toLowerCase()}/`;
+        if (entity === 'Padre' || entity === 'Educador' )
+        {
+                ruta = `http://127.0.0.1:8000/api/usuario/${entity.toLowerCase()}/`;
+        }
+        else if(entity === 'Administrador')
+            {
+                ruta = `http://127.0.0.1:8000/api/usuario/admin/`;
+            }
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLowerCase()}/`, {
+        const response = await fetch(ruta, {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json',
@@ -74,7 +85,9 @@ const fetchInstances = async (entity, setInstances, setFilteredInstances, blockN
 const handleDeleteRequest = async (entity, instance) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLowerCase()}/${instance.Id}/`, {
+        
+        console.log(`http://127.0.0.1:8000/api/${entity.toLowerCase()}/${instance}/`);
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLowerCase()}/${instance}/`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -102,7 +115,7 @@ const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstan
                 'Authorization': token
             },
             params: {
-                model: entity.toLower(),
+                model: entity,
                 field: attribute.name,
                 query: query
             }
@@ -119,16 +132,16 @@ const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstan
     }
 };
 
-const handleEdit = async (entity, instance) => {
+const handleEdit = async (entity, instance, values) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/${instance.Id}/`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/${instance}/`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token
             },
-            body: JSON.stringify(instance)
+            body: JSON.stringify(values)
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -143,7 +156,7 @@ const handleEdit = async (entity, instance) => {
 const handleAdd = async (entity, instance) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLowerCase()}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -167,7 +180,7 @@ const handleAdd = async (entity, instance) => {
 const fetchPendingUsers = async (setPendingUsers) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/usuario/`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/usuario/noconfirmado/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -189,7 +202,7 @@ const fetchPendingUsers = async (setPendingUsers) => {
 const handleAcceptUser = async (user) => {
     try {
       const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-      const response = await fetch(`http://127.0.0.1:8000/api/Usuario/${user.Id}/`, {
+      const response = await fetch(`http://127.0.0.1:8000/api/usuario/confirmarrol/${user.id}/`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -210,7 +223,7 @@ const handleAcceptUser = async (user) => {
 const handleRejectUser = async (user) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/Usuario/${user.Id}/`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/usuario/${user.id}/`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -222,7 +235,6 @@ const handleRejectUser = async (user) => {
             throw new Error('Network response was not ok');
         }
         message.success('Usuario rechazado exitosamente');
-        handleUserAuthorizationClick();
     } catch (error) {
         console.error('Failed to reject user:', error);
         message.error('No se pudo rechazar al usuario');
@@ -234,7 +246,7 @@ const handleRejectUser = async (user) => {
 const fetchResourcesInUse = async (setResources) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/Resource/`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/recurso/enuso/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -259,7 +271,7 @@ const fetchResourcesInUse = async (setResources) => {
 const fetchPendingReservations = async (setPendingReservations) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/Reservations`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/reservacion/noconfirmado/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

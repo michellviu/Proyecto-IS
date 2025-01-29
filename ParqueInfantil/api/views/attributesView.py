@@ -47,7 +47,16 @@ class AttributesView(APIView):
             )
 
         attributes = []
-        for field in model._meta.fields:
-            attributes.append({"name": field.name, "null": field.null})
+        if table_name == 'Usuario':
+            # Define los campos específicos que quieres devolver para el modelo Usuario
+            specific_fields = ['idU', 'username', 'email', 'rol']
+            for field in model._meta.fields:
+                if field.name in specific_fields:
+                    field_name = 'id' if field.primary_key else field.name
+                    attributes.append({"name": field_name, "null": field.null})
+        else:
+         for field in model._meta.fields:
+            field_name = 'id' if field.primary_key else field.name
+            attributes.append({"name": field_name, "null": field.null})
 
         return Response(attributes, status=status.HTTP_200_OK)

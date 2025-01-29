@@ -11,7 +11,7 @@ const ModalAdd = ({ isAddModalVisible, handleCancel, form, handleSave, atributes
       afterClose={() => form.resetFields()}
     >
       <Form form={form} onFinish={(values) => handleSave(values)}>
-        {atributes.filter(attr => attr.name !== 'Id').map(attribute => (
+        {atributes.filter(attr => attr.name !== 'id').map(attribute => (
           <Form.Item
             key={attribute.name}
             name={attribute.name}

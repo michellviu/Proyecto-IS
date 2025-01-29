@@ -117,7 +117,7 @@ const AdminPage = (admin = 'Eveliz') => {
 
   const handleDelete = (instance) => {
     setCurrentInstance(instance);
-    handleDeleteRequest(selectedEntity, currentInstance);
+    handleDeleteRequest(selectedEntity, currentInstance.id);
     setCurrentInstance(null);
     refresh();
   }
@@ -130,7 +130,7 @@ const AdminPage = (admin = 'Eveliz') => {
 
   const handleSave = (values) => {
     if (currentInstance) {
-      handleEdit(selectedEntity, values);
+      handleEdit(selectedEntity, currentInstance.id ,values);
     } else {
       handleAdd(selectedEntity, values);
     }
@@ -161,7 +161,6 @@ const AdminPage = (admin = 'Eveliz') => {
   return (
     <Container>
       <HeaderAdminPage />
-
       <Content>
         <MenuAdmin entities={entities}
           handleMenuClick={handleMenuClick}

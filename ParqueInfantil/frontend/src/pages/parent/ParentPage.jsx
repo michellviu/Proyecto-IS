@@ -84,7 +84,7 @@ const ParentPage = () => {
                         <ActivityCatalog />
                     </div>
                 )}
-                selected={selectedMenu === 'Mis Reservas'} && (
+                {/* selected={selectedMenu === 'Mis Reservas'} && (
                     <div style={{ width: '100%' }}>
                         <Reservations />
                     </div>
@@ -93,7 +93,7 @@ const ParentPage = () => {
                     <div style={{ width: '100%' }}>
                         <Perfil />
                     </div>
-                )}
+                )} */}
                 {selectedMenu === 'Home' && (
                     <div style={{ width: '100%' }}>
                         {window.location.href = '/'}

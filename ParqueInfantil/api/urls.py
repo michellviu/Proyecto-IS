@@ -73,12 +73,12 @@ urlpatterns = [
     path("actividad/", ActividadView.as_view()),
     path("actividad/<int:pk>/", ActividadDetailView.as_view()),
     # Actividad programada
-    path("actividadprogramada/", ScheduledActView.as_view()),
-    path("actividadprogramada/realizada/", ScheduledActRealizView.as_view()),
-    path("actividadprogramada/futura/", ScheduledActFuturaView.as_view()),
-    path("actividadprogramada/catalog/", ScheduledActCatalogView.as_view()),
-    path("actividadprogramada/<int:pk>/", ScheduledActDetailView.as_view()),
-    path("actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
+    path("actividad_programada/", ScheduledActView.as_view()),
+    path("actividad_programada/realizada/", ScheduledActRealizView.as_view()),
+    path("actividad_programada/futura/", ScheduledActFuturaView.as_view()),
+    path("actividad_programada/catalog/", ScheduledActCatalogView.as_view()),
+    path("actividad_programada/<int:pk>/", ScheduledActDetailView.as_view()),
+    path("actividad_programada/tiemporeal/", ScheduledActRealTimeView.as_view()),
     # Recurso
     path("recurso/", RecursoView.as_view()),
     path("recurso/enuso/", ResourceInUseView.as_view()),
