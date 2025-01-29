@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { message } from 'antd';
-import Redirect from './Utils';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -63,15 +62,11 @@ const LoginForm = () => {
 
             if (response.ok) {
                 const token = data.access;
-
                 const rol = data.rol;
                 localStorage.clear();
                 localStorage.setItem('AuthToken',token);
-        
                 message.success('Inicio de sesión exitoso');
-                navigate('/adminPage');
-            //    Redirect(rol);
-        
+                navigate(`/${rol}Page`);
             } else {
                 message.error( data.message ||'Error en el inicio de sesión');
             }

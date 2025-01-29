@@ -25,3 +25,7 @@ class GenericRepository(IGenericRepository):
 
     def delete(self, instance):
         instance.delete()
+    
+    def search(self, field_name, query):
+        filter_kwargs = {f"{field_name}__icontains": query}
+        return self.model.objects.filter(**filter_kwargs)

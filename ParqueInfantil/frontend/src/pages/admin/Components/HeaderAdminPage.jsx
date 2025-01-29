@@ -54,7 +54,7 @@ const HeaderAdminPage = () => {
             <Link to="/adminPage"><AiOutlineReload /></Link>
           </li>
           <li>
-            <Link onClick={handleLogOut}>
+            <Link to="/" onClick={handleLogOut}>
               <FiLogOut />
             </Link>
 

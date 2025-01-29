@@ -20,9 +20,7 @@ const SearchHeaderAdmin = ({handleSearch, handleAdd}) => {
                     style={{ width: 500 }}
                 />
             </div>
-            <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-                Agregar
-            </Button>
+          
         </Container>
     );
 };

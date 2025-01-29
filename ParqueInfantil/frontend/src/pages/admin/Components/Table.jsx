@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-// considerar table de antd 
+
 const TableContainer = styled.div`
     width: 100%;
     overflow-x: auto;
@@ -45,9 +45,9 @@ const Table = ({ headers, data, onHeaderClick, onDeleteClick, onEditClick }) => 
                 <thead>
                     <tr>
                         {headers.map((header) => (
-                            <TableHeader key={header}>
+                            <TableHeader key={header.name}>
                                 <Button type="link" onClick={() => onHeaderClick(header)}>
-                                    {header}
+                                    {header.name}
                                 </Button>
                             </TableHeader>
                         ))}
@@ -55,10 +55,10 @@ const Table = ({ headers, data, onHeaderClick, onDeleteClick, onEditClick }) => 
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((row) => (
-                        <TableRow key={row}>
+                    {data.map((row, rowIndex) => (
+                        <TableRow key={rowIndex}>
                             {headers.map((header) => (
-                                <TableCell key={header}>{row[header]}</TableCell>
+                                <TableCell key={header.name}>{row[header.name]}</TableCell>
                             ))}
                             <OptionsCell style={{ justifyContent: 'center' }}>
                                 <Button icon={<EditOutlined />} onClick={() => onEditClick(row)} />

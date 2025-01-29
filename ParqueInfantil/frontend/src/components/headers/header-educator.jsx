@@ -1,30 +1,43 @@
 import styled from 'styled-components';
-import { FaSignInAlt, FaEnvelope, FaInfoCircle, FaListAlt, FaHome } from 'react-icons/fa';
+import { FaSignInAlt, FaUser, FaEnvelope, FaInfoCircle, FaListAlt, FaHome } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
+import { FiLogOut } from 'react-icons/fi';
+import { handleLogOut } from '../../pages/admin/HandlersRequests';
 
 const Header = styled.header`
-    background-color:rgb(172, 190, 172);
-    padding: 10px 20px;
+    background-color: rgb(172, 190, 172);
+    padding: 20px 10px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    width: 10%;
+    position: fixed;
+    left: 0;
+    top: 0;
 `;
 
 const Nav = styled.nav`
     display: flex;
+    flex-direction: column;
     align-items: center;
+    width: 100%;
 `;
 
 const Ul = styled.ul`
     list-style: none;
     display: flex;
+    flex-direction: column;
     margin: 0;
     padding: 0;
+    width: 100%;
 `;
 
 const Li = styled.li`
-    margin: 0 15px;
+    margin: 15px 0;
+    width: 100%;
 `;
 
 const StyledLink = styled(Link)`
@@ -34,6 +47,8 @@ const StyledLink = styled(Link)`
     align-items: center;
     font-size: 18px;
     position: relative;
+    width: 100%;
+    justify-content: center;
 
     &:hover {
         color: #333;
@@ -56,11 +71,10 @@ const HeaderEducator = () => {
         <Header>
             <Nav>
                 <Ul>
-                    <Li><StyledLink to="/" className={location.pathname === '/' ? 'active' : ''}><FaHome />Inicio</StyledLink></Li>
-                    {/* <Li><StyledLink to="/login" className={location.pathname === '/login' ? 'active' : ''}><FaSignInAlt />Login</StyledLink></Li> */}
-                    <Li><StyledLink to="/activity-catalog" className={location.pathname === '/activity-catalog' ? 'active' : ''}><FaListAlt />Actividades</StyledLink></Li> 
-                    <Li><StyledLink to="/contact" className={location.pathname === '/contact' ? 'active' : ''}><FaEnvelope />Contáctenos</StyledLink></Li>
-                    <Li><StyledLink to="/about" className={location.pathname === '/about' ? 'active' : ''}><FaInfoCircle />Sobre Nosotros</StyledLink></Li>
+                    <Li><StyledLink to="/educadorPage" className={location.pathname === '/educadorPage' ? 'active' : ''}><FaInfoCircle />Mis Actividades</StyledLink></Li> 
+                    <Li><StyledLink to="/activity-catalog" className={location.pathname === '/activity-catalog' ? 'active' : ''}><FaListAlt />Programación</StyledLink></Li>
+                    <Li><StyledLink to="/educator/profile" className={location.pathname === '/educator/profile' ? 'active' : ''}><FaUser />Mi Perfil</StyledLink></Li>
+                    <Li><StyledLink to="/" onClick={handleLogOut}> <FiLogOut /> </StyledLink></Li>
                 </Ul>
             </Nav>
         </Header>

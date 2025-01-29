@@ -51,7 +51,10 @@ const AdminPage = (admin = 'Eveliz') => {
   ]);
   useEffect(() => { fetchEntities(setEntities) }, []);
   
-  const [atributes, setAtributes] = useState(['Id', 'Nombre', 'Descripción']);
+  const [atributes, setAtributes] = useState([
+    { name: 'Id', null: false },
+    { name: 'Nombre', null: false },
+    { name: 'Descripción', null: false }]);
   const [selectedEntity, setSelectedEntity] = useState([null]);
   const [selectedAttribute, setSelectedAttribute] = useState(atributes[0]);
 
@@ -94,7 +97,7 @@ const AdminPage = (admin = 'Eveliz') => {
 
   const handleAttributeClick = async (attribute) => {
     setSelectedAttribute(attribute);
-    message.info(`Atributo seleccionado: ${attribute}`);
+    message.info(`Atributo seleccionado: ${attribute.name}`);
   };
 
   const handleSearch = async (e) => {//Chequear que el parametro se pase bien
