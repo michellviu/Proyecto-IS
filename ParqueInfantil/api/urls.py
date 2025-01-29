@@ -1,8 +1,9 @@
 from django.urls import path, include, re_path
 from api.views.views import home
 from .views.swagger_doc import schema_view
-from .views.metadata import metadata_view
+from .views.metadata import MetadataView
 from .views.registerView import RegistroView
+from .views.SearchView import SearchView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
 from .views.activityView import ActividadView, ActividadDetailView
@@ -58,7 +59,7 @@ urlpatterns = [
         name="schema-json",
     ),
     # Metadata
-    path("metadata/", metadata_view, name="metadata"),
+    path("metadata/", MetadataView.as_view()),
     path("atributes/<str:table_name>/", AttributesView.as_view()),
     # Models
     # Login
@@ -80,7 +81,7 @@ urlpatterns = [
     path("actividadprogramada/tiemporeal/", ScheduledActRealTimeView.as_view()),
     # Recurso
     path("recurso/", RecursoView.as_view()),
-    path("recurso/enuso", ResourceInUseView.as_view()),
+    path("recurso/enuso/", ResourceInUseView.as_view()),
     path("recurso/<int:pk>/", RecursoDetailView.as_view()),
     # Usuario
     path("usuario/", UserView.as_view()),
@@ -97,4 +98,6 @@ urlpatterns = [
     path("calificacion/", QualificationView.as_view()),
     path("calificacion/<int:pk>/", QualificationDetailView.as_view()),
     path("calificacion/poractividad/<int:pk>/", QualificationByActivityView.as_view()),
+    # Search
+    path("search/", SearchView.as_view()),
 ]

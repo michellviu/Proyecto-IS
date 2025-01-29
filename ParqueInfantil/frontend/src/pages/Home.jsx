@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import HeaderHome from '../components/headers/HeaderHome';
-import Login from './Login';
+// import Login from './Login';
 import { FaHome } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-//import LoginForm from './Login';
+import LoginForm from './Login';
 
 
 const HomeContainer = styled.div`
@@ -69,7 +69,7 @@ const Home = () => {
                 <Container>
                     <Icon />
                     <Title>Login</Title>
-                    <Login />
+                    <LoginForm />
                     <RegisterLink to="/register">¿No tienes una cuenta aún?</RegisterLink>
                 </Container>
             ) : (
