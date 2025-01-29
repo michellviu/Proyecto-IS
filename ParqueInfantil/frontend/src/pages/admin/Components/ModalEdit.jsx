@@ -1,11 +1,7 @@
 import { Button, Input, Modal, Form } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
-
-// arreglar el boton de Guardar que posiblemente el submit ese este mal
-const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance,
-    currentInstance, handleSave, atributes, form
-}) => {
+const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance, currentInstance, handleSave, atributes, form }) => {
     return (
         <Modal
             title="Editar Instancia"
@@ -15,7 +11,7 @@ const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance,
             afterClose={() => {
                 form.resetFields();
                 setCurrentInstance(null);
-             }}
+            }}
         >
             <Form
                 key={currentInstance ? currentInstance.Id : 'new'}
@@ -24,10 +20,10 @@ const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance,
             >
                 {atributes.map(attribute => (
                     <Form.Item
-                        key={attribute}
-                        name={attribute}
-                        label={attribute}
-                        rules={[{ required: true, message: `Por favor ingrese ${attribute.toLowerCase()}` }]}
+                        key={attribute.name}
+                        name={attribute.name}
+                        label={attribute.name}
+                        rules={[{ required: !attribute.null, message: `Por favor ingrese ${attribute.name.toLowerCase()}` }]}
                     >
                         <Input />
                     </Form.Item>
@@ -44,4 +40,5 @@ const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance,
         </Modal>
     );
 };
+
 export default ModalEdit;

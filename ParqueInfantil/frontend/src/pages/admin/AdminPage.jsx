@@ -97,7 +97,7 @@ const AdminPage = (admin = 'Eveliz') => {
 
   const handleAttributeClick = async (attribute) => {
     setSelectedAttribute(attribute);
-    message.info(`Atributo seleccionado: ${attribute}`);
+    message.info(`Atributo seleccionado: ${attribute.name}`);
   };
 
   const handleSearch = async (e) => {//Chequear que el parametro se pase bien

@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { useNavigate ,Link} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 //Get
@@ -49,7 +49,14 @@ const fetchAtributes = async (entity, setAtributes) => {
 
 const fetchInstances = async (entity, setInstances, setFilteredInstances, blockNumber = 0) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/?format=json`);
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/?format=json`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -65,13 +72,17 @@ const fetchInstances = async (entity, setInstances, setFilteredInstances, blockN
 //CRUD
 const handleDeleteRequest = async (entity, instance) => {
     try {
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/${instance.Id}/`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        // fetchInstances(entity, currentBlock);
         message.success('Instancia eliminada');
     } catch (error) {
         console.error('Failed to delete instance:', error);
@@ -82,7 +93,19 @@ const handleDeleteRequest = async (entity, instance) => {
 const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstances) => {
     const query = e.target.value;// acordarme de que la query la tengo que pasar por json
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/search/${entity.toLower()}/${attribute}/`);
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(`http://127.0.0.1:8000/api/search/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            params: {
+                model: entity.toLower(),
+                field: attribute.name,
+                query: query
+            }
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -97,10 +120,12 @@ const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstan
 
 const handleEdit = async (entity, instance) => {
     try {
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/${instance.Id}/`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token
             },
             body: JSON.stringify(instance)
         });
@@ -116,10 +141,12 @@ const handleEdit = async (entity, instance) => {
 
 const handleAdd = async (entity, instance) => {
     try {
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token
             },
             body: JSON.stringify(instance)
         });
@@ -138,7 +165,14 @@ const handleAdd = async (entity, instance) => {
 
 const fetchPendingUsers = async (setPendingUsers) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/usuario`);
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(`http://127.0.0.1:8000/api/usuario/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -153,10 +187,12 @@ const fetchPendingUsers = async (setPendingUsers) => {
 
 const handleAcceptUser = async (user) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/Usuario/${user.Id}`, {
+      const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+      const response = await fetch(`http://127.0.0.1:8000/api/Usuario/${user.Id}/`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': token
         },
         body: JSON.stringify(user)
       });
@@ -164,7 +200,6 @@ const handleAcceptUser = async (user) => {
         throw new Error('Network response was not ok');
       }
       message.success('Usuario aceptado exitosamente');
-      handleUserAuthorizationClick();
     } catch (error) {
       console.error('Failed to accept user:', error);
       message.error('No se pudo aceptar al usuario');
@@ -173,10 +208,12 @@ const handleAcceptUser = async (user) => {
   
 const handleRejectUser = async (user) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/Usuario/${user.Id}`, {
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(`http://127.0.0.1:8000/api/Usuario/${user.Id}/`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token
             },
             body: JSON.stringify(user)
         });
@@ -195,7 +232,14 @@ const handleRejectUser = async (user) => {
 
 const fetchResourcesInUse = async (setResources) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/Resource`);
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(`http://127.0.0.1:8000/api/Resource/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -213,7 +257,14 @@ const fetchResourcesInUse = async (setResources) => {
 
 const fetchPendingReservations = async (setPendingReservations) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/Reservations`);
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(`http://127.0.0.1:8000/api/Reservations`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -229,20 +280,21 @@ const fetchPendingReservations = async (setPendingReservations) => {
 
 const handleLogOut = async () => {
     try {
+        const navigate = useNavigate();
         
-        const response = await fetch(`http://127.0.0.1:8000/logout/${user.Id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        localStorage.removeItem('authToken'); // Eliminar el token de localStorage
+        // const response = await fetch(`http://127.0.0.1:8000/logout/${user.Id}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // });
+        // if (!response.ok) {
+        //     throw new Error('Network response was not ok');
+        // }
+        localStorage.removeItem('AuthToken'); // Eliminar el token de localStorage
+        navigate("/");
         message.success('Sesión cerrada exitosamente');
-        // Redirigir al usuario a la página de inicio de sesión u otra acción necesaria
-       Navigate('.')
+        
     } catch (error) {
         console.error('Failed to log out:', error);
         message.error('No se pudo cerrar la sesión');
