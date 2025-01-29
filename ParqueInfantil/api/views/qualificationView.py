@@ -62,9 +62,9 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
         except Http404:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.get_serializer(qualification, data=request.data)
+        serializer = self.get_serializer(qualification, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        self.qualification_service.update(serializer.validated_data)
+        self.qualification_service.update(kwargs["pk"], serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -77,7 +77,7 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
         except Http404:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        self.qualification_service.delete(qualification)
+        self.qualification_service.delete(kwargs["pk"])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(
@@ -127,7 +127,7 @@ class QualificationByActivityView(generics.ListAPIView):
     """
 
     serializer_class = QualificationSerializer
-    permission_classes = [AllowAny()]
+    permission_classes = [AllowAny]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -135,5 +135,5 @@ class QualificationByActivityView(generics.ListAPIView):
 
     def get_queryset(self):
         return self.qualification_service.get_qualifications_by_activity(
-            self.kwargs["idAP"]
+            self.kwargs["pk"]
         )

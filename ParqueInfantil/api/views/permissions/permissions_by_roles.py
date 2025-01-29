@@ -47,7 +47,7 @@ class IsAdminOrSelf(BasePermission):
 
 
 class MySelf(BasePermission):
-    def has_permission(self, request, view, obj):
+    def has_object_permission(self, request, view, obj):
         user = JWTAuthentication().authenticate(request)
         if user is not None:
             user = user[0]

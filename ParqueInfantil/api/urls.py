@@ -90,11 +90,11 @@ urlpatterns = [
     path("usuario/confirmarrol/<int:idU>/", ConfirmRoleView.as_view()),
     # Reservacion
     path("reservacion", ReservacionView.as_view()),
-    path("reservacion/<str:pk>/", ReservacionDetailView.as_view()),
-    path("reservacion/porpadre/<int:pk>/", ReservacionesPorPadreView.as_view()),
     path("reservacion/noconfirmado/", UnconfirmedReservationsView.as_view()),
+    path("reservacion/porpadre/<int:id>/", ReservacionesPorPadreView.as_view()),
+    path("reservacion/<str:pk>/", ReservacionDetailView.as_view()),
     # Calificacion
-    path("calificacion", QualificationView.as_view()),
+    path("calificacion/", QualificationView.as_view()),
     path("calificacion/<int:pk>/", QualificationDetailView.as_view()),
     path("calificacion/poractividad/<int:pk>/", QualificationByActivityView.as_view()),
 ]

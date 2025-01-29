@@ -58,7 +58,7 @@ class ReservacionView(generics.ListCreateAPIView):
 
 class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReservacionSerializer
-    permission_classes = [IsAdmin() or (IsPadre() and MySelf())]
+    permission_classes = [IsAdmin or (IsPadre and MySelf)]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -109,7 +109,7 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class ReservacionesPorPadreView(generics.ListAPIView):
     serializer_class = ReservacionSerializer
-    permission_classes = [IsAdmin() or (IsPadre() and MySelf())]
+    permission_classes = [IsAdmin or (IsPadre and MySelf)]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -118,13 +118,6 @@ class ReservacionesPorPadreView(generics.ListAPIView):
     def get_queryset(self):
         padre_id = self.kwargs.get("id")
         return self.reservation_service.get_reservations_by_user(padre_id)
-
-    @swagger_auto_schema(
-        operation_description="Listar todas las reservaciones asociadas a un Padre específico. Solo puede ser accedido por un Padre logueado",
-        responses={200: ReservacionSerializer(many=True)},
-    )
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
 
 
 class UnconfirmedReservationsView(generics.ListAPIView):
