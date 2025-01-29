@@ -63,7 +63,7 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return [IsAdmin()]
+            return [IsAdminOrSelf()]
         elif self.request.method == "PUT":
             return [IsAdminOrSelf()]
         elif self.request.method == "DELETE":

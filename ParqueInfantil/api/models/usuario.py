@@ -5,17 +5,17 @@ from django.contrib.auth.models import AbstractUser
 
 class Usuario(AbstractUser):
     idU = models.AutoField(primary_key=True)  # Clave primaria autoincremental
-    
+
     # Definir los roles posibles
-    ADMIN = 'admin'
-    PADRE = 'padre'
-    EDUCADOR = 'educador'
+    ADMIN = "admin"
+    PADRE = "padre"
+    EDUCADOR = "educador"
     ROL_CHOICES = [
-        (ADMIN, 'admin'),
-        (PADRE, 'padre'),
-        (EDUCADOR, 'educador'),
+        (ADMIN, "admin"),
+        (PADRE, "padre"),
+        (EDUCADOR, "educador"),
     ]
-    
+
     rol = models.CharField(max_length=10, choices=ROL_CHOICES, default=PADRE)
     role_confirmation = models.BooleanField(default=False)
     imagen = models.ImageField(upload_to="media/images/usuarios", null=True, blank=True)
@@ -32,7 +32,7 @@ class Padre(models.Model):
     )
 
     def __str__(self):
-        return self.idP.nombre
+        return self.idP.username
 
 
 class Educador(models.Model):
@@ -43,7 +43,7 @@ class Educador(models.Model):
     )
 
     def __str__(self):
-        return self.idE.nombre
+        return self.idE.username
 
 
 class Administrador(models.Model):
@@ -54,4 +54,4 @@ class Administrador(models.Model):
     )
 
     def __str__(self):
-        return self.idA.nombre
+        return self.idA.username

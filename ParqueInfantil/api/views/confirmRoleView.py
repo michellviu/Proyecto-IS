@@ -18,7 +18,12 @@ class ConfirmRoleView(generics.UpdateAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.admin_service = AdminService(UserRepository(),AdminRepository(),FatherRepository(),EducadorRepository())
+        self.admin_service = AdminService(
+            UserRepository(),
+            AdminRepository(),
+            FatherRepository(),
+            EducadorRepository(),
+        )
 
     @swagger_auto_schema(
         operation_description="Confirmar el rol de un usuario y actualizar su información",
@@ -39,7 +44,7 @@ class ConfirmRoleView(generics.UpdateAPIView):
     )
     def update(self, request, *args, **kwargs):
         user_id = self.kwargs["idU"]
-        user = self.user_service.confirm_role(user_id)
+        user = self.admin_service.confirm_role(user_id)
 
         if user is None:
             return Response(

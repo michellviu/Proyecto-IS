@@ -9,7 +9,10 @@ from api.AppServices.QualificationService import QualificationService
 from api.InfrastructurePersistence.QualificationRepository import (
     QualificationRepository,
 )
-from .permissions.permissions_by_roles import IsAdmin, IsPadre, IsEducador
+from .permissions.permissions_by_roles import (
+    IsAdmin,
+    MySelf,
+)
 
 
 class QualificationView(generics.ListCreateAPIView):
@@ -23,7 +26,7 @@ class QualificationView(generics.ListCreateAPIView):
         return self.qualification_service.get_all()
 
     @swagger_auto_schema(
-        operation_description="Crear una nueva calificación. Puede ser creada por un Admin o un Padre que esten anteriormente logueados",
+        operation_description="Crear una nueva calificación. Puede ser creada por cualquier usuario logueado",
         request_body=QualificationSerializer,
         responses={201: QualificationSerializer},
     )
@@ -32,6 +35,13 @@ class QualificationView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.qualification_service.create(serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [AllowAny()]
+        elif self.request.method == "GET":
+            return [IsAdmin()]
+        return super().get_permissions()
 
 
 class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -52,9 +62,9 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
         except Http404:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.get_serializer(qualification, data=request.data)
+        serializer = self.get_serializer(qualification, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        self.qualification_service.update(serializer.validated_data)
+        self.qualification_service.update(kwargs["pk"], serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -67,7 +77,7 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
         except Http404:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        self.qualification_service.delete(qualification)
+        self.qualification_service.delete(kwargs["pk"])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @swagger_auto_schema(
@@ -83,9 +93,41 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(qualification)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def get_permissions(self):
+        """
+        Determine the permissions required for different HTTP methods.
 
-class CalificationByActivityView(generics.ListAPIView):
+        - GET: Allows any user to access.
+        - PUT, PATCH: Allows only the user themselves to access.
+        - DELETE: Allows either an admin or the user themselves to access.
+
+        Returns:
+            list: A list of permission instances based on the request method.
+        """
+        if self.request.method == "GET":
+            return [AllowAny()]
+        elif self.request.method in ["PUT", "PATCH"]:
+            return [MySelf()]
+        elif self.request.method == "DELETE":
+            return [IsAdmin() or MySelf()]
+        return super().get_permissions()
+
+
+class QualificationByActivityView(generics.ListAPIView):
+    """
+    View to list qualifications by activity.
+    This view inherits from `generics.ListAPIView` and provides a list of qualifications
+    for a specific activity identified by `idAP` in the URL parameters.
+    Attributes:
+        serializer_class (QualificationSerializer): The serializer class used to serialize the qualification data.
+        permission_classes (list): List of permission classes that determine access to this view.
+        qualification_service (QualificationService): Service used to interact with the qualification repository.
+    Methods:
+        get_queryset(): Retrieves the queryset of qualifications for the specified activity.
+    """
+
     serializer_class = QualificationSerializer
+    permission_classes = [AllowAny]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -93,5 +135,5 @@ class CalificationByActivityView(generics.ListAPIView):
 
     def get_queryset(self):
         return self.qualification_service.get_qualifications_by_activity(
-            self.kwargs["idAP"]
+            self.kwargs["pk"]
         )
