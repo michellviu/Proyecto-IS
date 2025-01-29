@@ -3,9 +3,9 @@ import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import styled from "styled-components";
 import HeaderHome from "../components/headers/HeaderHome";
 import { message } from "antd";
-//import { Redirect } from "./Utils";
 import { useState } from "react";
-import Password from "antd/es/input/Password";
+import { useNavigate } from 'react-router-dom';
+
 
 const Container = styled.div`
   display: flex;
@@ -75,6 +75,7 @@ const Button = styled.button`
 
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -110,13 +111,16 @@ const Register = () => {
       if (!response.ok) {
         setErrors(result.errors || {});
       } else {
-
         // acuerdate de el manejo de errores
-        // Handle successful registration
+       
         localStorage.setItem("AuthToken", result.access);
         message.success("Registro exitoso");
-        
-      //  Redirect(formData.rol);
+        if (formData.rol === 'padre') {
+          navigate(`\padrePage`);
+        } else {
+          message.warning('Debe esperar a que sea aceptada su aplicación');
+        }
+     
       }
     } catch (error) {
       message.error("No se pudo realizar el registro");

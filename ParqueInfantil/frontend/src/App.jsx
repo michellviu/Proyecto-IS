@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-//import Login from './pages/Login';
 import Register from './pages/Register';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
@@ -17,7 +16,6 @@ import ReservedActivities from './pages/parent/ReservedActivities';*/
 
 const App = () => {
     return (
-        //<ParentProfile></ParentProfile>
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />

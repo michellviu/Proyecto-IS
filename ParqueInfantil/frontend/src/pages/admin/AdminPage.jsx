@@ -51,7 +51,10 @@ const AdminPage = (admin = 'Eveliz') => {
   ]);
   useEffect(() => { fetchEntities(setEntities) }, []);
   
-  const [atributes, setAtributes] = useState(['Id', 'Nombre', 'Descripción']);
+  const [atributes, setAtributes] = useState([
+    { name: 'Id', null: false },
+    { name: 'Nombre', null: false },
+    { name: 'Descripción', null: false }]);
   const [selectedEntity, setSelectedEntity] = useState([null]);
   const [selectedAttribute, setSelectedAttribute] = useState(atributes[0]);
 
