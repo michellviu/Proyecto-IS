@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Actividad
+from api.models.actividad import Actividad
 from api.AppServices.ActivityService import ActivityService
 from api.InfrastructurePersistence.ActivityRepository import ActivityRepository
 
@@ -13,7 +13,8 @@ class ActividadSerializer(serializers.ModelSerializer):
             "id",
             "idI",
             "nombre",
-            "edad_recomendada",
+            "edadmin_recomendada",
+            "edadmax_recomendada",
             "duracion",
             "num_participantes",
             "descripcion",
