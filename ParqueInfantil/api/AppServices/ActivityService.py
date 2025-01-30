@@ -1,7 +1,10 @@
 from ..DomainServices.ServicesInterfaces.IActivityService import IActivityService
-from ..DomainServices.RepositoryInterfaces.IActivityRepository import IActivityRepository
+from ..DomainServices.RepositoryInterfaces.IActivityRepository import (
+    IActivityRepository,
+)
 from .GenericService import GenericService
 from api.models.instalacion import Instalacion
+
 
 class ActivityService(GenericService, IActivityService):
     def __init__(self, activity_repository: IActivityRepository):
@@ -27,3 +30,11 @@ class ActivityService(GenericService, IActivityService):
             raise ValueError("El número de participantes no puede ser mayor que la capacidad de la instalación.")
         # Llamar al método create del GenericService
         return super().create(data)
+
+
+    def get_average_calification(self, activity_id):
+        return self.activity_repository.get_average_calification(activity_id)
+
+    def get_activities_qualifications(self):
+        return self.activity_repository.get_activities_qualifications()
+

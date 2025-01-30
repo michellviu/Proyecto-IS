@@ -4,7 +4,10 @@ from rest_framework import generics
 from .permissions.permissions_by_roles import IsAdmin, IsPadre, IsEducador
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from ..serializers.serializer import ActividadSerializer
+from ..serializers.ActivitySerializer import (
+    ActividadSerializer,
+    ActividadQualificationSerializer,
+)
 from api.AppServices.ActivityService import ActivityService
 from api.InfrastructurePersistence.ActivityRepository import ActivityRepository
 from drf_yasg.utils import swagger_auto_schema
@@ -99,3 +102,26 @@ class ActividadDetailView(generics.RetrieveUpdateDestroyAPIView):
         elif self.request.method == "DELETE":
             return [IsAdmin()]
         return super().get_permissions()
+
+
+# vista para listar las calificaciones de actividades
+class ActividadCalificacionesView(generics.ListAPIView):
+    serializer_class = ActividadQualificationSerializer
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.activity_service = ActivityService(ActivityRepository())
+
+    @swagger_auto_schema(
+        operation_description="Listar calificaciones de actividades",
+        responses={
+            200: openapi.Response(
+                "Calificaciones de actividades", ActividadSerializer(many=True)
+            )
+        },
+    )
+    def get_queryset(self):
+        return self.activity_service.get_activities_qualifications()
+
+    def get_permissions(self):
+        return [AllowAny()]
