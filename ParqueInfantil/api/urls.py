@@ -28,6 +28,7 @@ from .views.sheduledActView import (
     ScheduledActCatalogView,
     ScheduledActRealizView,
     ScheduledActFuturaView,
+    ScheduledActParticipantsView,
 )
 from .views.reservationView import (
     ReservacionView,
@@ -86,6 +87,8 @@ urlpatterns = [
     path("actividad_programada/catalog/", ScheduledActCatalogView.as_view()),
     path("actividad_programada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividad_programada/tiemporeal/", ScheduledActRealTimeView.as_view()),
+    path("actividad_programada/numparticipantes/", ScheduledActParticipantsView.as_view()),
+
     # Recurso
     path("recurso/", RecursoView.as_view()),
     path("recurso/enuso/", ResourceInUseView.as_view()),
@@ -97,10 +100,10 @@ urlpatterns = [
     path("usuario/<str:role>/", UserByRoleView.as_view()),
     path("usuario/confirmarrol/<int:idU>/", ConfirmRoleView.as_view()),
     # Reservacion
-    path("reservacion", ReservacionView.as_view()),
+    path("reservacion/", ReservacionView.as_view()),
     path("reservacion/noconfirmado/", UnconfirmedReservationsView.as_view()),
     path("reservacion/porpadre/<int:id>/", ReservacionesPorPadreView.as_view()),
-    path("reservacion/<str:pk>/", ReservacionDetailView.as_view()),
+    path("reservacion/<int:pk>/", ReservacionDetailView.as_view()),
     # Calificacion
     path("calificacion/", QualificationView.as_view()),
     path("calificacion/<int:pk>/", QualificationDetailView.as_view()),

@@ -12,7 +12,7 @@ class GenericRepository(IGenericRepository):
         try:
             return self.model.objects.get(**{primary_key: id})
         except self.model.DoesNotExist:
-            return None
+            return 
 
     def create(self, data):
         return self.model.objects.create(**data)

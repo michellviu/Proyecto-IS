@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from drf_yasg.utils import swagger_auto_schema
+from django.core.exceptions import ObjectDoesNotExist
 from drf_yasg import openapi
 from ..serializers.QualificationSerializer import QualificationSerializer
 from api.AppServices.QualificationService import QualificationService
@@ -59,13 +60,16 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         try:
             qualification = self.qualification_service.get_by_id(kwargs["pk"])
-        except Http404:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            serializer = self.get_serializer(qualification, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.qualification_service.update(kwargs["pk"], serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.get_serializer(qualification, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.qualification_service.update(kwargs["pk"], serializer.validated_data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
 
     @swagger_auto_schema(
         operation_description="Eliminar una calificación existente. Puede ser eliminada por un Admin o un Padre que esten anteriormente logueados",
@@ -73,12 +77,12 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     )
     def destroy(self, request, *args, **kwargs):
         try:
-            qualification = self.qualification_service.get_by_id(kwargs["pk"])
-        except Http404:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            self.qualification_service.delete(kwargs["pk"])
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
-        self.qualification_service.delete(kwargs["pk"])
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        
 
     @swagger_auto_schema(
         operation_description="Obtener una calificación existente. Puede ser obtenida por un Admin o un Padre que esten anteriormente logueados",
@@ -87,8 +91,8 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     def retrieve(self, request, *args, **kwargs):
         try:
             qualification = self.qualification_service.get_by_id(kwargs["pk"])
-        except Http404:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = self.get_serializer(qualification)
         return Response(serializer.data, status=status.HTTP_200_OK)

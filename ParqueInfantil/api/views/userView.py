@@ -6,6 +6,7 @@ from api.serializers.UserSerializer import UserSerializer
 from api.AppServices.UserService import UserService
 from api.InfrastructurePersistence.UserRepository import UserRepository
 from .permissions.permissions_by_roles import IsAdmin, IsAdminOrSelf
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class UserView(generics.ListAPIView):
@@ -40,26 +41,36 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         super().__init__(**kwargs)
         self.user_service = UserService(UserRepository())
 
-    def get_object(self):
-        user_id = self.kwargs["pk"]
-        user = self.user_service.get_by_id(user_id)
-        if user is None:
-            raise Http404("User not found")
-        return user
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            user = self.user_service.get_by_id(self.kwargs["pk"])
+            serializer = self.get_serializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     def update(self, request, *args, **kwargs):
-        user = self.get_object()
-        self.check_object_permissions(request, user)
-        serializer = self.get_serializer(user, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.user_service.update(user.idU, serializer.validated_data)
-        return Response(serializer.data)
+        try:
+            user = self.user_service.get_by_id(self.kwargs["pk"])
+            self.check_object_permissions(request, user)
+            serializer = self.get_serializer(user, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.user_service.update(user.idU, serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     def destroy(self, request, *args, **kwargs):
-        user = self.get_object()
-        self.check_object_permissions(request, user)
-        self.user_service.delete(user.idU)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+           user = self.user_service.get_by_id(self.kwargs["pk"])
+           self.check_object_permissions(request, user)
+           self.user_service.delete(user.idU)
+           return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     def get_permissions(self):
         if self.request.method == "GET":

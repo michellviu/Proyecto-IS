@@ -9,7 +9,7 @@ from ..serializers.serializer import RecursoSerializer
 from api.AppServices.ResourceService import ResourceService
 from api.InfrastructurePersistence.ResourceRepository import ResourceRepository
 from api.InfrastructurePersistence.ScheduledActRepository import ScheduledActRepository
-
+from django.core.exceptions import ObjectDoesNotExist
 
 # vista para crear o listar todos los recursos
 class RecursoView(generics.ListCreateAPIView):
@@ -25,10 +25,7 @@ class RecursoView(generics.ListCreateAPIView):
         responses={200: RecursoSerializer(many=True)},
     )
     def get_queryset(self):
-        obj = self.resource_service.get_all()
-        if obj is None:
-            raise Http404("Resource not found")
-        return obj
+        return self.resource_service.get_all()
 
     @swagger_auto_schema(
         operation_description="Crear un nuevo recurso",
@@ -51,10 +48,8 @@ class ResourceInUseView(generics.ListAPIView):
         self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository()))
 
     def get_queryset(self):
-        obj = self.resource_service.get_resource_in_use()
-        if obj is None:
-            raise Http404("Resource not found")
-        return obj
+        return self.resource_service.get_resource_in_use()
+        
    
 
 
@@ -71,10 +66,17 @@ class RecursoDetailView(generics.RetrieveUpdateDestroyAPIView):
         operation_description="Obtener los detalles de un recurso",
         responses={200: RecursoSerializer},
     )
-    def get_object(self):
-        return self.resource_service.get_by_id(self.kwargs["pk"])
-
-   
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            activity = self.resource_service.get_by_id(self.kwargs["pk"])
+            serializer = self.get_serializer(activity)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    
 
     @swagger_auto_schema(
         operation_description="Actualizar un recurso existente",
@@ -82,16 +84,25 @@ class RecursoDetailView(generics.RetrieveUpdateDestroyAPIView):
         responses={200: RecursoSerializer},
     )
     def update(self, request, *args, **kwargs):
-        resource = self.get_object()
-        serializer = self.get_serializer(resource, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.resource_service.update(resource.idR, serializer.validated_data)
-        return Response(serializer.data)
+        try:
+           resource = self.resource_service.get_by_id(self.kwargs["pk"])
+           serializer = self.get_serializer(resource, data=request.data)
+           serializer.is_valid(raise_exception=True)
+           self.resource_service.update(resource.idR, serializer.validated_data)
+           return Response(serializer.data,status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     @swagger_auto_schema(
         operation_description="Eliminar un recurso",
         responses={204: "No Content"},
     )
     def destroy(self, request, *args, **kwargs):
-        self.resource_service.delete(self.kwargs["pk"])
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+         self.resource_service.delete(self.kwargs["pk"])
+         return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+

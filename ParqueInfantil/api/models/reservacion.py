@@ -27,8 +27,18 @@ class Reservacion(models.Model):
 
     def __str__(self):
         return f"{self.idP} : {self.idAP}"
+    
+     # Definir los estados posibles
+    PENDIENTE = "Pendiente"
+    CONFIRMADO = "Confirmado"
+    CANCELADO = "Cancelado"
+    ESTADO_CHOICES = [
+        (PENDIENTE, "Pendiente"),
+        (CONFIRMADO, "Confirmado"),
+        (CANCELADO, "Cancelado"),
+    ]
 
     fecha_hora = models.DateField()
-    estado = models.CharField(max_length=10)
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default=PENDIENTE)
     num_ninos = models.PositiveIntegerField()  # Número de niños
     comentarios = models.CharField(max_length=100)
