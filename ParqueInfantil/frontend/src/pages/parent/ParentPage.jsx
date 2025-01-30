@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import ActivityCatalog from '../ActivityCatalog'; // Make sure to import your component
 import Perfil from './ParentProfile';
 import PlayHubLogo from '../../assets/PlayHub.png';
-import Reservations from './ReservedActivities'
+//import Reservations from './ReservedActivities'
 
 const Container = styled.div`
     display: flex;
@@ -30,7 +30,6 @@ const MenuItem = styled.div`
     margin: 5px 0;
     width: 100%;
     text-align: center;
-    cursor: pointer;
     transition: all 0.3s ease;
     ${({ selected }) =>
         selected &&
@@ -39,13 +38,21 @@ const MenuItem = styled.div`
             border-radius: 50px 0 0 50px;
             margin-left: 40%;
         `}
-    &:hover {
-        background-color: #f5f5dc; /* beige */
-    }
 `;
 
 const ParentPage = () => {
     const [selectedMenu, setSelectedMenu] = useState('Catalogo');
+
+    const [showSubMenu, setShowSubMenu] = useState(false);
+
+    const handleMenuClick = (menu) => {
+        setSelectedMenu(menu);
+        if (menu === 'Catalogo') {
+            setShowSubMenu(!showSubMenu);
+        } else {
+            setShowSubMenu(false);
+        }
+    };
 
     return (
         <Container>
@@ -53,25 +60,41 @@ const ParentPage = () => {
                 <div style={{ marginTop: '50px' }} />
                 <MenuItem
                     selected={selectedMenu === 'Catalogo'}
-                    onClick={() => setSelectedMenu('Catalogo')}
+                    onClick={() => handleMenuClick('Catalogo')}
                 >
                     Catálogo
                 </MenuItem>
+                {showSubMenu && selectedMenu === 'Catalogo' && (
+                    <>
+                        <MenuItem
+                            selected={selectedMenu === 'Actividad Actual'}
+                            onClick={() => handleMenuClick('Actividad Actual')}
+                        >
+                            Actividad Actual
+                        </MenuItem>
+                        <MenuItem
+                            selected={selectedMenu === 'Actividades Futuras'}
+                            onClick={() => handleMenuClick('Actividades Futuras')}
+                        >
+                            Actividades Futuras
+                        </MenuItem>
+                    </>
+                )}
                 <MenuItem
                     selected={selectedMenu === 'Mis Reservas'}
-                    onClick={() => setSelectedMenu('Mis Reservas')}
+                    onClick={() => handleMenuClick('Mis Reservas')}
                 >
                     Reservaciones
                 </MenuItem>
                 <MenuItem
                     selected={selectedMenu === 'Perfil'}
-                    onClick={() => setSelectedMenu('Perfil')}
+                    onClick={() => handleMenuClick('Perfil')}
                 >
                     Perfil
                 </MenuItem>
                 <MenuItem
                     selected={selectedMenu === 'Home'}
-                    onClick={() => setSelectedMenu('Home')}
+                    onClick={() => handleMenuClick('Home')}
                 >
                     Home
                 </MenuItem>
@@ -84,16 +107,26 @@ const ParentPage = () => {
                         <ActivityCatalog />
                     </div>
                 )}
+                {selectedMenu === 'Actividad Actual' && (
+                    <div style={{ width: '100%' }}>
+                        {/* Add your component for Actividad Actual here */}
+                    </div>
+                )}
+                {selectedMenu === 'Actividades Futuras' && (
+                    <div style={{ width: '100%' }}>
+                        {/* Add your component for Actividades Futuras here */}
+                    </div>
+                )}
                 {/* selected={selectedMenu === 'Mis Reservas'} && (
                     <div style={{ width: '100%' }}>
                         <Reservations />
                     </div>
-                )
+                )*/}
                 {selectedMenu === 'Perfil' && (
                     <div style={{ width: '100%' }}>
                         <Perfil />
                     </div>
-                )} */}
+                )}
                 {selectedMenu === 'Home' && (
                     <div style={{ width: '100%' }}>
                         {window.location.href = '/'}

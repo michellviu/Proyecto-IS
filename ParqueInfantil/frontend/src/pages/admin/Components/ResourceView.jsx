@@ -5,12 +5,11 @@ import SearchHeaderAdmin from './SearchHeaderAdmin';
 import { List } from 'antd';
 
 
-const ResourceView = ({handleSearch, handleAdd, resources}) => {
+const ResourceView = ({handleSearch, resources}) => {
     return (
         <div> 
            <SearchHeaderAdmin
-              handleSearch={handleSearch}
-              handleAdd={handleAdd} />
+              handleSearch={handleSearch}/>
     
               <List
                 itemLayout="horizontal"

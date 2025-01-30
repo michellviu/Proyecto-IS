@@ -10,7 +10,7 @@ const Container = styled.div`
   margin-bottom: 20px;
 `;
 
-const SearchHeaderAdmin = ({handleSearch, handleAdd}) => {
+const SearchHeaderAdmin = ({handleSearch}) => {
     return (
         <Container>
             <div style={{ display: 'flex', alignItems: 'center' }}>

@@ -40,10 +40,10 @@ const ActionButton = styled(Button)`
     }
 `;
 
-const UserAuthorization = ({ handleSearch, handleAdd, pendingUsers, handleAcceptUser, handleRejectUser }) => {
+const UserAuthorization = ({ handleSearch, pendingUsers, handleAcceptUser, handleRejectUser }) => {
     return (
         <Container>
-            <SearchHeaderAdmin handleSearch={handleSearch} handleAdd={handleAdd} />
+            <SearchHeaderAdmin handleSearch={handleSearch} />
             <StyledList
                 itemLayout="horizontal"
                 dataSource={pendingUsers}

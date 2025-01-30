@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+
 
 
 //Get
@@ -72,7 +72,6 @@ const fetchInstances = async (entity, setInstances, setFilteredInstances, blockN
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        message.success(data[1]);
         setInstances(data);
         setFilteredInstances(data);
     } catch (error) {
@@ -135,7 +134,7 @@ const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstan
 const handleEdit = async (entity, instance, values) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLower()}/${instance}/`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/${entity.toLowerCase()}/${instance}/`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -168,7 +167,6 @@ const handleAdd = async (entity, instance) => {
             throw new Error('Network response was not ok');
         }
         message.success('Instancia agregada');
-        fetchInstances(selectedEntity, currentBlock);
     } catch (error) {
         console.error('Failed to add instance:', error);
         message.error('No se pudo agregar la instancia');

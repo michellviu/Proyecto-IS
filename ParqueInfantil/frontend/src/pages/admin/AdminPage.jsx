@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { message, Form } from 'antd';
+import { message, Form, Spin } from 'antd';
 import styled from 'styled-components';
 
 //Componentes externas
@@ -20,7 +20,6 @@ import {
   fetchResourcesInUse,
   fetchPendingReservations
 } from './HandlersRequests'
-
 
 // Styled Components
 const Container = styled.div`
@@ -85,14 +84,22 @@ const AdminPage = (admin = 'Eveliz') => {
   
   //Metodos GET entidades
   const handleMenuClick = async (entity) => {
+    setLoading(true);
     message.info(`Entidad seleccionada: ${entity}`);
     setSelectedEntity(entity);
-    fetchAtributes(selectedEntity, setAtributes);
-    fetchInstances(selectedEntity, setInstances, setFilteredInstances, currentBlock);
+    await fetchAtributes(entity, setAtributes);
+    await fetchInstances(entity, setInstances, setFilteredInstances, currentBlock);
+    setLoading(false);
   };
 
   const refresh = async () => {
-    fetchInstances(selectedEntity, setInstances, setFilteredInstances, currentBlock);
+    setLoading(true);
+    if (selectedEntity === 'user-authorization'){
+      await fetchPendingUsers(setPendingUsers);
+    }else
+    {
+    await fetchInstances(selectedEntity, setInstances, setFilteredInstances, currentBlock);}
+    setLoading(false);
   }
 
   const handleAttributeClick = async (attribute) => {
@@ -100,8 +107,10 @@ const AdminPage = (admin = 'Eveliz') => {
     message.info(`Atributo seleccionado: ${attribute.name}`);
   };
 
-  const handleSearch = async (e) => {//Chequear que el parametro se pase bien
-    fetchSearch(selectedEntity, selectedAttribute, e, setInstances, setFilteredInstances);
+  const handleSearch = async (e) => {
+    setLoading(true);
+    await fetchSearch(selectedEntity, selectedAttribute, e, setInstances, setFilteredInstances);
+    setLoading(false);
   };
 
   //Metodos CRUD 
@@ -115,11 +124,13 @@ const AdminPage = (admin = 'Eveliz') => {
     setIsAddModalVisible(true);
   };
 
-  const handleDelete = (instance) => {
+  const handleDelete = async (instance) => {
+    setLoading(true);
     setCurrentInstance(instance);
-    handleDeleteRequest(selectedEntity, currentInstance.id);
+    await handleDeleteRequest(selectedEntity, instance.id);
     setCurrentInstance(null);
-    refresh();
+    await refresh();
+    setLoading(false);
   }
 
   const handleCancel = () => {
@@ -128,34 +139,58 @@ const AdminPage = (admin = 'Eveliz') => {
     setCurrentInstance(null);
   };
 
-  const handleSave = (values) => {
-    if (currentInstance) {
-      handleEdit(selectedEntity, currentInstance.id ,values);
+  const handleSave = async (values) => {
+    setLoading(true);
+    if (isEditModalVisible) {
+      await handleEdit(selectedEntity, values.id ,values);
     } else {
-      handleAdd(selectedEntity, values);
+      await handleAdd(selectedEntity, values);
     }
     setIsAddModalVisible(false);
     setIsEditModalVisible(false);
     setCurrentInstance(null);
-    refresh();
+    await refresh();
+    setLoading(false);
   };
 
   //Asignación de roles
   const handleUserAuthorizationClick = async () => {
+    setLoading(true);
     setSelectedEntity('user-authorization');
-    fetchPendingUsers(setPendingUsers);
+    await fetchPendingUsers(setPendingUsers);
+    setLoading(false);
   };
 
   //Gestion de Recursos
-  const handleResourceClick = () => {
+  const handleResourceClick = async () => {
+    setLoading(true);
     setSelectedEntity('resource');
-    fetchResourcesInUse(setResources);
+    await fetchResourcesInUse(setResources);
+    setLoading(false);
   };
 
   //Gestion de Reservas
   const handleReservationRequestsClick = async () => {
+    setLoading(true);
     setSelectedEntity('reservation-requests');
-    fetchPendingReservations(setPendingReservations);
+    await fetchPendingReservations(setPendingReservations);
+    setLoading(false);
+  };
+
+  const handleAccept = async (user) => {
+    setLoading(true);
+    await handleAcceptUser(user);
+    await refresh();
+    setLoading(false);
+
+  };
+
+  const handleReject = async (user) => {
+    setLoading(true);
+    await handleRejectUser(user);
+    await refresh();
+    setLoading(false);
+
   };
 
   return (
@@ -169,41 +204,47 @@ const AdminPage = (admin = 'Eveliz') => {
           handleResourceClick={handleResourceClick}
         />
         <InstancesList>
-          {selectedEntity === 'user-authorization' && (
-            <UserAuthorization
-              handleSearch={handleSearch}
-              handleAdd={handleAddModal}
-              pendingUsers={pendingUsers}
-              handleAcceptUser={handleAcceptUser}
-              handleRejectUser={handleRejectUser}
-            />
-          )}
-          {selectedEntity === 'resource' && (
-            <ResourceView
-              handleSearch={handleSearch}
-              handleAdd={handleAddModal}
-              resources={resources}
-            />
-          )}
-          {selectedEntity === 'reservation-requests' && (
-            <div>
-              <ReservationRequestsView 
-              handleSearch={handleSearch}
-              handleAdd={handleAddModal}
-              reservations={pendingReservations}
-              />
-            </div>
-          )}
-          {entities.includes(selectedEntity) && (
-            <EntityView
-              handleSearch={handleSearch}
-              handleAdd={handleAddModal}
-              atributes={atributes}
-              instances={instances}
-              handleAttributeClick={handleAttributeClick}
-              handleEdit={handleEditModal}
-              handleDelete={handleDelete}
-            />
+          {loading ? (
+            <Spin size="large" />
+          ) : (
+            <>
+              {selectedEntity === 'user-authorization' && (
+                <UserAuthorization
+                  handleSearch={handleSearch}
+                  handleAdd={handleAddModal}
+                  pendingUsers={pendingUsers}
+                  handleAcceptUser={handleAccept}
+                  handleRejectUser={handleReject}
+                />
+              )}
+              {selectedEntity === 'resource' && (
+                <ResourceView
+                  handleSearch={handleSearch}
+                  handleAdd={handleAddModal}
+                  resources={resources}
+                />
+              )}
+              {selectedEntity === 'reservation-requests' && (
+                <div>
+                  <ReservationRequestsView 
+                  handleSearch={handleSearch}
+                  handleAdd={handleAddModal}
+                  reservations={pendingReservations}
+                  />
+                </div>
+              )}
+              {entities.includes(selectedEntity) && (
+                <EntityView
+                  handleSearch={handleSearch}
+                  handleAdd={handleAddModal}
+                  atributes={atributes}
+                  instances={instances}
+                  handleAttributeClick={handleAttributeClick}
+                  handleEdit={handleEditModal}
+                  handleDelete={handleDelete}
+                />
+              )}
+            </>
           )}
         </InstancesList>
       </Content>
