@@ -9,7 +9,7 @@ from .permissions.permissions_by_roles import IsAdmin, IsAdminOrSelf
 from django.core.exceptions import ObjectDoesNotExist
 
 
-class UserView(generics.ListAPIView):
+class UserView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAdmin]
 
@@ -19,6 +19,15 @@ class UserView(generics.ListAPIView):
 
     def get_queryset(self):
         return self.user_service.get_all()
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+           self.user_service.create(serializer.validated_data)
+           return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UnconfirmedUsersView(generics.ListAPIView):

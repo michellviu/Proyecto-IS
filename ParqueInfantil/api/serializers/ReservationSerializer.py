@@ -6,11 +6,12 @@ from api.models.reservacion import Reservacion
 
 
 class ReservacionSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(source="cod_uni", required=False)
     # reservation_service = ReservationService(ReservationRepository())
 
     class Meta:
         model = Reservacion
-        fields = "__all__"
+        fields = ['id', 'idP', 'idAP', 'fecha_hora', 'estado', 'num_ninos', 'comentarios']
 
     # def create(self, validated_data):
     #     return self.reservation_service.create(validated_data)

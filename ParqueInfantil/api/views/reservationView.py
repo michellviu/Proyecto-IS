@@ -13,6 +13,7 @@ from .permissions.permissions_by_roles import (
     IsPadre,
     MySelf,
 )
+import uuid
 
 
 # vista para crear o listar todas las reservaciones
@@ -72,10 +73,11 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     )
     def update(self, request, *args, **kwargs):
         try:
-            reservation = self.reservation_service.get_by_id(kwargs["pk"])
+            reservation_id = uuid.UUID(kwargs["pk"])
+            reservation = self.reservation_service.get_by_id(reservation_id)
             serializer = self.get_serializer(reservation, data=request.data)
             serializer.is_valid(raise_exception=True)
-            self.reservation_service.update(kwargs["pk"], serializer.validated_data)
+            self.reservation_service.update(reservation_id, serializer.validated_data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -89,7 +91,8 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     )
     def destroy(self, request, *args, **kwargs):
         try:
-            self.reservation_service.delete(kwargs["pk"])
+            reservation_id = uuid.UUID(kwargs["pk"])
+            self.reservation_service.delete(reservation_id)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist as e:
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
