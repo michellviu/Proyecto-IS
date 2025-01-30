@@ -30,3 +30,15 @@ class ActividadQualificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actividad
         fields = ["id", "nombre", "puntuacion"]
+
+
+class ActividadParticipantesSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source="idA", required=False)
+    participantes = serializers.SerializerMethodField()
+
+    def get_participantes(self, obj):
+        return ActivityService(ActivityRepository).get_most_participated_activities()
+
+    class Meta:
+        model = Actividad
+        fields = ["id", "nombre", "participantes"]

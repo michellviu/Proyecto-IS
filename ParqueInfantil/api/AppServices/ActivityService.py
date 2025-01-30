@@ -38,3 +38,5 @@ class ActivityService(GenericService, IActivityService):
     def get_activities_qualifications(self):
         return self.activity_repository.get_activities_qualifications()
 
+    def get_most_participated_activities(self):
+        return self.activity_repository.get_most_participated_activities()

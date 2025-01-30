@@ -1,6 +1,7 @@
 from api.models.actividad import Actividad
 from api.models.actividad_programada import Actividad_programada
 from api.models.calificacion import Calificacion
+from api.models.reservacion import Reservacion
 from api.DomainServices.RepositoryInterfaces.IActivityRepository import (
     IActivityRepository,
 )
@@ -76,6 +77,39 @@ class ActivityRepository(GenericRepository, IActivityRepository):
                 "puntuacion": ActivityRepository.get_average_calification(activity.idA),
             }
 
+            activities_details.append(activity_details)
+
+        return activities_details
+
+    def get_cant_participantes_confirmados(actividad_programada_id):
+        reservaciones = Reservacion.objects.filter(
+            idAP=actividad_programada_id, estado="Confirmado"
+        )
+        total_ninos = sum(reservacion.num_ninos for reservacion in reservaciones)
+        return total_ninos
+
+    @staticmethod
+    def get_cant_participantes(actividad_id):
+        act_progs = Actividad_programada.objects.filter(idAP=actividad_id)
+        cant_participantes = 0
+        for act_prog in act_progs:
+            cant_participantes += ActivityRepository.get_cant_participantes_confirmados(
+                act_prog.idAP
+            )
+        return cant_participantes
+
+    @staticmethod
+    def get_most_participated_activities():
+        activities_details = []
+        all_activities = Actividad.objects.all()
+        for activity in all_activities:
+            activity_details = {
+                "id": activity.idA,
+                "nombre": activity.nombre,
+                "participantes": ActivityRepository.get_cant_participantes(
+                    activity.idA
+                ),
+            }
             activities_details.append(activity_details)
 
         return activities_details

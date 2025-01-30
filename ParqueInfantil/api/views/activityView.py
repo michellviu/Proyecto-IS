@@ -7,6 +7,7 @@ from rest_framework import status
 from ..serializers.ActivitySerializer import (
     ActividadSerializer,
     ActividadQualificationSerializer,
+    ActividadParticipantesSerializer,
 )
 from api.AppServices.ActivityService import ActivityService
 from api.InfrastructurePersistence.ActivityRepository import ActivityRepository
@@ -122,6 +123,28 @@ class ActividadCalificacionesView(generics.ListAPIView):
     )
     def get_queryset(self):
         return self.activity_service.get_activities_qualifications()
+
+    def get_permissions(self):
+        return [AllowAny()]
+
+
+class ActividadParticipantesView(generics.ListAPIView):
+    serializer_class = ActividadParticipantesSerializer
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.activity_service = ActivityService(ActivityRepository())
+
+    @swagger_auto_schema(
+        operation_description="Listar actividades con más participantes",
+        responses={
+            200: openapi.Response(
+                "Actividades con más participantes", ActividadSerializer(many=True)
+            )
+        },
+    )
+    def get_queryset(self):
+        return self.activity_service.get_most_participated_activities()
 
     def get_permissions(self):
         return [AllowAny()]
