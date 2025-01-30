@@ -11,8 +11,7 @@ const EntityView = ({ handleSearch, handleAdd, atributes, instances,
     return (
         <>
             <SearchHeaderAdmin
-                handleSearch={handleSearch}
-                handleAdd={handleAdd} />
+                handleSearch={handleSearch} />
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
                 Agregar
             </Button>
