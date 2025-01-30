@@ -90,7 +90,13 @@ class ActivityRepository(GenericRepository, IActivityRepository):
 
     @staticmethod
     def get_cant_participantes(actividad_id):
-        act_progs = Actividad_programada.objects.filter(idAP=actividad_id)
+        # Calculate the date for three months ago from now
+        three_months_ago = datetime.now() - timedelta(days=90)
+
+        # Filter scheduled activities by the given activity ID and within the last three months
+        act_progs = Actividad_programada.objects.filter(
+            idAP=actividad_id, fecha_hora__gte=three_months_ago
+        )
         cant_participantes = 0
         for act_prog in act_progs:
             cant_participantes += ActivityRepository.get_cant_participantes_confirmados(
