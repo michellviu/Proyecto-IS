@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny
 from ..serializers.serializer import InstalacionSerializer
 from api.AppServices.InstallationService import InstallationService
 from api.InfrastructurePersistence.InstallationRepository import InstallationRepository
-
+from django.core.exceptions import ObjectDoesNotExist
 
 # vista para crear o listar todas las instalaciones
 class InstalacionView(generics.ListCreateAPIView):
@@ -55,10 +55,12 @@ class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
         responses={200: InstalacionSerializer},
     )
     def get_object(self):
-        obj = self.installation_service.get_by_id(self.kwargs["pk"])
-        if obj is None:
-            raise Http404("Installation not found")
-        return obj
+        try:
+         return self.installation_service.get_by_id(self.kwargs["pk"])
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @swagger_auto_schema(
         operation_description="Actualizar una instalación existente",
@@ -77,5 +79,10 @@ class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
         responses={204: "No Content"},
     )
     def destroy(self, request, *args, **kwargs):
-        self.installation_service.delete(self.kwargs["pk"])
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+         self.installation_service.delete(self.kwargs["pk"])
+         return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

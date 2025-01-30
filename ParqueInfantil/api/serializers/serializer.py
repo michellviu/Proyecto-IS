@@ -13,13 +13,13 @@ class ActividadSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='idA',required=False)
     class Meta:
         model = Actividad
-        fields = ['id','idI', 'nombre', 'edad_recomendada', 'duracion', 'num_participantes', 'descripcion']
+        fields = ['id','idI', 'nombre', 'edadmin_recomendada', 'edadmax_recomendada', 'duracion', 'num_participantes', 'descripcion']
 
 class RecursoSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='idR',required=False)
     class Meta:
         model = Recurso
-        fields = ['id','estado', 'tipo', 'frecuencia_uso', 'idI']
+        fields = ['id','estado', 'tipo', 'idI']
 
 class PadreSerializer(serializers.ModelSerializer):
     class Meta:

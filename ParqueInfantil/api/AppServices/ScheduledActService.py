@@ -15,3 +15,6 @@ class ScheduledActService(GenericService, IScheduledActService):
     
     def get_actividades_futuras(self):
         return self.scheduled_act_repository.get_actividades_futuras()
+    
+    def get_actividades_numparticipantes(self):
+        return self.scheduled_act_repository.get_actividades_numparticipantes()
