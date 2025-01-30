@@ -6,7 +6,11 @@ from .views.registerView import RegistroView
 from .views.SearchView import SearchView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
-from .views.activityView import ActividadView, ActividadDetailView
+from .views.activityView import (
+    ActividadView,
+    ActividadDetailView,
+    ActividadCalificacionesView,
+)
 from .views.resourceView import RecursoView, RecursoDetailView, ResourceInUseView
 from .views.userView import (
     UserByRoleView,
@@ -72,6 +76,7 @@ urlpatterns = [
     # Actividad
     path("actividad/", ActividadView.as_view()),
     path("actividad/<int:pk>/", ActividadDetailView.as_view()),
+    path("actividad/calificaciones/", ActividadCalificacionesView.as_view()),
     # Actividad programada
     path("actividad_programada/", ScheduledActView.as_view()),
     path("actividad_programada/realizada/", ScheduledActRealizView.as_view()),

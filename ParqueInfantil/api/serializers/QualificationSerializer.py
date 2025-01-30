@@ -6,4 +6,10 @@ class QualificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Calificacion
-        fields = "__all__"
+        fields = [
+            "idU",
+            "idAP",
+            "puntuacion",
+            "fecha",
+            "comentario",
+        ]

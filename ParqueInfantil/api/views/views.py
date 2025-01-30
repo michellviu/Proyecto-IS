@@ -21,8 +21,6 @@ from ..serializers.serializer import (
     EducadorSerializer,
     AdministradorSerializer,
     Actividad_programadaSerializer,
-    ReservacionSerializer,
-    CalificacionSerializer,
 )
 
 
@@ -58,13 +56,3 @@ def home(request):
 # class AdministradorView(generics.ListCreateAPIView):
 #     serializer_class = AdministradorSerializer
 #     queryset = Administrador.objects.all()
-
-
-class ReservacionView(generics.ListCreateAPIView):
-    serializer_class = ReservacionSerializer
-    queryset = Reservacion.objects.all()
-
-
-class CalificacionView(generics.ListCreateAPIView):
-    serializer_class = CalificacionSerializer
-    queryset = Calificacion.objects.all()
