@@ -12,3 +12,7 @@ class IActivityRepository(IGenericRepository, ABC):
     @abstractmethod
     def get_activities_qualifications(self) -> list:
         pass
+
+    @abstractmethod
+    def get_most_participated_activities(self) -> list:
+        pass
