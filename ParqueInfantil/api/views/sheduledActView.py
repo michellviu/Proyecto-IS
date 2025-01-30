@@ -159,9 +159,9 @@ class ScheduledActParticipantsView(generics.ListAPIView):
     serializer_class = ScheduledActSerializer
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.scheduled_act_service = ScheduledActService()
-
-    def get_queryset(self):
+        self.scheduled_act_service = ScheduledActService(ScheduledActRepository())
+ 
+    def get(self, request, *args, **kwargs):
             actividades_numparticipantes = self.scheduled_act_service.get_actividades_numparticipantes()
             return Response(actividades_numparticipantes, status=status.HTTP_200_OK)
         

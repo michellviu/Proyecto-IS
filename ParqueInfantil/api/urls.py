@@ -103,7 +103,7 @@ urlpatterns = [
     path("reservacion/", ReservacionView.as_view()),
     path("reservacion/noconfirmado/", UnconfirmedReservationsView.as_view()),
     path("reservacion/porpadre/<int:id>/", ReservacionesPorPadreView.as_view()),
-    path("reservacion/<int:pk>/", ReservacionDetailView.as_view()),
+    path("reservacion/<str:pk>/", ReservacionDetailView.as_view()),
     # Calificacion
     path("calificacion/", QualificationView.as_view()),
     path("calificacion/<int:pk>/", QualificationDetailView.as_view()),
