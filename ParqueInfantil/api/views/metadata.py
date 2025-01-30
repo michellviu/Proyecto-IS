@@ -18,22 +18,17 @@ class MetadataView(generics.ListAPIView):
         super().__init__(**kwargs)
 
     def get(self, request, *args, **kwargs):
-        models = apps.get_models()
-        model_names = [model._meta.object_name for model in models]
+         # Obtener todos los modelos
+        all_models = apps.get_models()
+        # Filtrar solo los modelos definidos por ti (excluyendo los de Django)
+        custom_models = [model for model in all_models if model._meta.app_label == 'api']
+        # Obtener los nombres de los modelos
+        model_names = [model._meta.object_name for model in custom_models]
+        # Preparar los datos para el serializador
         data = {"models": model_names}
+        # Serializar los datos
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
+        # Devolver la respuesta
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # serializer = self.get_serializer(data={"models": model_names})
-        # serializer.is_valid(raise_exception=True)
-    # Retornar la lista de modelos como JSON
-        # return Response(serializer.data, status=status.HTTP_200_OK)
     
-# @api_view(["GET"])
-# def metadata_view(request):
-#     # Obtener todas las aplicaciones instaladas
-#     models = apps.get_models()
-#     # Extraer solo los nombres de los modelos
-#     model_names = [model._meta.object_name for model in models]
-#     # Retornar la lista de modelos como JSON
-#     return JsonResponse({"models": model_names})

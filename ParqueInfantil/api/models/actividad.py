@@ -12,7 +12,8 @@ class Actividad(models.Model):
         # db_column="IdI"  # Nombre de la columna en la base de datos
     )
     nombre = models.CharField(max_length=50)
-    edad_recomendada = models.PositiveSmallIntegerField()  # Edad recomendada
+    edadmin_recomendada = models.PositiveSmallIntegerField()  # Edad recomendada
+    edadmax_recomendada = models.PositiveSmallIntegerField()
     num_participantes = models.PositiveIntegerField()  # Número de participantes
     duracion = models.DurationField()  # Duración en formato de tiempo
     descripcion = models.CharField(max_length=100)

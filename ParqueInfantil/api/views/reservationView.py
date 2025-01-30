@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from drf_yasg.utils import swagger_auto_schema
+from django.core.exceptions import ObjectDoesNotExist
 from drf_yasg import openapi
 from ..serializers.ReservationSerializer import ReservacionSerializer
 from api.AppServices.ReservationService import ReservationService
@@ -72,13 +73,15 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         try:
             reservation = self.reservation_service.get_by_id(kwargs["pk"])
-        except Http404:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serializer = self.get_serializer(reservation, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.reservation_service.update(kwargs["pk"], serializer.validated_data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = self.get_serializer(reservation, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.reservation_service.update(kwargs["pk"], serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+        
 
     @swagger_auto_schema(
         operation_description="Eliminar una reservación existente. Puede ser eliminada por un Admin o un Padre que esten anteriormente logueados",
@@ -86,12 +89,12 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     )
     def destroy(self, request, *args, **kwargs):
         try:
-            reservation = self.reservation_service.get_by_id(kwargs["pk"])
-        except Http404:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            self.reservation_service.delete(kwargs["pk"])
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
-        self.reservation_service.delete(kwargs["pk"])
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        
 
     @swagger_auto_schema(
         operation_description="Obtener una reservación existente. Puede ser obtenida por un Admin o Padre que esten anteriormente logueados",
@@ -100,8 +103,8 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     def retrieve(self, request, *args, **kwargs):
         try:
             reservation = self.reservation_service.get_by_id(kwargs["pk"])
-        except Http404:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = self.get_serializer(reservation)
         return Response(serializer.data, status=status.HTTP_200_OK)
