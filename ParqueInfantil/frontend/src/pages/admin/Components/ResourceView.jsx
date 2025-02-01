@@ -2,7 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 
 import SearchHeaderAdmin from './SearchHeaderAdmin';
-import { List, Spin } from 'antd';
+import { List, Spin, Button } from 'antd';
+
+const ActionButton = styled(Button)`
+    margin: 0 5px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+`;
 
 
 const ResourceView = ({handleSearch, resources, loading}) => {

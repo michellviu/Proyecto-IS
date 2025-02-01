@@ -8,7 +8,7 @@ import SearchHeaderAdmin from './SearchHeaderAdmin';
 import Table from './Table';
 
 const EntityView = ({ handleSearch, handleAdd, atributes, instances,
-    handleAttributeClick, handleEdit, handleDelete, loading }) => {
+    handleAttributeClick, handleEdit, handleDelete, handleSort, loading }) => {
     return (
         <>
             <SearchHeaderAdmin
@@ -26,6 +26,7 @@ const EntityView = ({ handleSearch, handleAdd, atributes, instances,
                     onHeaderClick={handleAttributeClick}
                     onDeleteClick={handleDelete}
                     onEditClick={handleEdit}
+                    onSortClick={handleSort}
                 />)}
         </>
 
