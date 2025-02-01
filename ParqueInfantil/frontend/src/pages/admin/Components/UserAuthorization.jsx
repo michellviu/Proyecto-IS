@@ -63,7 +63,7 @@ const UserAuthorization = ({ handleSearch, pendingUsers, handleAcceptUser, handl
                                     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
                                         {Object.keys(user).map(key => (
                                             <span key={key} style={{ marginRight: '20px' }}>
-                                                <strong>{key === 'Nombre' || key === 'Rol' ? <span style={{ color: 'blue' }}>{key}:</span> : `${key}:`}</strong> {user[key]}
+                                                <strong>{key === 'username' || key === 'rol' ? <span style={{ color: 'blue' }}>{key}:</span> : `${key}:`}</strong> {user[key]}
                                             </span>
                                         ))}
                                     </div>

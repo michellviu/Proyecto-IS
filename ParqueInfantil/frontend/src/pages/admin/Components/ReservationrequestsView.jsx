@@ -2,10 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 import SearchHeaderAdmin from './SearchHeaderAdmin';
-import { List, Spin } from 'antd';
+import { List, Spin, Button } from 'antd';
 import { FaTimes, FaCheck } from 'react-icons/fa';
 
+const ActionButton = styled(Button)`
+    margin: 0 5px;
+    transition: transform 0.2s ease;
 
+    &:hover {
+        transform: scale(1.1);
+    }
+`;
 
 const ReservationRequestsView = ({ handleSearch, reservations, loading, handleAccept, handleReject }) => {
   return (
@@ -36,7 +43,8 @@ const ReservationRequestsView = ({ handleSearch, reservations, loading, handleAc
               />
             </List.Item>
           )}
-        />)}
+        />
+      )}
     </div >
   );
 };
