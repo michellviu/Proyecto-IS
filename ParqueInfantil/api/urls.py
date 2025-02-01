@@ -47,6 +47,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from .views.CustomTokenObtainPairView import CustomTokenObtainPairView
+from .views.testsview import TestGraficarCalificacionesView
+from .views.ReportView import ReportView
 
 # router = routers.DefaultRouter()
 # router.register(r'instalacion', views.InstalacionView, 'instalacion')
@@ -88,8 +90,9 @@ urlpatterns = [
     path("actividad_programada/catalog/", ScheduledActCatalogView.as_view()),
     path("actividad_programada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividad_programada/tiemporeal/", ScheduledActRealTimeView.as_view()),
-    path("actividad_programada/numparticipantes/", ScheduledActParticipantsView.as_view()),
-
+    path(
+        "actividad_programada/numparticipantes/", ScheduledActParticipantsView.as_view()
+    ),
     # Recurso
     path("recurso/", RecursoView.as_view()),
     path("recurso/enuso/", ResourceInUseView.as_view()),
@@ -112,4 +115,7 @@ urlpatterns = [
     # Search
     path("search/", SearchView.as_view()),
     path("orderbyproperty/", OrderByPropertyView.as_view()),
+    # Tests
+    path("test/", TestGraficarCalificacionesView.as_view()),
+    path("pdf/", ReportView.as_view()),
 ]

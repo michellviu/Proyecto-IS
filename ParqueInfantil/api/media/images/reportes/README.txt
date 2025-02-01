@@ -1,0 +1,1 @@
+Aqui van las imagenes que se generan para los reportes
