@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import { FaBook } from 'react-icons/fa';
 import { Button } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-
 const Catalog = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -22,12 +21,15 @@ const ActivityCard = styled.div`
     padding: 20px;
     width: 200px;
     text-align: center;
+<<<<<<< HEAD
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
 
     &:hover {
         transform: translateY(-5px);
     }
+=======
+>>>>>>> b36630d (Minor changes)
 `;
 
 const ActivityInfo = styled.div`
