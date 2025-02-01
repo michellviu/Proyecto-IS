@@ -16,7 +16,7 @@ from rest_framework.pagination import PageNumberPagination
 
 
 # vista para crear o listar todas las instalaciones
-class ScheduledActView(generics.ListAPIView):
+class ScheduledActView(generics.ListCreateAPIView):
     serializer_class = Actividad_programadaSerializer
 
     def __init__(self, **kwargs):
@@ -28,7 +28,19 @@ class ScheduledActView(generics.ListAPIView):
         responses={200: Actividad_programadaSerializer(many=True)},
     )
     def get(self, request, format=None):
-        return self.scheduled_act_service.get_all()
+        # Obtener todos los objetos del modelo
+        queryset = self.scheduled_act_service.get_all()
+        # Crear una instancia de PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 15  # Número de elementos por página
+
+        # Paginar el queryset
+        result_page = paginator.paginate_queryset(queryset, request)
+        # Serializar los objetos paginados
+        serializer = Actividad_programadaSerializer(result_page, many=True)
+
+        # Devolver la respuesta paginada
+        return paginator.get_paginated_response(serializer.data)
     
 
     # @swagger_auto_schema(
