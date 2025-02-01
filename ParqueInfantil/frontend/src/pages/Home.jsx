@@ -62,7 +62,7 @@ const RegisterLink = styled(Link)`
 const Home = () => {
 
     const authToken = localStorage.getItem('authToken');
-    
+    localStorage.clear();
     return (
         <HomeContainer>
             <HeaderHome />

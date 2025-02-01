@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import ActivityCatalog from '../ActivityCatalog'; // Make sure to import your component
 import Perfil from './ParentProfile';
@@ -53,6 +54,22 @@ const ParentPage = () => {
             setShowSubMenu(false);
         }
     };
+
+    const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const userRole = localStorage.getItem('Role');
+        if (userRole !== 'padre') {
+            navigate('/alertPage');
+        } else {
+            setIsAuthenticated(true);
+        }
+    }, [navigate]);
+
+    if (!isAuthenticated) {
+        return null; // O un componente de carga/spinner
+    }
 
     return (
         <Container>
