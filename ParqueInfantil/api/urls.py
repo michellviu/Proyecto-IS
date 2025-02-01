@@ -4,6 +4,7 @@ from .views.swagger_doc import schema_view
 from .views.metadata import MetadataView
 from .views.registerView import RegistroView
 from .views.SearchView import SearchView
+from .views.orderbyProperty import OrderByPropertyView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
 from .views.activityView import (
@@ -110,4 +111,5 @@ urlpatterns = [
     path("calificacion/poractividad/<int:pk>/", QualificationByActivityView.as_view()),
     # Search
     path("search/", SearchView.as_view()),
+    path("orderbyproperty/", OrderByPropertyView.as_view()),
 ]

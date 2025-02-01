@@ -45,12 +45,15 @@ class ScheduledActRepository(GenericRepository, IScheduledActRepository):
         return actividades_programadas
     
 
-    def get_actividades_numparticipantes(self):
+    @staticmethod
+    def get_actividades_numparticipantes():
         # Realizar el join y agrupar por idAP, sumando num_ninos
         actividades_participantes = (
             Reservacion.objects
             .filter(estado='Confirmado')
             .values('idAP')
+            .annotate(idA=F('idAP__idA'))
+            .annotate(nombre_actividad=F('idAP__idA__nombre'))
             .annotate(total_participants=Sum('num_ninos'))
         )
         return actividades_participantes

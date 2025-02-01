@@ -37,8 +37,11 @@ class ReservacionView(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.reservation_service.create(serializer.validated_data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        try:
+            self.reservation_service.create(serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def get_permissions(self):
         """

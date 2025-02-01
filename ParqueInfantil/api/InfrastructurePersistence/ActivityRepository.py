@@ -7,11 +7,14 @@ from api.DomainServices.RepositoryInterfaces.IActivityRepository import (
 )
 from .GenericRepository import GenericRepository
 from datetime import datetime, timedelta
+from .ScheduledActRepository import ScheduledActRepository
+from api.DomainServices.RepositoryInterfaces.IScheduledActRepository import IScheduledActRepository
 
 
 class ActivityRepository(GenericRepository, IActivityRepository):
     def __init__(self):
         super().__init__(Actividad)
+ 
 
     def get_average_calification(actividad_id):
         # Filter scheduled activities by the given activity ID
@@ -81,21 +84,20 @@ class ActivityRepository(GenericRepository, IActivityRepository):
 
         return activities_details
 
-    def get_cant_participantes_confirmados(actividad_programada_id):
-        reservaciones = Reservacion.objects.filter(
-            idAP=actividad_programada_id, estado="Confirmado"
-        )
-        total_ninos = sum(reservacion.num_ninos for reservacion in reservaciones)
-        return total_ninos
+    # def get_cant_participantes_confirmados(actividad_programada_id):
+    #     reservaciones = Reservacion.objects.filter(
+    #         idAP=actividad_programada_id, estado="Confirmado"
+    #     )
+    #     total_ninos = sum(reservacion.num_ninos for reservacion in reservaciones)
+    #     return total_ninos
 
     @staticmethod
     def get_cant_participantes(actividad_id):
-        act_progs = Actividad_programada.objects.filter(idAP=actividad_id)
+        act_progs = ScheduledActRepository.get_actividades_numparticipantes()
         cant_participantes = 0
         for act_prog in act_progs:
-            cant_participantes += ActivityRepository.get_cant_participantes_confirmados(
-                act_prog.idAP
-            )
+          if act_prog['idA'] == actividad_id:
+            cant_participantes += act_prog['total_participants']    
         return cant_participantes
 
     @staticmethod
@@ -103,13 +105,9 @@ class ActivityRepository(GenericRepository, IActivityRepository):
         activities_details = []
         all_activities = Actividad.objects.all()
         for activity in all_activities:
-            activity_details = {
-                "id": activity.idA,
-                "nombre": activity.nombre,
-                "participantes": ActivityRepository.get_cant_participantes(
-                    activity.idA
-                ),
-            }
-            activities_details.append(activity_details)
-
+          activity_details = {'id': activity.idA,
+                  'nombre': activity.nombre, 
+                  'participantes': ActivityRepository.get_cant_participantes(activity.idA)}
+          activities_details.append(activity_details)
+        
         return activities_details
