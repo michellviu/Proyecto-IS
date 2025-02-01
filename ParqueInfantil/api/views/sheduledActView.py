@@ -12,10 +12,11 @@ from .permissions.permissions_by_roles import IsAdmin, IsPadre, IsEducador
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.pagination import PageNumberPagination
 
 
 # vista para crear o listar todas las instalaciones
-class ScheduledActView(generics.ListCreateAPIView):
+class ScheduledActView(generics.ListAPIView):
     serializer_class = Actividad_programadaSerializer
 
     def __init__(self, **kwargs):
@@ -26,8 +27,9 @@ class ScheduledActView(generics.ListCreateAPIView):
         operation_description="Listar todas las actividades programadas",
         responses={200: Actividad_programadaSerializer(many=True)},
     )
-    def get_queryset(self):
+    def get(self, request, format=None):
         return self.scheduled_act_service.get_all()
+    
 
     # @swagger_auto_schema(
     #     operation_description="Crear una nueva actividad programada",
