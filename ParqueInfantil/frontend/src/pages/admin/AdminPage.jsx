@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { message, Form, Spin } from 'antd';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 //Componentes externas
 import MenuAdmin from './Components/MenuAdmin';
@@ -11,6 +12,7 @@ import UserAuthorization from './Components/UserAuthorization'
 import ResourceView from './Components/ResourceView';
 import ReservationRequestsView from './Components/ReservationrequestsView';
 import EntityView from './Components/EntityView';
+// import AlertPage from '../AlertPage';
 
 //Handlers API
 import {
@@ -41,6 +43,24 @@ const InstancesList = styled.div`
 `;
 
 const AdminPage = (admin = 'Eveliz') => {
+
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+      const userRole = localStorage.getItem('Role');
+      if (userRole !== 'admin') {
+          navigate('/alertPage');
+      } else {
+          setIsAuthenticated(true);
+      }
+  }, [navigate]);
+
+  if (!isAuthenticated) {
+      return;
+  }
+
+
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -225,6 +245,7 @@ const AdminPage = (admin = 'Eveliz') => {
 
   };
   return (
+
     <Container>
       <HeaderAdminPage />
       <Content>

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './pages/Register';
+import AlertPage from './pages/AlertPage';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import ParentPage from './pages/parent/ParentPage';
@@ -28,6 +29,7 @@ const App = () => {
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/adminPage" element={<AdminPage />} />
                 <Route path="/padrePage" element={<ParentPage />} />
+                <Route path="/alertPage" element={<AlertPage />} />
                 <Route path="/activity-catalog" element={<ActivityCatalog />} />
                 {/* <Route path="/educator/profile" element={<EducatorProfile />} />
                 <Route path="/educadorPage" element={<ResponsibleActivities />} /> */}
