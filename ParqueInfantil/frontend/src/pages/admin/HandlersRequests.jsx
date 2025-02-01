@@ -382,7 +382,7 @@ const handleLogOut = async () => {
         // if (!response.ok) {
         //     throw new Error('Network response was not ok');
         // }
-        localStorage.removeItem('Rol');
+        localStorage.removeItem('Role');
         localStorage.removeItem('AuthToken'); // Eliminar el token de localStorage
         message.success('Sesión cerrada exitosamente');
 
