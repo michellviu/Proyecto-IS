@@ -129,7 +129,7 @@ class ActividadCalificacionesView(generics.ListAPIView):
         return [AllowAny()]
 
 
-class ActividadParticipantesView(APIView):
+class ActividadParticipantesView(generics.ListAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

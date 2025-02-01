@@ -6,9 +6,9 @@ from drf_yasg import openapi
 from .permissions.permissions_by_roles import IsAdmin
 from api.InfrastructurePersistence.GenericRepository import GenericRepository
 from api.serializers.Utils import get_serializer_for_model,get_model_for_name
+from rest_framework import generics
 
-
-class OrderByPropertyView(APIView):
+class OrderByPropertyView(generics.ListAPIView):
     permission_classes = [IsAdmin]
 
     @swagger_auto_schema(
