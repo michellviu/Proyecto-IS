@@ -6,11 +6,15 @@ const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance, curre
         <Modal
             title="Editar Instancia"
             open={isEditModalVisible}
-            onCancel={handleCancel}
+            onCancel={() => {
+                handleCancel();
+                form.resetFields();
+            }
+            }
             footer={null}
             afterClose={() => {
                 form.resetFields();
-                //setCurrentInstance(null);
+                setCurrentInstance(null);
             }}
         >
             <Form
@@ -29,7 +33,7 @@ const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance, curre
                     </Form.Item>
                 ))}
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }} onClick={() => form.submit()}>
+                    <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }}>
                         Guardar
                     </Button>
                     <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
