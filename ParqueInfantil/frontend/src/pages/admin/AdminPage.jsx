@@ -56,9 +56,9 @@ const AdminPage = (admin = 'Eveliz') => {
       }
   }, [navigate]);
 
-  if (!isAuthenticated) {
-      return;
-  }
+  // if (!isAuthenticated) {
+  //     return;
+  // }
 
 
   const [form] = Form.useForm();
