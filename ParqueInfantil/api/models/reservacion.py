@@ -20,10 +20,10 @@ class Reservacion(models.Model):
         on_delete=models.CASCADE,
     )
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["idP", "idAP"], name="unique_reservacion")
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(fields=["idP", "idAP"], name="unique_reservacion")
+    #     ]
 
     def __str__(self):
         return f"{self.idP} : {self.idAP}"

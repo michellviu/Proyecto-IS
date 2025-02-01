@@ -14,6 +14,7 @@ from api.InfrastructurePersistence.ActivityRepository import ActivityRepository
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.views import APIView
 
 
 # vista para crear o listar todas las actividades
@@ -128,8 +129,7 @@ class ActividadCalificacionesView(generics.ListAPIView):
         return [AllowAny()]
 
 
-class ActividadParticipantesView(generics.ListAPIView):
-    serializer_class = ActividadParticipantesSerializer
+class ActividadParticipantesView(APIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -143,8 +143,9 @@ class ActividadParticipantesView(generics.ListAPIView):
             )
         },
     )
-    def get_queryset(self):
-        return self.activity_service.get_most_participated_activities()
+    def get(self, request, *args, **kwargs):
+        activities = self.activity_service.get_most_participated_activities()
+        return Response(activities, status=status.HTTP_200_OK)
 
     def get_permissions(self):
-        return [AllowAny()]
+        return [IsAdmin()]
