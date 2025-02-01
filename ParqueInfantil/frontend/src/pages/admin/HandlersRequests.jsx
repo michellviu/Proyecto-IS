@@ -107,16 +107,18 @@ const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstan
     const query = e.target.value;// acordarme de que la query la tengo que pasar por json
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        const response = await fetch(`http://127.0.0.1:8000/api/search/`, {
+        const url = new URL('http://127.0.0.1:8000/api/search/');
+        const params = {
+            model: entity,
+            field: attribute.name,
+            query: query
+        };
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token
-            },
-            params: {
-                model: entity,
-                field: attribute.name,
-                query: query
             }
         });
         if (!response.ok) {
@@ -127,7 +129,7 @@ const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstan
         setFilteredInstances(data);
     } catch (error) {
         console.error('Failed to search instances:', error);
-        message.error('No se pudieron buscar las instancias.');
+        message.error(String(error));
     }
 };
 
@@ -142,13 +144,14 @@ const handleEdit = async (entity, instance, values) => {
             },
             body: JSON.stringify(values)
         });
+        const data = await response.json();
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         message.success('Instancia actualizada');
     } catch (error) {
         console.error('Failed to update instance:', error);
-        message.error('No se pudo actualizar la instancia');
+        message.error('No se pudo actualizar la instancia ');
     }
 };
 

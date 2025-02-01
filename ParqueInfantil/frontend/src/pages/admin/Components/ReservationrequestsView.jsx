@@ -2,31 +2,36 @@ import React from 'react';
 import styled from 'styled-components';
 
 import SearchHeaderAdmin from './SearchHeaderAdmin';
-import { List } from 'antd';
+import { List, Spin } from 'antd';
 
 
-const ReservationRequestsView = ({handleSearch, reservations}) => {
+
+const ReservationRequestsView = ({handleSearch, reservations, loading}) => {
     return (
         <div> 
            <SearchHeaderAdmin
-              handleSearch={handleSearch}/>
+          handleSearch={handleSearch} />
+        
+        {loading ? (
+          <Spin size="large" />
+        ) : (
     
-              <List
-                itemLayout="horizontal"
-                dataSource={reservations}
-                renderItem={reservation => (
-                  <List.Item
-                  >
-                    <List.Item.Meta
-                      title={Object.keys(reservation).map(key => (
-                        <span key={key} style={{ display: 'block' }}>
-                          <strong>{key}:</strong> {reservation[key]}
-                        </span>
-                      ))}
-                    />
-                  </List.Item>
-                )}
-              />
+          <List
+            itemLayout="horizontal"
+            dataSource={reservations}
+            renderItem={reservation => (
+              <List.Item
+              >
+                <List.Item.Meta
+                  title={Object.keys(reservation).map(key => (
+                    <span key={key} style={{ display: 'block' }}>
+                      <strong>{key}:</strong> {reservation[key]}
+                    </span>
+                  ))}
+                />
+              </List.Item>
+            )}
+          />)}
             </div >
     );
 };
