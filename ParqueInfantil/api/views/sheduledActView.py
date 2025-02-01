@@ -12,6 +12,7 @@ from .permissions.permissions_by_roles import IsAdmin, IsPadre, IsEducador
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.pagination import PageNumberPagination
 
 
 # vista para crear o listar todas las instalaciones
@@ -26,8 +27,21 @@ class ScheduledActView(generics.ListCreateAPIView):
         operation_description="Listar todas las actividades programadas",
         responses={200: Actividad_programadaSerializer(many=True)},
     )
-    def get_queryset(self):
-        return self.scheduled_act_service.get_all()
+    def get(self, request, format=None):
+        # Obtener todos los objetos del modelo
+        queryset = self.scheduled_act_service.get_all()
+        # Crear una instancia de PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 15  # Número de elementos por página
+
+        # Paginar el queryset
+        result_page = paginator.paginate_queryset(queryset, request)
+        # Serializar los objetos paginados
+        serializer = Actividad_programadaSerializer(result_page, many=True)
+
+        # Devolver la respuesta paginada
+        return paginator.get_paginated_response(serializer.data)
+    
 
     # @swagger_auto_schema(
     #     operation_description="Crear una nueva actividad programada",
@@ -159,9 +173,9 @@ class ScheduledActParticipantsView(generics.ListAPIView):
     serializer_class = ScheduledActSerializer
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.scheduled_act_service = ScheduledActService()
-
-    def get_queryset(self):
+        self.scheduled_act_service = ScheduledActService(ScheduledActRepository())
+ 
+    def get(self, request, *args, **kwargs):
             actividades_numparticipantes = self.scheduled_act_service.get_actividades_numparticipantes()
             return Response(actividades_numparticipantes, status=status.HTTP_200_OK)
         

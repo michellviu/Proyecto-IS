@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, List } from 'antd';
+import { Button, List, Spin } from 'antd';
 import { FaTimes, FaCheck } from 'react-icons/fa';
 import SearchHeaderAdmin from './SearchHeaderAdmin';
+
 
 const Container = styled.div`
     padding: 20px;
@@ -40,34 +41,37 @@ const ActionButton = styled(Button)`
     }
 `;
 
-const UserAuthorization = ({ handleSearch, pendingUsers, handleAcceptUser, handleRejectUser }) => {
+const UserAuthorization = ({ handleSearch, pendingUsers, handleAcceptUser, handleRejectUser , loading}) => {
     return (
         <Container>
             <SearchHeaderAdmin handleSearch={handleSearch} />
-            <StyledList
-                itemLayout="horizontal"
-                dataSource={pendingUsers}
-                renderItem={user => (
-                    <ListItem
-                        actions={[
-                            <ActionButton icon={<FaCheck />} onClick={() => handleAcceptUser(user)} />,
-                            <ActionButton icon={<FaTimes />} onClick={() => handleRejectUser(user)} />
-                        ]}
-                    >
-                        <ListItemMeta
-                            title={
-                                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                                    {Object.keys(user).map(key => (
-                                        <span key={key} style={{ marginRight: '20px' }}>
-                                            <strong>{key === 'Nombre' || key === 'Rol' ? <span style={{ color: 'blue' }}>{key}:</span> : `${key}:`}</strong> {user[key]}
-                                        </span>
-                                    ))}
-                                </div>
-                            }
-                        />
-                    </ListItem>
-                )}
-            />
+            {loading ? (
+                <Spin size="large" />
+            ) : (
+                <StyledList
+                    itemLayout="horizontal"
+                    dataSource={pendingUsers}
+                    renderItem={user => (
+                        <ListItem
+                            actions={[
+                                <ActionButton icon={<FaCheck />} onClick={() => handleAcceptUser(user)} />,
+                                <ActionButton icon={<FaTimes />} onClick={() => handleRejectUser(user)} />
+                            ]}
+                        >
+                            <ListItemMeta
+                                title={
+                                    <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                                        {Object.keys(user).map(key => (
+                                            <span key={key} style={{ marginRight: '20px' }}>
+                                                <strong>{key === 'Nombre' || key === 'Rol' ? <span style={{ color: 'blue' }}>{key}:</span> : `${key}:`}</strong> {user[key]}
+                                            </span>
+                                        ))}
+                                    </div>
+                                }
+                            />
+                        </ListItem>
+                    )}
+                />)}
         </Container>
     );
 };

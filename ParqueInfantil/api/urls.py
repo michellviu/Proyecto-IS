@@ -4,6 +4,7 @@ from .views.swagger_doc import schema_view
 from .views.metadata import MetadataView
 from .views.registerView import RegistroView
 from .views.SearchView import SearchView
+from .views.orderbyProperty import OrderByPropertyView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
 from .views.activityView import (
@@ -103,11 +104,12 @@ urlpatterns = [
     path("reservacion/", ReservacionView.as_view()),
     path("reservacion/noconfirmado/", UnconfirmedReservationsView.as_view()),
     path("reservacion/porpadre/<int:id>/", ReservacionesPorPadreView.as_view()),
-    path("reservacion/<int:pk>/", ReservacionDetailView.as_view()),
+    path("reservacion/<str:pk>/", ReservacionDetailView.as_view()),
     # Calificacion
     path("calificacion/", QualificationView.as_view()),
     path("calificacion/<int:pk>/", QualificationDetailView.as_view()),
     path("calificacion/poractividad/<int:pk>/", QualificationByActivityView.as_view()),
     # Search
     path("search/", SearchView.as_view()),
+    path("orderbyproperty/", OrderByPropertyView.as_view()),
 ]

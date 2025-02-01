@@ -23,7 +23,7 @@ class RecursoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recurso
-        fields = ["id", "estado", "tipo", "idI"]
+        fields = ["id", "estado", "tipo", "frecuencia_uso", "idI"]
 
 
 class PadreSerializer(serializers.ModelSerializer):

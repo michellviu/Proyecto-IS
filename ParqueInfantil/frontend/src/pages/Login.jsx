@@ -47,7 +47,7 @@ const LoginForm = () => {
     const [username, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    
     const login = async (username, password) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/login/`, {
@@ -65,6 +65,7 @@ const LoginForm = () => {
                 const rol = data.rol;
                 localStorage.clear();
                 localStorage.setItem('AuthToken',token);
+                localStorage.setItem('Role',rol);
                 message.success('Inicio de sesión exitoso');
                 navigate(`/${rol}Page`);
             } else {

@@ -11,19 +11,19 @@ class Reservacion(models.Model):
         default=uuid.uuid4,  # Genera automáticamente un UUID(implentación de GUID) único
         editable=False,  # No se puede editar manualmente
     )
-    idP = models.OneToOneField(
+    idP = models.ForeignKey(
         Padre,
         on_delete=models.CASCADE,
     )
-    idAP = models.OneToOneField(
+    idAP = models.ForeignKey(
         Actividad_programada,
         on_delete=models.CASCADE,
     )
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["idP", "idAP"], name="unique_reservacion")
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(fields=["idP", "idAP"], name="unique_reservacion")
+    #     ]
 
     def __str__(self):
         return f"{self.idP} : {self.idAP}"
@@ -38,7 +38,7 @@ class Reservacion(models.Model):
         (CANCELADO, "Cancelado"),
     ]
 
-    fecha_hora = models.DateField()
+    fecha_hora = models.DateTimeField()
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default=PENDIENTE)
     num_ninos = models.PositiveIntegerField()  # Número de niños
     comentarios = models.CharField(max_length=100)
