@@ -67,9 +67,9 @@ const ParentPage = () => {
         }
     }, [navigate]);
 
-    if (!isAuthenticated) {
-        return null; // O un componente de carga/spinner
-    }
+    // if (!isAuthenticated) {
+    //     return;
+    // }
 
     return (
         <Container>
