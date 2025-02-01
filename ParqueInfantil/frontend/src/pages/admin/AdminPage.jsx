@@ -204,9 +204,6 @@ const AdminPage = (admin = 'Eveliz') => {
           handleResourceClick={handleResourceClick}
         />
         <InstancesList>
-          {loading ? (
-            <Spin size="large" />
-          ) : (
             <>
               {selectedEntity === 'user-authorization' && (
                 <UserAuthorization
@@ -214,7 +211,8 @@ const AdminPage = (admin = 'Eveliz') => {
                   handleAdd={handleAddModal}
                   pendingUsers={pendingUsers}
                   handleAcceptUser={handleAccept}
-                  handleRejectUser={handleReject}
+                handleRejectUser={handleReject}
+                loading = {loading}
                 />
               )}
               {selectedEntity === 'resource' && (
@@ -222,6 +220,7 @@ const AdminPage = (admin = 'Eveliz') => {
                   handleSearch={handleSearch}
                   handleAdd={handleAddModal}
                   resources={resources}
+                  loading={loading}
                 />
               )}
               {selectedEntity === 'reservation-requests' && (
@@ -230,6 +229,7 @@ const AdminPage = (admin = 'Eveliz') => {
                   handleSearch={handleSearch}
                   handleAdd={handleAddModal}
                   reservations={pendingReservations}
+                  loading={loading}
                   />
                 </div>
               )}
@@ -242,10 +242,10 @@ const AdminPage = (admin = 'Eveliz') => {
                   handleAttributeClick={handleAttributeClick}
                   handleEdit={handleEditModal}
                   handleDelete={handleDelete}
+                  loading={loading}
                 />
               )}
             </>
-          )}
         </InstancesList>
       </Content>
 
