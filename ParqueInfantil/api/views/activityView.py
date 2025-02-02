@@ -145,6 +145,8 @@ class ActividadParticipantesView(generics.ListAPIView):
     )
     def get(self, request, *args, **kwargs):
         activities = self.activity_service.get_most_participated_activities()
+        activities = sorted(activities, key=lambda x: x["participantes"], reverse=True)
+        activities = activities[:3]
         return Response(activities, status=status.HTTP_200_OK)
 
     def get_permissions(self):

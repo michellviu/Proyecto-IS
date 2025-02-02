@@ -44,7 +44,7 @@ class ActividadParticipantesSerializer(serializers.ModelSerializer):
     participantes = serializers.SerializerMethodField()
 
     # def get_participantes(self, obj):
-    #     return ActivityService(ActivityRepository).get_most_participated_activities()
+    #     return ActivityService(ActivityRepository).get_cant_participantes(obj.idA)
 
     class Meta:
         model = Actividad

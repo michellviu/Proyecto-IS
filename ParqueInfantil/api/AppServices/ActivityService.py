@@ -50,3 +50,6 @@ class ActivityService(GenericService, IActivityService):
 
     def get_most_participated_activities(self):
         return self.activity_repository.get_most_participated_activities()
+    
+    def get_cant_participantes(self,actividad_id):
+        return self.activity_repository.get_cant_participantes(actividad_id)

@@ -54,6 +54,8 @@ class ScheduledActRepository(GenericRepository, IScheduledActRepository):
             .values('idAP')
             .annotate(idA=F('idAP__idA'))
             .annotate(nombre_actividad=F('idAP__idA__nombre'))
+            .annotate(fecha_inicio=F('idAP__fecha_hora'))
+            .annotate(fecha_fin=F('idAP__fecha_hora')+F('idAP__idA__duracion'))
             .annotate(total_participants=Sum('num_ninos'))
         )
         return actividades_participantes
