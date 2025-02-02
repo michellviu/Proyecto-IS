@@ -16,7 +16,7 @@ class Calificacion(models.Model):
     )
 
     puntuacion = models.SmallIntegerField()
-    fecha = models.DateField()
+    fecha = models.DateTimeField(auto_now_add=True)
     comentario = models.CharField(
         max_length=100,
         validators=[no_offensive_language],

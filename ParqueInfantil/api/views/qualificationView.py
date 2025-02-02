@@ -1,12 +1,18 @@
 from django.http import Http404
+from rest_framework.exceptions import ValidationError as Http400
 from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from drf_yasg.utils import swagger_auto_schema
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 from drf_yasg import openapi
+from api.InfrastructurePersistence.ScheduledActRepository import ScheduledActRepository
 from ..serializers.QualificationSerializer import QualificationSerializer
+from ..serializers.QualificationSerializer import QualificationByUserSerializer
 from api.AppServices.QualificationService import QualificationService
+from api.AppServices.UserService import UserService
+from api.InfrastructurePersistence.UserRepository import UserRepository
 from api.InfrastructurePersistence.QualificationRepository import (
     QualificationRepository,
 )
@@ -21,7 +27,7 @@ class QualificationView(generics.ListCreateAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.qualification_service = QualificationService(QualificationRepository())
+        self.qualification_service = QualificationService(QualificationRepository(),ScheduledActRepository())
 
     def get_queryset(self):
         return self.qualification_service.get_all()
@@ -32,10 +38,13 @@ class QualificationView(generics.ListCreateAPIView):
         responses={201: QualificationSerializer},
     )
     def create(self, request, *args, **kwargs):
+      try:    
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.qualification_service.create(serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+      except Http400 as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def get_permissions(self):
         if self.request.method == "POST":
@@ -50,7 +59,7 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.qualification_service = QualificationService(QualificationRepository())
+        self.qualification_service = QualificationService(QualificationRepository(),ScheduledActRepository())
 
     @swagger_auto_schema(
         operation_description="Actualizar una calificación existente. Puede ser actualizada por un Admin o un Padre que esten anteriormente logueados",
@@ -135,9 +144,40 @@ class QualificationByActivityView(generics.ListAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.qualification_service = QualificationService(QualificationRepository())
+        self.qualification_service = QualificationService(QualificationRepository(),ScheduledActRepository())
 
     def get_queryset(self):
         return self.qualification_service.get_qualifications_by_activity(
             self.kwargs["pk"]
         )
+    
+
+class QualificationByUserView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = QualificationByUserSerializer
+    
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.qualification_service = QualificationService(QualificationRepository(),ScheduledActRepository())
+        self.user_service = UserService(UserRepository())
+    
+    def get_queryset(self):
+        user = self.request.user
+        return self.qualification_service.get_qualifications_by_user(user.idU)
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Obtener el usuario autenticado desde el token
+        user = request.user
+        user_instance = self.user_service.get_by_id(user.idU)
+        serializer.validated_data['idU'] = user_instance
+       
+        try:
+            self.qualification_service.create(serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
