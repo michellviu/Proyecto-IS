@@ -18,3 +18,6 @@ class ScheduledActService(GenericService, IScheduledActService):
     
     def get_actividades_numparticipantes(self):
         return self.scheduled_act_repository.get_actividades_numparticipantes()
+    
+    def get_actividades_por_educador(self, educador_id):
+        return self.scheduled_act_repository.get_actividades_por_educador(educador_id)

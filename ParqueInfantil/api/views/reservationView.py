@@ -6,7 +6,10 @@ from drf_yasg.utils import swagger_auto_schema
 from django.core.exceptions import ObjectDoesNotExist
 from drf_yasg import openapi
 from ..serializers.ReservationSerializer import ReservacionSerializer
+from ..serializers.ReservationSerializer import ReservacionByFatherSerializer
 from api.AppServices.ReservationService import ReservationService
+from api.AppServices.FatherService import FatherService
+from api.InfrastructurePersistence.FatherRepository import FatherRepository
 from api.InfrastructurePersistence.ReservationRepository import ReservationRepository
 from .permissions.permissions_by_roles import (
     IsAdmin,
@@ -19,7 +22,7 @@ import uuid
 # vista para crear o listar todas las reservaciones
 class ReservacionView(generics.ListCreateAPIView):
     serializer_class = ReservacionSerializer
-
+    permission_classes = [IsAdmin]
     # Constructor de la clase ReservacionView
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -55,7 +58,7 @@ class ReservacionView(generics.ListCreateAPIView):
             list: A list of permission instances.
         """
         if self.request.method == "POST":
-            return [IsAdmin() or (IsPadre() and MySelf())]
+            return [IsAdmin()]
         elif self.request.method == "GET":
             return [IsAdmin()]
         return super().get_permissions()
@@ -116,17 +119,39 @@ class ReservacionDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ReservacionesPorPadreView(generics.ListAPIView):
-    serializer_class = ReservacionSerializer
-    permission_classes = [IsAdmin or (IsPadre and MySelf)]
+class ReservacionesPorPadreView(generics.ListCreateAPIView):
+    permission_classes = [IsPadre]
+    serializer_class = ReservacionByFatherSerializer
+    
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.reservation_service = ReservationService(ReservationRepository())
+        self.father_service = FatherService(FatherRepository())
 
     def get_queryset(self):
-        padre_id = self.kwargs.get("id")
-        return self.reservation_service.get_reservations_by_user(padre_id)
+        user = self.request.user
+        return self.reservation_service.get_reservations_by_user(user.idU)
+    
+ 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Obtener el usuario autenticado desde el token
+        user = request.user
+
+        # Establecer el idP al usuario autenticado
+       
+        padre_instance = self.father_service.get_by_id(user.idU)
+        serializer.validated_data['idP'] = padre_instance
+       
+        try:
+            self.reservation_service.create(serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class UnconfirmedReservationsView(generics.ListAPIView):

@@ -179,3 +179,15 @@ class ScheduledActParticipantsView(generics.ListAPIView):
             actividades_numparticipantes = self.scheduled_act_service.get_actividades_numparticipantes()
             return Response(actividades_numparticipantes, status=status.HTTP_200_OK)
         
+
+class ScheduledActForEducadorView(generics.ListAPIView):
+    serializer_class = ScheduledActSerializer
+    permission_classes = [IsEducador]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.scheduled_act_service = ScheduledActService(ScheduledActRepository())
+
+    def get_queryset(self):
+        user = self.request.user
+        return self.scheduled_act_service.get_actividades_por_educador(user.idU)

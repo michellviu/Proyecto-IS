@@ -4,12 +4,14 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .permissions.permissions_by_roles import IsAdmin
+from rest_framework.permissions import AllowAny
 from api.InfrastructurePersistence.GenericRepository import GenericRepository
 from api.serializers.Utils import get_serializer_for_model,get_model_for_name
 from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 
 class OrderByPropertyView(generics.ListAPIView):
-    permission_classes = [IsAdmin]
+    permission_classes = [AllowAny]
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -32,9 +34,15 @@ class OrderByPropertyView(generics.ListAPIView):
         if field_name == 'id':
             field_name = model._meta.pk.name
         results = repository.get_all_order_by_property(field_name, criterion)
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 15  # Número de elementos por página
+
+        # Paginar el queryset
+        result_page = paginator.paginate_queryset(results, request)
         
         serializer_class = get_serializer_for_model(model_name)
         if not serializer_class:
             return Response({"error": "Invalid model name."}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = serializer_class(results, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = serializer_class(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)

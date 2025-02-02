@@ -18,3 +18,7 @@ class IScheduledActRepository(IGenericRepository, ABC):
      @abstractmethod
      def get_actividades_numparticipantes(self):
           pass
+
+     @abstractmethod
+     def get_actividades_por_educador(self, educador_id):
+          pass

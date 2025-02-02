@@ -44,21 +44,21 @@ const InstancesList = styled.div`
 
 const AdminPage = (admin = 'Eveliz') => {
 
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const navigate = useNavigate();
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-      const userRole = localStorage.getItem('Role');
-      if (userRole !== 'admin') {
-          navigate('/alertPage');
-      } else {
-          setIsAuthenticated(true);
-      }
-  }, [navigate]);
+  // useEffect(() => {
+  //     const userRole = localStorage.getItem('Role');
+  //     if (userRole !== 'admin') {
+  //         navigate('/alertPage');
+  //     } else {
+  //         setIsAuthenticated(true);
+  //     }
+  // }, [navigate]);
 
-  if (!isAuthenticated) {
-      return;
-  }
+  // if (!isAuthenticated) {
+  //     return;
+  // }
 
 
   const [form] = Form.useForm();
