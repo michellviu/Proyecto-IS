@@ -4,6 +4,7 @@ from ..DomainServices.RepositoryInterfaces.IActivityRepository import (
 )
 from .GenericService import GenericService
 from api.models.instalacion import Instalacion
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class ActivityService(GenericService, IActivityService):
@@ -13,6 +14,17 @@ class ActivityService(GenericService, IActivityService):
     
 
     def create(self, data):
+        # Comprobar los requerimientos de cantidad de personas 
+        self.check_for_consistency(data)
+        # Llamar al método create del GenericService
+        return super().create(data)
+
+    def update(self,id, data):
+            self.check_for_consistency(data)
+            return super().update(id, data)
+        
+    @staticmethod
+    def check_for_consistency(data):
         # Obtener la instalación correspondiente a la actividad
         instalacion_id = data.get('idI')
         num_participantes = data.get('num_participantes')
@@ -28,9 +40,7 @@ class ActivityService(GenericService, IActivityService):
         # Verificar si el número de participantes es mayor que la capacidad de la instalación
         if num_participantes > instalacion.capacidad:
             raise ValueError("El número de participantes no puede ser mayor que la capacidad de la instalación.")
-        # Llamar al método create del GenericService
-        return super().create(data)
-
+        
 
     def get_average_calification(self, activity_id):
         return self.activity_repository.get_average_calification(activity_id)

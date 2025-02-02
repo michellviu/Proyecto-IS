@@ -42,6 +42,7 @@ from .views.qualificationView import (
     QualificationView,
     QualificationDetailView,
     QualificationByActivityView,
+    QualificationByUserView
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -113,6 +114,7 @@ urlpatterns = [
     path("calificacion/", QualificationView.as_view()),
     path("calificacion/<int:pk>/", QualificationDetailView.as_view()),
     path("calificacion/poractividad/<int:pk>/", QualificationByActivityView.as_view()),
+    path("calificacion/porusuario/", QualificationByUserView.as_view()),
     # Search
     path("search/", SearchView.as_view()),
     path("orderbyproperty/", OrderByPropertyView.as_view()),

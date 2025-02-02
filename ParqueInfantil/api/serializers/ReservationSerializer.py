@@ -18,7 +18,6 @@ class ReservacionSerializer(serializers.ModelSerializer):
 
 class ReservacionByFatherSerializer(serializers.ModelSerializer):
     nombre_actividad = serializers.CharField(source="idAP.idA.nombre", required=False)
-    fecha_hora = serializers.DateTimeField(required=False)
     comentarios = serializers.CharField(required=False)
     class Meta:
         model = Reservacion
