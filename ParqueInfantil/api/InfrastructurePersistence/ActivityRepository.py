@@ -96,6 +96,9 @@ class ActivityRepository(GenericRepository, IActivityRepository):
     @staticmethod
     def get_cant_participantes(actividad_id):
         act_progs = ScheduledActRepository.get_actividades_numparticipantes()
+         # Calculate the date for one month ago from now
+        last_month = datetime.now() - timedelta(days=90)
+        act_progs = act_progs.filter(fecha_hora__gte=last_month)
         cant_participantes = 0
         for act_prog in act_progs:
             if act_prog["idA"] == actividad_id:

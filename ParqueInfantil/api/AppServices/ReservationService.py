@@ -12,6 +12,8 @@ from api.InfrastructurePersistence.ActivityRepository import ActivityRepository
 from .ScheduledActService import ScheduledActService
 from .ActivityService import ActivityService
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime, timedelta
+from django.utils.timezone import make_naive
 
 
 class ReservationService(GenericService, IReservationService):
@@ -45,9 +47,14 @@ class ReservationService(GenericService, IReservationService):
         participantes = 0
         for act in total_participantes_actuales:
             if act['idAP'] == actividad_programada.idAP:
+                fecha_fin_naive = make_naive(act['fecha_fin'])
+                print(fecha_fin_naive)
+                if fecha_fin_naive < datetime.now():
+                    raise ValueError("La actividad ya ha finalizado.") 
                 participantes = act['total_participants']
                 break
-    
+        
+
          # Verificar si la capacidad es suficiente
         if participantes + num_ninos > actividad_programada.idA.num_participantes:
             raise ValueError("La capacidad de la actividad es insuficiente para esta reservación.")
