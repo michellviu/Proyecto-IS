@@ -16,7 +16,7 @@ import EntityView from './Components/EntityView';
 
 //Handlers API
 import {
-  fetchEntities, fetchAtributes, fetchInstances,
+  fetchEntities, fetchAtributes, fetchInstances, fetchPage, 
   handleDeleteRequest, fetchSearch, fetchOrder, handleEdit, handleAdd,
   fetchPendingUsers, handleAcceptUser, handleRejectUser,
   fetchResourcesInUse,
@@ -42,7 +42,7 @@ const InstancesList = styled.div`
   padding: 0 20px;
 `;
 
-const AdminPage = (admin = 'Eveliz') => {
+const AdminPage = () => {
 
   // const navigate = useNavigate();
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -64,92 +64,89 @@ const AdminPage = (admin = 'Eveliz') => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const [entities, setEntities] = useState([
-    'INSTALACIONES', 'ACTIVIDAD', 'RECURSOS', 'USUARIO', 'PADRE',
-    'EDUCADOR', 'ADMINISTRADOR', 'ACTIVIDAD_PROGRAMADA', 'RESERVACIÓN', 'CALIFICACIÓN'
-  ]);
+  const [entities, setEntities] = useState([]);
   useEffect(() => { fetchEntities(setEntities) }, []);
 
-  const [atributes, setAtributes] = useState([
-    { name: 'Id', null: false },
-    { name: 'Nombre', null: false },
-    { name: 'Descripción', null: false }]);
+  //Metadata
+  const [atributes, setAtributes] = useState([]);
   const [selectedEntity, setSelectedEntity] = useState([null]);
   const [selectedAttribute, setSelectedAttribute] = useState(atributes[0]);
 
-  const currentBlock = 0;
-  const [instances, setInstances] = useState([
-    { Id: 1, Nombre: 'Ejemplo 1', Descripción: 'Des 1' },
-    { Id: 2, Nombre: 'Ejemplo 2', Descripción: 'Des 2' },
-    { Id: 3, Nombre: 'Ejemplo 3', Descripción: 'Des 3' }]);
-  const [filteredInstances, setFilteredInstances] = useState([]);
+  //Paginacion
+  const [nextPage, setNextPage] = useState(null);
+  const [previousPage, setPreviousPage] = useState(null);
+
+  //Instancias
+  const [instances, setInstances] = useState([]);
   const [currentInstance, setCurrentInstance] = useState(null);
+
+  //Tipo de Orden
   const [currentOrder, setCurrentOrder] = useState(0);
 
+  //Formularios de edición y adición
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-
-
-  const [pendingUsers, setPendingUsers] = useState([
-    { id: 1, nombre: 'Juan Perez', descripcion: 'Usuario pendiente 1' },
-    { id: 2, nombre: 'Maria Lopez', descripcion: 'Usuario pendiente 2' },
-    { id: 3, nombre: 'Carlos Sanchez', descripcion: 'Usuario pendiente 3' }]);
-
-  const [resources, setResources] = useState([
-    { id: 1, nombre: 'Recurso 1', descripcion: 'Descripción del recurso 1' },
-    { id: 2, nombre: 'Recurso 2', descripcion: 'Descripción del recurso 2' },
-    { id: 3, nombre: 'Recurso 3', descripcion: 'Descripción del recurso 3' }]);
-
-  const [pendingReservations, setPendingReservations] = useState([]);
-
 
   //Metodos GET entidades
   const handleMenuClick = async (entity) => {
     setLoading(true);
-    message.info(`Entidad seleccionada: ${entity}`);
     setSelectedEntity(entity);
+    message.info(`Entidad seleccionada: ${entity}`);
     await fetchAtributes(entity, setAtributes);
-    await fetchInstances(entity, setInstances, setFilteredInstances, currentBlock);
+    await fetchInstances(entity, setInstances, setNextPage, setPreviousPage);
     setLoading(false);
   };
+
+  const handlePage = async (url) => {
+    setLoading(true);
+    await fetchPage(setInstances, setNextPage, setPreviousPage, url);
+    setLoading(false); 
+  }
 
   const refresh = async () => {
     setLoading(true);
     if (selectedEntity === 'user-authorization') {
-      await fetchPendingUsers(setPendingUsers);
-    } else {
-      await fetchInstances(selectedEntity, setInstances, setFilteredInstances, currentBlock);
+      await fetchPendingUsers(setInstances, setNextPage, setPreviousPage);
+    }
+    else if (selectedEntity === 'resource') {
+      await fetchResourcesInUse(setInstances, setNextPage, setPreviousPage);
+    }
+    else if (selectedEntity === 'reservation-requests') {
+      await fetchPendingReservations(setInstances, setNextPage, setPreviousPage);
+    }
+    else {
+      await fetchInstances(selectedEntity, setInstances, setNextPage, setPreviousPage);
     }
     setLoading(false);
   }
 
   const handleAttributeClick = async (attribute) => {
+    setSelectedAttribute(attribute);
     if (!(attribute.name === selectedAttribute.name)) {
-      setSelectedAttribute(attribute);
       message.info(`Atributo seleccionado: ${attribute.name}`);
     }
   };
 
   const handleSearch = async (e) => {
     setLoading(true);
-    await fetchSearch(selectedEntity, selectedAttribute, e, setInstances, setFilteredInstances);
+    await fetchSearch(selectedEntity, selectedAttribute, e, setInstances, setNextPage, setPreviousPage);
     setLoading(false);
   };
 
   const handleSort = async (attribute) => {
     setLoading(true);
     handleAttributeClick(attribute);
-    var order = 'asc'
+    var order = 'asc';//meter operador ternario aqui
     if (currentOrder === 1) {
       order = 'desc';
     }
-    await fetchOrder(selectedEntity, attribute, order, setInstances, setFilteredInstances);
+    await fetchOrder(selectedEntity, attribute, order, setInstances, setNextPage, setPreviousPage);
     setCurrentOrder(1 - currentOrder);
     setLoading(false);
   }
 
   //Metodos CRUD 
-  const handleEditModal = async (instance) => {
+  const handleEditModal = (instance) => {
     setCurrentInstance(instance);
     setIsEditModalVisible(true);
   };
@@ -192,7 +189,7 @@ const AdminPage = (admin = 'Eveliz') => {
   const handleUserAuthorizationClick = async () => {
     setLoading(true);
     setSelectedEntity('user-authorization');
-    await fetchPendingUsers(setPendingUsers);
+    await fetchPendingUsers(setInstances, setNextPage, setPreviousPage);
     setLoading(false);
   };
 
@@ -216,7 +213,7 @@ const AdminPage = (admin = 'Eveliz') => {
   const handleResourceClick = async () => {
     setLoading(true);
     setSelectedEntity('resource');
-    await fetchResourcesInUse(setResources);
+    await fetchResourcesInUse(setInstances, setNextPage, setPreviousPage);
     setLoading(false);
   };
 
@@ -224,7 +221,7 @@ const AdminPage = (admin = 'Eveliz') => {
   const handleReservationRequestsClick = async () => {
     setLoading(true);
     setSelectedEntity('reservation-requests');
-    await fetchPendingReservations(setPendingReservations);
+    await fetchPendingReservations(setInstances, setNextPage, setPreviousPage);
     setLoading(false);
   };
 
@@ -261,29 +258,36 @@ const AdminPage = (admin = 'Eveliz') => {
               <UserAuthorization
                 handleSearch={handleSearch}
                 handleAdd={handleAddModal}
-                pendingUsers={pendingUsers}
+                pendingUsers={instances}
                 handleAcceptUser={handleAccept}
                 handleRejectUser={handleReject}
                 loading={loading}
+                handlePage={handlePage}
+                previous={previousPage}
+                next={nextPage}
               />
             )}
             {selectedEntity === 'resource' && (
               <ResourceView
                 handleSearch={handleSearch}
-                handleAdd={handleAddModal}
-                resources={resources}
+                resources={instances}
                 loading={loading}
+                handlePage={handlePage}
+                previous={previousPage}
+                next={nextPage}
               />
             )}
             {selectedEntity === 'reservation-requests' && (
               <div>
                 <ReservationRequestsView
                   handleSearch={handleSearch}
-                  handleAdd={handleAddModal}
-                  reservations={pendingReservations}
+                  reservations={instances}
                   loading={loading}
                   handleAccept={handleAcceptReservation}
                   handleReject={handleRejectReservation}
+                  handlePage={handlePage}
+                  next={nextPage}
+                  previous={previousPage}
                 />
               </div>
             )}
@@ -298,6 +302,9 @@ const AdminPage = (admin = 'Eveliz') => {
                 handleDelete={handleDelete}
                 handleSort={handleSort}
                 loading={loading}
+                handlePage={handlePage}
+                next={nextPage}
+                previous={previousPage}
               />
             )}
           </>

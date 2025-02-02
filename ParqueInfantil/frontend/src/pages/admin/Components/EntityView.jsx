@@ -6,9 +6,12 @@ import { Spin } from 'antd';
 
 import SearchHeaderAdmin from './SearchHeaderAdmin';
 import Table from './Table';
+import PaginationControls from './PaginationControls'
+
 
 const EntityView = ({ handleSearch, handleAdd, atributes, instances,
-    handleAttributeClick, handleEdit, handleDelete, handleSort, loading }) => {
+    handleAttributeClick, handleEdit, handleDelete, handleSort, loading,
+    handlePage, next , previous}) => {
     return (
         <>
             <SearchHeaderAdmin
@@ -27,7 +30,16 @@ const EntityView = ({ handleSearch, handleAdd, atributes, instances,
                     onDeleteClick={handleDelete}
                     onEditClick={handleEdit}
                     onSortClick={handleSort}
-                />)}
+                    />
+
+            )}
+            <PaginationControls
+                handlePage={handlePage}
+                next={next}
+                previous={previous}
+            />
+            
+            
         </>
 
 
