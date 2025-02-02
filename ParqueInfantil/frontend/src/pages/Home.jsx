@@ -39,7 +39,7 @@ const HomeContainer = styled.div`
 
 
 const Footer = styled.footer`
-    background-color: #ffcccb;
+    background-color:rgba(161, 134, 133, 0.42);
     width: 100%;
     text-align: center;
     padding: 10px 0;
@@ -69,7 +69,7 @@ const Icon = styled(FaHome)`
 
 const RegisterLink = styled(Link)`
     margin-top: 1rem;
-    color: #007bff;
+    color:rgba(199, 199, 199, 0.1);
     text-decoration: none;
 
     &:hover {
@@ -82,7 +82,6 @@ const RegisterLink = styled(Link)`
 const Home = () => {
 
     const authToken = localStorage.getItem('authToken');
-    localStorage.clear();
 
     return (
         <HomeContainer>

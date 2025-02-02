@@ -109,10 +109,9 @@ const Register = () => {
       const result = await response.json();
 
       if (!response.ok) {
+        message.error('Falló el registro: ' + result.error );
         setErrors(result.errors || {});
       } else {
-        // acuerdate de el manejo de errores
-       
         localStorage.setItem("AuthToken", result.access);
         message.success("Registro exitoso");
         if (formData.rol === 'padre') {
