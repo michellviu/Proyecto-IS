@@ -42,6 +42,14 @@ const MenuItem = styled.div`
 `;
 
 const ParentPage = () => {
+
+    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('Role') === 'padre');
+    if (!isAuthenticated){
+      return (
+        <AlertPage />
+      );
+    }
+
     const [selectedMenu, setSelectedMenu] = useState('Catalogo');
 
     const [showSubMenu, setShowSubMenu] = useState(false);
@@ -55,21 +63,6 @@ const ParentPage = () => {
         }
     };
 
-    const navigate = useNavigate();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    useEffect(() => {
-        const userRole = localStorage.getItem('Role');
-        if (userRole !== 'padre') {
-            navigate('/alertPage');
-        } else {
-            setIsAuthenticated(true);
-        }
-    }, [navigate]);
-
-    // if (!isAuthenticated) {
-    //     return;
-    // }
 
     return (
         <Container>
