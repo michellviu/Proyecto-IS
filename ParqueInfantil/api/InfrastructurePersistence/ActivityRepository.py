@@ -16,10 +16,11 @@ from api.DomainServices.RepositoryInterfaces.IScheduledActRepository import (
 class ActivityRepository(GenericRepository, IActivityRepository):
     def __init__(self):
         super().__init__(Actividad)
-
+    
+    @staticmethod
     def get_average_calification(actividad_id):
         # Filter scheduled activities by the given activity ID
-        act_progs = Actividad_programada.objects.filter(idAP=actividad_id)
+        act_progs = Actividad_programada.objects.filter(idA=actividad_id)
 
         # Calculate the date for one month ago from now
         last_month = datetime.now() - timedelta(days=30)
@@ -48,7 +49,7 @@ class ActivityRepository(GenericRepository, IActivityRepository):
             if cantidad_calificaciones > 0:
                 return puntuacion_total / cantidad_calificaciones
             else:
-                return 0
+                return None
         # else:
         #     raise ValueError(
         #         "No hay actividades programadas asociadas a la actividad."
@@ -76,7 +77,7 @@ class ActivityRepository(GenericRepository, IActivityRepository):
         # Iterate through each activity to calculate its average qualification
         for activity in all_activities:
             activity_details = {
-                "id": activity.idA,
+                "idA": activity.idA,
                 "nombre": activity.nombre,
                 "puntuacion": ActivityRepository.get_average_calification(activity.idA),
             }

@@ -6,6 +6,11 @@ from api.InfrastructurePersistence.ActivityRepository import ActivityRepository
 
 class ActividadSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="idA", required=False)
+    puntuacion = serializers.SerializerMethodField()
+
+
+    def get_puntuacion(self, obj):
+        return ActivityService(ActivityRepository).get_average_calification(obj.idA)
 
     class Meta:
         model = Actividad
@@ -15,6 +20,7 @@ class ActividadSerializer(serializers.ModelSerializer):
             "nombre",
             "edadmin_recomendada",
             "edadmax_recomendada",
+            "puntuacion",
             "duracion",
             "num_participantes",
             "descripcion",
@@ -23,10 +29,10 @@ class ActividadSerializer(serializers.ModelSerializer):
 
 class ActividadQualificationSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="idA", required=False)
-    puntuacion = serializers.SerializerMethodField()
+    puntuacion = serializers.FloatField()
 
-    def get_puntuacion(self, obj):
-        return ActivityService(ActivityRepository).get_activities_qualifications()
+    # def get_puntuacion(self, obj):
+    #     return ActivityService(ActivityRepository).get_activities_qualifications()
 
     class Meta:
         model = Actividad
