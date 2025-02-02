@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import ActivityCatalog from '../ActivityCatalog'; // Make sure to import your component
 import Perfil from './ParentProfile';
 import PlayHubLogo from '../../assets/PlayHub.png';
-//import Reservations from './ReservedActivities'
+import Reservations from './Reservations'
 
 const Container = styled.div`
     display: flex;
@@ -67,9 +67,9 @@ const ParentPage = () => {
         }
     }, [navigate]);
 
-    if (!isAuthenticated) {
-        return null; // O un componente de carga/spinner
-    }
+    // if (!isAuthenticated) {
+    //     return;
+    // }
 
     return (
         <Container>
@@ -98,8 +98,8 @@ const ParentPage = () => {
                     </>
                 )}
                 <MenuItem
-                    selected={selectedMenu === 'Mis Reservas'}
-                    onClick={() => handleMenuClick('Mis Reservas')}
+                    selected={selectedMenu === 'Reservas'}
+                    onClick={() => handleMenuClick('Reservas')}
                 >
                     Reservaciones
                 </MenuItem>
@@ -134,11 +134,11 @@ const ParentPage = () => {
                         {/* Add your component for Actividades Futuras here */}
                     </div>
                 )}
-                {/* selected={selectedMenu === 'Mis Reservas'} && (
+                {selectedMenu === 'Reservas' && (
                     <div style={{ width: '100%' }}>
                         <Reservations />
                     </div>
-                )*/}
+                )}
                 {selectedMenu === 'Perfil' && (
                     <div style={{ width: '100%' }}>
                         <Perfil />
