@@ -4,9 +4,15 @@ from .views.swagger_doc import schema_view
 from .views.metadata import MetadataView
 from .views.registerView import RegistroView
 from .views.SearchView import SearchView
+from .views.orderbyProperty import OrderByPropertyView
 from .views.loginView import LoginView
 from .views.installationView import InstalacionView, InstalacionDetailView
-from .views.activityView import ActividadView, ActividadDetailView
+from .views.activityView import (
+    ActividadView,
+    ActividadDetailView,
+    ActividadCalificacionesView,
+    ActividadParticipantesView,
+)
 from .views.resourceView import RecursoView, RecursoDetailView, ResourceInUseView
 from .views.userView import (
     UserByRoleView,
@@ -23,6 +29,7 @@ from .views.sheduledActView import (
     ScheduledActCatalogView,
     ScheduledActRealizView,
     ScheduledActFuturaView,
+    ScheduledActParticipantsView,
 )
 from .views.reservationView import (
     ReservacionView,
@@ -72,6 +79,8 @@ urlpatterns = [
     # Actividad
     path("actividad/", ActividadView.as_view()),
     path("actividad/<int:pk>/", ActividadDetailView.as_view()),
+    path("actividad/calificaciones/", ActividadCalificacionesView.as_view()),
+    path("actividad/participantes/", ActividadParticipantesView.as_view()),
     # Actividad programada
     path("actividad_programada/", ScheduledActView.as_view()),
     path("actividad_programada/realizada/", ScheduledActRealizView.as_view()),
@@ -79,6 +88,8 @@ urlpatterns = [
     path("actividad_programada/catalog/", ScheduledActCatalogView.as_view()),
     path("actividad_programada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividad_programada/tiemporeal/", ScheduledActRealTimeView.as_view()),
+    path("actividad_programada/numparticipantes/", ScheduledActParticipantsView.as_view()),
+
     # Recurso
     path("recurso/", RecursoView.as_view()),
     path("recurso/enuso/", ResourceInUseView.as_view()),
@@ -90,7 +101,7 @@ urlpatterns = [
     path("usuario/<str:role>/", UserByRoleView.as_view()),
     path("usuario/confirmarrol/<int:idU>/", ConfirmRoleView.as_view()),
     # Reservacion
-    path("reservacion", ReservacionView.as_view()),
+    path("reservacion/", ReservacionView.as_view()),
     path("reservacion/noconfirmado/", UnconfirmedReservationsView.as_view()),
     path("reservacion/porpadre/<int:id>/", ReservacionesPorPadreView.as_view()),
     path("reservacion/<str:pk>/", ReservacionDetailView.as_view()),
@@ -100,4 +111,5 @@ urlpatterns = [
     path("calificacion/poractividad/<int:pk>/", QualificationByActivityView.as_view()),
     # Search
     path("search/", SearchView.as_view()),
+    path("orderbyproperty/", OrderByPropertyView.as_view()),
 ]

@@ -12,7 +12,7 @@ class GenericRepository(IGenericRepository):
         try:
             return self.model.objects.get(**{primary_key: id})
         except self.model.DoesNotExist:
-            return None
+            return 
 
     def create(self, data):
         return self.model.objects.create(**data)
@@ -29,3 +29,8 @@ class GenericRepository(IGenericRepository):
     def search(self, field_name, query):
         filter_kwargs = {f"{field_name}__icontains": query}
         return self.model.objects.filter(**filter_kwargs)
+    
+    def get_all_order_by_property(self, field_name, criterio):
+        if criterio.lower() == 'desc':
+            field_name = f"-{field_name}"
+        return self.model.objects.all().order_by(field_name)

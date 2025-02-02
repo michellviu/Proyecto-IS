@@ -1,4 +1,5 @@
 from api.models.actividad_programada import Actividad_programada
+from api.models.reservacion import Reservacion
 from api.DomainServices.RepositoryInterfaces.IScheduledActRepository import (
     IScheduledActRepository,
 )
@@ -6,6 +7,7 @@ from .GenericRepository import GenericRepository
 from django.utils import timezone
 from django.db.models import F, ExpressionWrapper, DurationField
 import pytz
+from django.db.models import Sum
 
 
 class ScheduledActRepository(GenericRepository, IScheduledActRepository):
@@ -41,6 +43,20 @@ class ScheduledActRepository(GenericRepository, IScheduledActRepository):
         actividades_programadas = Actividad_programada.objects.select_related('idA')
         actividades_programadas=actividades_programadas.filter(fecha_hora__gt=now)
         return actividades_programadas
+    
+
+    @staticmethod
+    def get_actividades_numparticipantes():
+        # Realizar el join y agrupar por idAP, sumando num_ninos
+        actividades_participantes = (
+            Reservacion.objects
+            .filter(estado='Confirmado')
+            .values('idAP')
+            .annotate(idA=F('idAP__idA'))
+            .annotate(nombre_actividad=F('idAP__idA__nombre'))
+            .annotate(total_participants=Sum('num_ninos'))
+        )
+        return actividades_participantes
 
        
         

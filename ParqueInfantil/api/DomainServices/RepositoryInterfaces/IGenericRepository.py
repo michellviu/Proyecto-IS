@@ -20,3 +20,11 @@ class IGenericRepository(ABC):
     @abstractmethod
     def delete(self, entity):
         pass
+
+    @abstractmethod
+    def search(self, field_name, query):
+        pass
+
+    @abstractmethod
+    def get_all_order_by_property(self,field_name,criterio):
+        pass

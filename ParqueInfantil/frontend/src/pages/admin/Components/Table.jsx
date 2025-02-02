@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { FaSort } from 'react-icons/fa'
 
 const TableContainer = styled.div`
     width: 100%;
@@ -38,7 +39,7 @@ const OptionsCell = styled.td`
     gap: 10px;
 `;
 
-const Table = ({ headers, data, onHeaderClick, onDeleteClick, onEditClick }) => {
+const Table = ({ headers, data, onHeaderClick, onDeleteClick, onEditClick, onSortClick}) => {
     return (
         <TableContainer>
             <StyledTable>
@@ -49,6 +50,7 @@ const Table = ({ headers, data, onHeaderClick, onDeleteClick, onEditClick }) => 
                                 <Button type="link" onClick={() => onHeaderClick(header)}>
                                     {header.name}
                                 </Button>
+                                <Button icon={<FaSort />} onClick={() => onSortClick(header)} />
                             </TableHeader>
                         ))}
                         <TableHeader>Opciones</TableHeader>

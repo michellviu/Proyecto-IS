@@ -11,6 +11,8 @@ from api.serializers.serializer import Actividad_programadaSerializer
 from .permissions.permissions_by_roles import IsAdmin, IsPadre, IsEducador
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.pagination import PageNumberPagination
 
 
 # vista para crear o listar todas las instalaciones
@@ -25,8 +27,21 @@ class ScheduledActView(generics.ListCreateAPIView):
         operation_description="Listar todas las actividades programadas",
         responses={200: Actividad_programadaSerializer(many=True)},
     )
-    def get_queryset(self):
-        return self.scheduled_act_service.get_all()
+    def get(self, request, format=None):
+        # Obtener todos los objetos del modelo
+        queryset = self.scheduled_act_service.get_all()
+        # Crear una instancia de PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 15  # Número de elementos por página
+
+        # Paginar el queryset
+        result_page = paginator.paginate_queryset(queryset, request)
+        # Serializar los objetos paginados
+        serializer = Actividad_programadaSerializer(result_page, many=True)
+
+        # Devolver la respuesta paginada
+        return paginator.get_paginated_response(serializer.data)
+    
 
     # @swagger_auto_schema(
     #     operation_description="Crear una nueva actividad programada",
@@ -55,15 +70,18 @@ class ScheduledActDetailView(generics.RetrieveUpdateDestroyAPIView):
         super().__init__(**kwargs)
         self.scheduled_act_service = ScheduledActService(ScheduledActRepository())
 
+
     @swagger_auto_schema(
         operation_description="Obtener los detalles de una actividad programada",
         responses={200: Actividad_programadaSerializer},
     )
-    def get_object(self):
-        obj = self.scheduled_act_service.get_by_id(self.kwargs["pk"])
-        if obj is None:
-            raise Http404("Scheduled activity not found")
-        return obj
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            scheduled_act = self.scheduled_act_service.get_by_id(self.kwargs["pk"])
+            serializer = self.get_serializer(scheduled_act)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
 
     @swagger_auto_schema(
@@ -72,19 +90,29 @@ class ScheduledActDetailView(generics.RetrieveUpdateDestroyAPIView):
         responses={200: Actividad_programadaSerializer},
     )
     def update(self, request, *args, **kwargs):
-        scheduled_act = self.get_object()
-        serializer = self.get_serializer(scheduled_act, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.scheduled_act_service.update(scheduled_act.idAP, serializer.validated_data)
-        return Response(serializer.data)
+
+        try:
+          scheduled_act = self.scheduled_act_service.get_by_id(self.kwargs["pk"])
+          serializer = self.get_serializer(scheduled_act, data=request.data)
+          serializer.is_valid(raise_exception=True)
+          self.scheduled_act_service.update(scheduled_act.idAP, serializer.validated_data)
+          return Response(serializer.data,status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     @swagger_auto_schema(
         operation_description="Eliminar una actividad programada",
         responses={204: "No Content"},
     )
     def destroy(self, request, *args, **kwargs):
-        self.scheduled_act_service.delete(self.kwargs["pk"])
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+         self.scheduled_act_service.delete(self.kwargs["pk"])
+         return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+        
 
 
 # vista para listar actividades programadas en tiempo real
@@ -139,3 +167,15 @@ class ScheduledActFuturaView(generics.ListAPIView):
 
     def get_queryset(self):
         return self.scheduled_act_service.get_actividades_futuras()
+
+
+class ScheduledActParticipantsView(generics.ListAPIView):
+    serializer_class = ScheduledActSerializer
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.scheduled_act_service = ScheduledActService(ScheduledActRepository())
+ 
+    def get(self, request, *args, **kwargs):
+            actividades_numparticipantes = self.scheduled_act_service.get_actividades_numparticipantes()
+            return Response(actividades_numparticipantes, status=status.HTTP_200_OK)
+        
