@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { message, Form, Spin } from 'antd';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import AlertPage from '../AlertPage';
 
 //Componentes externas
 import MenuAdmin from './Components/MenuAdmin';
@@ -44,22 +45,12 @@ const InstancesList = styled.div`
 
 const AdminPage = () => {
 
-  // const navigate = useNavigate();
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // useEffect(() => {
-  //     const userRole = localStorage.getItem('Role');
-  //     if (userRole !== 'admin') {
-  //         navigate('/alertPage');
-  //     } else {
-  //         setIsAuthenticated(true);
-  //     }
-  // }, [navigate]);
-
-  // if (!isAuthenticated) {
-  //     return;
-  // }
-
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('Role') === 'admin');
+  if (!isAuthenticated){
+    return (
+      <AlertPage />
+    );
+  }
 
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);

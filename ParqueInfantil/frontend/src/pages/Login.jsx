@@ -69,7 +69,7 @@ const LoginForm = () => {
                 message.success('Inicio de sesión exitoso');
                 navigate(`/${rol}Page`);
             } else {
-                message.error( data.message ||'Error en el inicio de sesión');
+                message.error('Error en el inicio de sesión: '+ data.error);
             }
         } catch (error) {
             message.error(rol);
