@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button, List, Spin } from 'antd';
 import { FaTimes, FaCheck } from 'react-icons/fa';
 import SearchHeaderAdmin from './SearchHeaderAdmin';
+import PaginationControls from './PaginationControls'
 
 
 const Container = styled.div`
@@ -41,7 +42,7 @@ const ActionButton = styled(Button)`
     }
 `;
 
-const UserAuthorization = ({ handleSearch, pendingUsers, handleAcceptUser, handleRejectUser , loading}) => {
+const UserAuthorization = ({ handleSearch, pendingUsers, handleAcceptUser, handleRejectUser , loading, handlePage, previous, next}) => {
     return (
         <Container>
             <SearchHeaderAdmin handleSearch={handleSearch} />
@@ -72,6 +73,12 @@ const UserAuthorization = ({ handleSearch, pendingUsers, handleAcceptUser, handl
                         </ListItem>
                     )}
                 />)}
+            <PaginationControls
+                handlePage={handlePage}
+                next={next}
+                previous={previous}
+            />
+            
         </Container>
     );
 };
