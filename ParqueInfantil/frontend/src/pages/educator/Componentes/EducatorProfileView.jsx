@@ -33,7 +33,7 @@ const EducatorProfileView = ({ educator }) => {
                 <br />
                 <Text>{educator.phone}</Text>
                 <br />
-                <Text>{educator.bio}</Text>
+                {/* <Text>{educator}</Text> */}
             </ProfileDetails>
         </ProfileCard>
     );
