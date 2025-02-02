@@ -12,3 +12,6 @@ class QualificationRepository(GenericRepository, IQualificationRepository):
     # Method to get qualifications by activity ID
     def get_qualifications_by_activity(self, activity_id):
         return Calificacion.objects.filter(idAP=activity_id)
+    
+    def get_qualifications_by_user(self, user_id):
+        return Calificacion.objects.filter(idU=user_id)

@@ -30,6 +30,7 @@ from .views.sheduledActView import (
     ScheduledActRealizView,
     ScheduledActFuturaView,
     ScheduledActParticipantsView,
+    ScheduledActForEducadorView,
 )
 from .views.reservationView import (
     ReservacionView,
@@ -41,12 +42,15 @@ from .views.qualificationView import (
     QualificationView,
     QualificationDetailView,
     QualificationByActivityView,
+    QualificationByUserView
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 from .views.CustomTokenObtainPairView import CustomTokenObtainPairView
+from .views.testsview import TestGraficarCalificacionesView
+from .views.ReportView import ReportView
 
 # router = routers.DefaultRouter()
 # router.register(r'instalacion', views.InstalacionView, 'instalacion')
@@ -89,6 +93,7 @@ urlpatterns = [
     path("actividad_programada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividad_programada/tiemporeal/", ScheduledActRealTimeView.as_view()),
     path("actividad_programada/numparticipantes/", ScheduledActParticipantsView.as_view()),
+    path("actividad_programada/poreducador/", ScheduledActForEducadorView.as_view()),
 
     # Recurso
     path("recurso/", RecursoView.as_view()),
@@ -103,13 +108,17 @@ urlpatterns = [
     # Reservacion
     path("reservacion/", ReservacionView.as_view()),
     path("reservacion/noconfirmado/", UnconfirmedReservationsView.as_view()),
-    path("reservacion/porpadre/<int:id>/", ReservacionesPorPadreView.as_view()),
+    path("reservacion/porpadre/", ReservacionesPorPadreView.as_view()),
     path("reservacion/<str:pk>/", ReservacionDetailView.as_view()),
     # Calificacion
     path("calificacion/", QualificationView.as_view()),
     path("calificacion/<int:pk>/", QualificationDetailView.as_view()),
     path("calificacion/poractividad/<int:pk>/", QualificationByActivityView.as_view()),
+    path("calificacion/porusuario/", QualificationByUserView.as_view()),
     # Search
     path("search/", SearchView.as_view()),
     path("orderbyproperty/", OrderByPropertyView.as_view()),
+    # Tests
+    path("test/", TestGraficarCalificacionesView.as_view()),
+    path("pdf/", ReportView.as_view()),
 ]

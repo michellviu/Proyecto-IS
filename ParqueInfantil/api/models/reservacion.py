@@ -3,6 +3,7 @@ from django.db.models import SET_NULL
 import uuid
 from .actividad_programada import Actividad_programada
 from .usuario import *
+import pytz
 
 
 class Reservacion(models.Model):
@@ -38,7 +39,7 @@ class Reservacion(models.Model):
         (CANCELADO, "Cancelado"),
     ]
 
-    fecha_hora = models.DateTimeField()
+    fecha_hora = models.DateTimeField(auto_now_add=True)
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default=PENDIENTE)
     num_ninos = models.PositiveIntegerField()  # Número de niños
     comentarios = models.CharField(max_length=100)

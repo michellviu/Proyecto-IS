@@ -8,17 +8,19 @@ from api.DomainServices.RepositoryInterfaces.IActivityRepository import (
 from .GenericRepository import GenericRepository
 from datetime import datetime, timedelta
 from .ScheduledActRepository import ScheduledActRepository
-from api.DomainServices.RepositoryInterfaces.IScheduledActRepository import IScheduledActRepository
+from api.DomainServices.RepositoryInterfaces.IScheduledActRepository import (
+    IScheduledActRepository,
+)
 
 
 class ActivityRepository(GenericRepository, IActivityRepository):
     def __init__(self):
         super().__init__(Actividad)
- 
-
+    
+    @staticmethod
     def get_average_calification(actividad_id):
         # Filter scheduled activities by the given activity ID
-        act_progs = Actividad_programada.objects.filter(idAP=actividad_id)
+        act_progs = Actividad_programada.objects.filter(idA=actividad_id)
 
         # Calculate the date for one month ago from now
         last_month = datetime.now() - timedelta(days=30)
@@ -47,7 +49,7 @@ class ActivityRepository(GenericRepository, IActivityRepository):
             if cantidad_calificaciones > 0:
                 return puntuacion_total / cantidad_calificaciones
             else:
-                return 0
+                return None
         # else:
         #     raise ValueError(
         #         "No hay actividades programadas asociadas a la actividad."
@@ -75,7 +77,7 @@ class ActivityRepository(GenericRepository, IActivityRepository):
         # Iterate through each activity to calculate its average qualification
         for activity in all_activities:
             activity_details = {
-                "id": activity.idA,
+                "idA": activity.idA,
                 "nombre": activity.nombre,
                 "puntuacion": ActivityRepository.get_average_calification(activity.idA),
             }
@@ -96,8 +98,8 @@ class ActivityRepository(GenericRepository, IActivityRepository):
         act_progs = ScheduledActRepository.get_actividades_numparticipantes()
         cant_participantes = 0
         for act_prog in act_progs:
-          if act_prog['idA'] == actividad_id:
-            cant_participantes += act_prog['total_participants']    
+            if act_prog["idA"] == actividad_id:
+                cant_participantes += act_prog["total_participants"]
         return cant_participantes
 
     @staticmethod
@@ -105,9 +107,13 @@ class ActivityRepository(GenericRepository, IActivityRepository):
         activities_details = []
         all_activities = Actividad.objects.all()
         for activity in all_activities:
-          activity_details = {'id': activity.idA,
-                  'nombre': activity.nombre, 
-                  'participantes': ActivityRepository.get_cant_participantes(activity.idA)}
-          activities_details.append(activity_details)
-        
+            activity_details = {
+                "id": activity.idA,
+                "nombre": activity.nombre,
+                "participantes": ActivityRepository.get_cant_participantes(
+                    activity.idA
+                ),
+            }
+            activities_details.append(activity_details)
+
         return activities_details

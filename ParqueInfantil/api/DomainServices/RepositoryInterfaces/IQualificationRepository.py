@@ -8,4 +8,9 @@ class IQualificationRepository(IGenericRepository):
     def get_qualifications_by_activity(self, idAP: int):
         pass
 
-    pass
+    @abstractmethod
+    def get_qualifications_by_user(self, idU: int):
+        pass
+
+    
+    

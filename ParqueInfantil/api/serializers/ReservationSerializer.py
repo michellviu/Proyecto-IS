@@ -7,23 +7,19 @@ from api.models.reservacion import Reservacion
 
 class ReservacionSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(source="cod_uni", required=False)
+    nombre_actividad = serializers.CharField(source="idAP.idA.nombre", required=False)
+    comentarios = serializers.CharField(required=False)
     # reservation_service = ReservationService(ReservationRepository())
 
     class Meta:
         model = Reservacion
-        fields = ['id', 'idP', 'idAP', 'fecha_hora', 'estado', 'num_ninos', 'comentarios']
+        fields = ['id', 'idP', 'idAP','nombre_actividad', 'fecha_hora', 'estado', 'num_ninos', 'comentarios']
 
-    # def create(self, validated_data):
-    #     return self.reservation_service.create(validated_data)
 
-    # def update(self, instance, validated_data):
-    #     return self.reservation_service.update(instance.cod_uni, validated_data)
-
-    # def delete(self, instance):
-    #     return self.reservation_service.delete(instance.cod_uni)
-
-    # def list(self):
-    #     return self.reservation_service.list()
-
-    # def retrieve(self, cod_uni):
-    #     return self.reservation_service.retrieve(cod_uni)
+class ReservacionByFatherSerializer(serializers.ModelSerializer):
+    nombre_actividad = serializers.CharField(source="idAP.idA.nombre", required=False)
+    comentarios = serializers.CharField(required=False)
+    class Meta:
+        model = Reservacion
+        fields = ['idP','idAP','nombre_actividad', 'fecha_hora', 'estado', 'num_ninos', 'comentarios']
+        read_only_fields = ['idP','fecha_hora']  # El campo 'padre' será asignado automáticamente

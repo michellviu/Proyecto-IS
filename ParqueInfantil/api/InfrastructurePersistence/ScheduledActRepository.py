@@ -57,6 +57,10 @@ class ScheduledActRepository(GenericRepository, IScheduledActRepository):
             .annotate(total_participants=Sum('num_ninos'))
         )
         return actividades_participantes
+    
+    def get_actividades_por_educador(self, educador_id):
+        actividades_programadas=Actividad_programada.objects.filter(idE=educador_id)
+        return actividades_programadas
 
        
         

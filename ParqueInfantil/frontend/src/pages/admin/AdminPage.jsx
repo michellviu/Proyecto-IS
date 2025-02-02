@@ -42,19 +42,19 @@ const InstancesList = styled.div`
   padding: 0 20px;
 `;
 
-const AdminPage = (admin = 'Eveliz') => {
+const AdminPage = () => {
 
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const navigate = useNavigate();
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-      const userRole = localStorage.getItem('Role');
-      if (userRole !== 'admin') {
-          navigate('/alertPage');
-      } else {
-          setIsAuthenticated(true);
-      }
-  }, [navigate]);
+  // useEffect(() => {
+  //     const userRole = localStorage.getItem('Role');
+  //     if (userRole !== 'admin') {
+  //         navigate('/alertPage');
+  //     } else {
+  //         setIsAuthenticated(true);
+  //     }
+  // }, [navigate]);
 
   // if (!isAuthenticated) {
   //     return;
@@ -270,7 +270,6 @@ const AdminPage = (admin = 'Eveliz') => {
             {selectedEntity === 'resource' && (
               <ResourceView
                 handleSearch={handleSearch}
-                handleAdd={handleAddModal}
                 resources={resources}
                 loading={loading}
               />
@@ -279,7 +278,6 @@ const AdminPage = (admin = 'Eveliz') => {
               <div>
                 <ReservationRequestsView
                   handleSearch={handleSearch}
-                  handleAdd={handleAddModal}
                   reservations={pendingReservations}
                   loading={loading}
                   handleAccept={handleAcceptReservation}
