@@ -353,7 +353,7 @@ const fetchPendingReservations = async (setPendingReservations, setNextPage, set
 
 };
 
-const handleAcceptRev = async (reservation) => {//manejar buen editado 
+const handleAcceptRev = async (reservation) => {
     try {
         const updatedReservation = { ...reservation, estado: 'Confirmado' };
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
@@ -376,7 +376,7 @@ const handleAcceptRev = async (reservation) => {//manejar buen editado
     }
 };
 
-const handleRejectRev = async (reservation) => {//manejar buen editado 
+const handleRejectRev = async (reservation) => {
     try {
         const updatedReservation = { ...reservation, estado: 'Cancelado' };
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;

@@ -32,6 +32,9 @@ const EducatorPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("Catálogo");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    fetchResponsibleActivities(setActivities);
+  });
 
   const handleCatalogoClick = async () => {
     setLoading(true);
@@ -39,6 +42,7 @@ const EducatorPage = () => {
     setLoading(false);
   };
 
+        {selectedMenu === "Perfil" && <></>}
 
   const handleActivitiesClick = async () => {
     setLoading(true);
@@ -86,7 +90,7 @@ const EducatorPage = () => {
 
         {selectedMenu === "Perfil" && <></>}
 
-        {selectedMenu === "Estadísticas " && <></>}
+        {selectedMenu === "Estadísticas" && <></>}
 
 
       </Content>
