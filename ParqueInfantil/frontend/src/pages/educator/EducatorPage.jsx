@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-    width: 100%;
+    width: 80%;
     background-color: #f5f5dc; /* beige */
     display: flex;
 `;
@@ -91,7 +91,6 @@ const EducatorPage = () => {
         {selectedMenu === "Perfil" && <></>}
 
         {selectedMenu === "Estadísticas" && <></>}
-
 
       </Content>
     </Container>
