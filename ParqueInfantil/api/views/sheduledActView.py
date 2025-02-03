@@ -137,7 +137,7 @@ class ScheduledActRealTimeView(generics.ListAPIView):
         result_page = paginator.paginate_queryset(actividades, request)
        
         # Serializar los objetos paginados
-        serializer = Actividad_programadaSerializer(result_page, many=True)
+        serializer = ScheduledActSerializer(result_page, many=True)
         # Devolver la respuesta paginada
         return paginator.get_paginated_response(serializer.data)
 

@@ -130,6 +130,7 @@ class ActividadCalificacionesView(generics.ListAPIView):
 
 
 class ActividadParticipantesView(generics.ListAPIView):
+    permission_classes = [IsAdmin | IsEducador]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -149,5 +150,3 @@ class ActividadParticipantesView(generics.ListAPIView):
         activities = activities[:3]
         return Response(activities, status=status.HTTP_200_OK)
 
-    def get_permissions(self):
-        return [IsAdmin()]
