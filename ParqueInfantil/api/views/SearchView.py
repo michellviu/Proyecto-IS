@@ -56,7 +56,7 @@ class SearchView(generics.ListAPIView):
         
 
         paginator = PageNumberPagination()
-        paginator.page_size = 15  # Número de elementos por página
+        paginator.page_size = 10  # Número de elementos por página
 
         # Paginar el queryset
         result_page = paginator.paginate_queryset(results, request)

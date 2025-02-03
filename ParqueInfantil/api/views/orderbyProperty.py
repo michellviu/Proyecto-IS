@@ -36,7 +36,7 @@ class OrderByPropertyView(generics.ListAPIView):
         results = repository.get_all_order_by_property(field_name, criterion)
 
         paginator = PageNumberPagination()
-        paginator.page_size = 15  # Número de elementos por página
+        paginator.page_size = 10  # Número de elementos por página
 
         # Paginar el queryset
         result_page = paginator.paginate_queryset(results, request)
