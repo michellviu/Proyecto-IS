@@ -64,6 +64,30 @@ const StyledLink = styled(Link)`
     }
 `;
 
+/**
+ * Componente HeaderEducator
+ * 
+ * Este componente representa el encabezado para la sección del educador en la aplicación.
+ * Utiliza `useLocation` para determinar la ruta actual y resaltar el enlace activo.
+ * 
+ * @returns {JSX.Element} El componente HeaderEducator.
+ * 
+ * @component
+ * 
+ * @example
+ * return (
+ *   <HeaderEducator />
+ * )
+ * 
+ * @description
+ * El componente contiene una lista de enlaces de navegación:
+ * - "Mis Actividades" que redirige a `/educadorPage`.
+ * - "Programación" que redirige a `/activity-catalog`.
+ * - "Mi Perfil" que redirige a `/educator/profile`.
+ * - Un enlace para cerrar sesión que llama a la función `handleLogOut`.
+ * 
+ * Cada enlace tiene una clase `active` si la ruta actual coincide con la ruta del enlace.
+ */
 const HeaderEducator = () => {
     const location = useLocation();
 

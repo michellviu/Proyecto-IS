@@ -11,6 +11,17 @@ const Container = styled.div`
     text-align: center;
 `;
 
+/**
+ * Componente funcional que muestra una página de alerta con un mensaje de error 404.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <AlertPage />
+ * )
+ * 
+ * @returns {JSX.Element} Un contenedor con una imagen de alerta y un mensaje de error.
+ */
 const AlertPage = () => {
     const Img = styled.img`
         width: 30%;

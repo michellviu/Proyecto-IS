@@ -23,6 +23,19 @@ const ProfileDetails = styled.div`
     margin-top: 20px;
 `;
 
+/**
+ * Componente EducatorProfileView
+ * 
+ * Este componente muestra el perfil de un educador en una tarjeta de perfil.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.educator - Objeto que contiene la información del educador.
+ * @param {string} props.educator.name - Nombre del educador.
+ * @param {string} props.educator.email - Correo electrónico del educador.
+ * @param {string} props.educator.phone - Número de teléfono del educador.
+ * 
+ * @returns {JSX.Element} Un componente JSX que representa la vista del perfil del educador.
+ */
 const EducatorProfileView = ({ educator }) => {
     return (
         <ProfileCard>

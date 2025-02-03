@@ -60,6 +60,19 @@ const PaginationControls = styled.div`
     gap: 10px;
 `;
 
+/**
+ * Componente MyActivitiesView
+ * 
+ * Este componente muestra una lista de actividades en forma de tarjetas y controles de paginación.
+ * 
+ * @param {Object[]} activities - Array de objetos que representan las actividades.
+ * @param {boolean} next - Indica si hay una página siguiente de actividades.
+ * @param {boolean} previous - Indica si hay una página anterior de actividades.
+ * @param {Function} handleNext - Función que se ejecuta al hacer clic en el botón "Siguiente".
+ * @param {Function} handlePrevious - Función que se ejecuta al hacer clic en el botón "Anterior".
+ * 
+ * @returns {JSX.Element} - Retorna un componente que muestra las actividades y los controles de paginación.
+ */
 const MyActivitiesView = ({ activities, next, previous, handleNext, handlePrevious }) => {
     return (
         <>

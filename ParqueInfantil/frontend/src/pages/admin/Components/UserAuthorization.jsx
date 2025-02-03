@@ -42,6 +42,25 @@ const ActionButton = styled(Button)`
     }
 `;
 
+/**
+ * Componente UserAuthorization
+ * 
+ * Este componente se encarga de mostrar una lista de usuarios pendientes de autorización,
+ * permitiendo aceptar o rechazar cada usuario. También incluye controles de paginación y
+ * un componente de búsqueda.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {Function} props.handleSearch - Función para manejar la búsqueda de usuarios.
+ * @param {Array} props.pendingUsers - Lista de usuarios pendientes de autorización.
+ * @param {Function} props.handleAcceptUser - Función para aceptar un usuario.
+ * @param {Function} props.handleRejectUser - Función para rechazar un usuario.
+ * @param {boolean} props.loading - Indicador de carga para mostrar un spinner mientras se cargan los datos.
+ * @param {Function} props.handlePage - Función para manejar el cambio de página en la paginación.
+ * @param {boolean} props.previous - Indicador para habilitar/deshabilitar el botón de página anterior.
+ * @param {boolean} props.next - Indicador para habilitar/deshabilitar el botón de página siguiente.
+ * 
+ * @returns {JSX.Element} - Retorna el componente UserAuthorization.
+ */
 const UserAuthorization = ({ handleSearch, pendingUsers, handleAcceptUser, handleRejectUser , loading, handlePage, previous, next}) => {
     return (
         <Container>

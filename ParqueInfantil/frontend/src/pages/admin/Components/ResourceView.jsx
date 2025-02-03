@@ -7,6 +7,19 @@ import PaginationControls from './PaginationControls'
 
 
 
+/**
+ * Componente ResourceView
+ * 
+ * @param {Object} props - Propiedades del componente
+ * @param {Function} props.handleSearch - Función para manejar la búsqueda
+ * @param {Array} props.resources - Lista de recursos a mostrar
+ * @param {boolean} props.loading - Indicador de carga
+ * @param {Function} props.previous - Función para manejar la paginación anterior
+ * @param {Function} props.next - Función para manejar la paginación siguiente
+ * @param {Function} props.handlePage - Función para manejar el cambio de página
+ * 
+ * @returns {JSX.Element} - Retorna el componente ResourceView
+ */
 const ResourceView = ({ handleSearch, resources, loading, previous, next , handlePage }) => {
   return (
     <div>

@@ -29,6 +29,19 @@ const MenuItem = styled.div`
         `}
 `;
 
+/**
+ * Componente Menu que representa un menú lateral con varias opciones.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {function} props.handleActivitiesClick - Función que se ejecuta al hacer clic en "Mis Actividades".
+ * @param {function} props.handleStatsClick - Función que se ejecuta al hacer clic en "Estadísticas".
+ * @param {string} props.selectedMenu - El menú actualmente seleccionado.
+ * @param {function} props.handlePerfilClick - Función que se ejecuta al hacer clic en "Perfil".
+ * @param {function} props.handleLogOutClick - Función que se ejecuta al hacer clic en "LogOut".
+ * @param {function} props.handleCatalogoClick - Función que se ejecuta al hacer clic en "Catálogo".
+ * 
+ * @returns {JSX.Element} El componente Menu.
+ */
 const Menu = ({ handleActivitiesClick, handleStatsClick, selectedMenu, handlePerfilClick, handleLogOutClick, handleCatalogoClick  }) => {
 
     const navigate = useNavigate();

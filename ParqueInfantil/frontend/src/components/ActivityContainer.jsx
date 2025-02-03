@@ -6,14 +6,10 @@ import ReserveModal from "./ActivityContainer/ReserveModal";
 import CommentModal from "./ActivityContainer/CommentModal";
 import ActivityModal from "./ActivityContainer/ActivityModal";
 
-{
-  /* <ActivityContainer
-        key={activity.id}
-        data={activity}
-        rol={rol}
-        tiempo={kindActivity}
-      /> */
-}
+import { Form, Spin } from 'antd';
+
+
+
 
 const ActivityImage = ({ image, name, openModal }) => (
   <Image src={image} alt={name} onClick={openModal} />
@@ -76,7 +72,23 @@ const Button = styled.button`
 
 Modal.setAppElement("#root");
 
+/**
+ * Componente ActivityContainer
+ *
+ * Este componente representa un contenedor para una actividad, mostrando su imagen, información y modales relacionados.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {string} props.key - La clave única para el componente.
+ * @param {Object} props.data - Los datos de la actividad.
+ * @param {string} props.data.image - La URL de la imagen de la actividad.
+ * @param {string} props.data.nombre - El nombre de la actividad.
+ * @param {string} props.rol - El rol del usuario.
+ * @param {string} props.time - El tiempo asociado a la actividad.
+ *
+ * @returns {JSX.Element} El componente ActivityContainer.
+ */
 const ActivityContainer = ({ key, data, rol, time }) => {
+  const [form] = Form.useForm();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [reserveModalIsOpen, setReserveModalIsOpen] = useState(false);
   const [commentModalIsOpen, setCommentModalIsOpen] = useState(false);
@@ -105,15 +117,7 @@ const ActivityContainer = ({ key, data, rol, time }) => {
     setCommentModalIsOpen(false);
   };
 
-
-//       "idAP": 0,
-//       "nombre": "string",
-//       "educador": "string",
-//       "instalacion": "string",
-//       "duracion": "string",
-//       "fecha_hora": "2025-02-02T23:14:48.902Z",
-//       "puntuacion": "string",
-//       "descripcion": "string"
+  
 
   return (
     <Card>
@@ -132,10 +136,12 @@ const ActivityContainer = ({ key, data, rol, time }) => {
         rol={rol}
         time={time}
       />
-      <ReserveModal
+     <ReserveModal
         isOpen={reserveModalIsOpen}
         closeModal={closeReserveModal}
-      />
+        form={form}
+        onFinish={closeReserveModal}
+      /> 
       <CommentModal
         isOpen={commentModalIsOpen}
         closeModal={closeCommentModal}

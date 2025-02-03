@@ -10,6 +10,7 @@ import Link from "antd/es/typography/Link";
 
 
 
+
 const Button = styled.button`
   background: rgb(196, 120, 49);
   border: none;
@@ -39,7 +40,25 @@ const ModalContent = styled.div`
 `;
 
 
+/**
+ * Componente ActivityModal
+ * 
+ * Este componente representa un modal que muestra los detalles de una actividad.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {boolean} props.isOpen - Indica si el modal está abierto.
+ * @param {Function} props.closeModal - Función para cerrar el modal.
+ * @param {Object} props.activity - Objeto que contiene los detalles de la actividad.
+ * @param {Function} props.openReserveModal - Función para abrir el modal de reserva.
+ * @param {Function} props.openCommentModal - Función para abrir el modal de comentarios.
+ * @param {string} props.rol - Rol del usuario (padre, educador, admin).
+ * @param {string} props.time - Estado temporal de la actividad (Realizadas, En curso, Programadas).
+ * 
+ * @returns {JSX.Element} El componente ActivityModal.
+ */
 const ActivityModal = ({ isOpen, closeModal, activity, openReserveModal, openCommentModal, rol, time }) => {
+    
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);

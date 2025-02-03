@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Menu, Layout, Spin } from 'antd';
 import { BarChartOutlined, LineChartOutlined, PieChartOutlined, AreaChartOutlined, DotChartOutlined, RadarChartOutlined } from '@ant-design/icons';
-
+import { FaFileExport } from 'react-icons/fa';
+import { handleExport } from './HandlersAPI';
 
 const { Header, Content } = Layout;
 
@@ -21,6 +22,55 @@ const StyledContent = styled(Content)`
     background: #fff;
 `;
 
+const ExportButton = styled.button`
+    display: flex;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+
+    svg {
+        margin-right: 8px;
+    }
+`;
+
+/**
+ * Componente StatsView
+ * 
+ * Este componente muestra una vista de estadísticas con un menú para seleccionar diferentes tipos de gráficos y un botón para exportar la información.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <StatsView />
+ * )
+ * 
+ * @returns {JSX.Element} La vista de estadísticas.
+ * 
+ * @description
+ * - Utiliza el estado local para manejar el menú seleccionado, el estado de carga y la fuente de la imagen.
+ * - Muestra un menú horizontal con diferentes opciones de gráficos.
+ * - Muestra un spinner de carga mientras se están cargando los datos.
+ * - Muestra una imagen con las estadísticas una vez que los datos están cargados.
+ * - Incluye un botón para exportar la información.
+ * 
+ * @function
+ * @name handleMenuClick
+ * @description Maneja el evento de clic en el menú, actualizando el estado de carga y el menú seleccionado.
+ * @param {Object} e - El evento de clic.
+ * 
+ * @function
+ * @name handleExportAPI
+ * @description Maneja el evento de clic en el botón de exportar, llamando a la función de exportación y actualizando el estado de carga.
+ */
 const StatsView = () => {
     const [selectedMenu, setSelectedMenu] = useState('1');
     const [loading, setLoading] = useState(false);
@@ -28,8 +78,17 @@ const StatsView = () => {
 
     
 
-    const handleMenuClick = (e) => {
+    const handleMenuClick = async (e) => {
+        setLoading(true);
         setSelectedMenu(e.key);
+
+        setLoading(false);
+    };
+
+    const handleExportAPI = async () => {
+        setLoading(true);
+        await  handleExport();
+        setLoading(false);
     };
 
     return (
@@ -60,12 +119,18 @@ const StatsView = () => {
                     </Menu.Item>
                 </Menu>
             </StyledHeader>
+
+         
             <StyledContent>
                 {loading ? (
                     <Spin size="large" />
                 ) : (
                     <img src={imageSrc} alt="Estadísticas" style={{ width: '100%' }} />
                 )}
+                   <ExportButton onClick={handleExportAPI}>
+                    <FaFileExport />
+                    Exportar Información
+                </ExportButton>
             </StyledContent>
         </StyledLayout>
     );

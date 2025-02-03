@@ -43,6 +43,101 @@ const InstancesList = styled.div`
   padding: 0 20px;
 `;
 
+/**
+ * Página de administración para gestionar entidades, usuarios, recursos y reservas.
+ * 
+ * @component
+ * @returns {JSX.Element} Componente de la página de administración.
+ * 
+ * @description
+ * Este componente representa la página de administración donde los administradores pueden gestionar diferentes entidades,
+ * usuarios pendientes de autorización, recursos en uso y solicitudes de reserva. Incluye funcionalidades para buscar, ordenar,
+ * agregar, editar y eliminar instancias de entidades, así como aceptar o rechazar usuarios y reservas.
+ * 
+ * @example
+ * <AdminPage />
+ * 
+ * @function
+ * @name AdminPage
+ * 
+ * @returns {JSX.Element} Retorna el componente de la página de administración.
+ * 
+ * @property {boolean} isAuthenticated - Estado de autenticación del usuario.
+ * @property {function} setIsAuthenticated - Función para actualizar el estado de autenticación.
+ * @property {object} form - Instancia del formulario.
+ * @property {boolean} loading - Estado de carga de las operaciones.
+ * @property {function} setLoading - Función para actualizar el estado de carga.
+ * @property {Array} entities - Lista de entidades disponibles.
+ * @property {function} setEntities - Función para actualizar la lista de entidades.
+ * @property {Array} atributes - Lista de atributos de la entidad seleccionada.
+ * @property {function} setAtributes - Función para actualizar la lista de atributos.
+ * @property {string|null} selectedEntity - Entidad seleccionada actualmente.
+ * @property {function} setSelectedEntity - Función para actualizar la entidad seleccionada.
+ * @property {object} selectedAttribute - Atributo seleccionado actualmente.
+ * @property {function} setSelectedAttribute - Función para actualizar el atributo seleccionado.
+ * @property {string|null} nextPage - URL de la siguiente página de resultados.
+ * @property {function} setNextPage - Función para actualizar la URL de la siguiente página.
+ * @property {string|null} previousPage - URL de la página anterior de resultados.
+ * @property {function} setPreviousPage - Función para actualizar la URL de la página anterior.
+ * @property {Array} instances - Lista de instancias de la entidad seleccionada.
+ * @property {function} setInstances - Función para actualizar la lista de instancias.
+ * @property {object|null} currentInstance - Instancia actual seleccionada para editar o eliminar.
+ * @property {function} setCurrentInstance - Función para actualizar la instancia actual.
+ * @property {number} currentOrder - Orden actual de los resultados (0: ascendente, 1: descendente).
+ * @property {function} setCurrentOrder - Función para actualizar el orden de los resultados.
+ * @property {boolean} isAddModalVisible - Estado de visibilidad del modal de agregar.
+ * @property {function} setIsAddModalVisible - Función para actualizar la visibilidad del modal de agregar.
+ * @property {boolean} isEditModalVisible - Estado de visibilidad del modal de edición.
+ * @property {function} setIsEditModalVisible - Función para actualizar la visibilidad del modal de edición.
+ * 
+ * @method handleMenuClick - Maneja la selección de una entidad del menú.
+ * @param {string} entity - Entidad seleccionada.
+ * 
+ * @method handlePage - Maneja la paginación de los resultados.
+ * @param {string} url - URL de la página a cargar.
+ * 
+ * @method refresh - Refresca la lista de instancias de la entidad seleccionada.
+ * 
+ * @method handleAttributeClick - Maneja la selección de un atributo.
+ * @param {object} attribute - Atributo seleccionado.
+ * 
+ * @method handleSearch - Maneja la búsqueda de instancias.
+ * @param {Event} e - Evento de búsqueda.
+ * 
+ * @method handleSort - Maneja la ordenación de las instancias.
+ * @param {object} attribute - Atributo por el cual ordenar.
+ * 
+ * @method handleEditModal - Abre el modal de edición para una instancia.
+ * @param {object} instance - Instancia a editar.
+ * 
+ * @method handleAddModal - Abre el modal de agregar una nueva instancia.
+ * 
+ * @method handleDelete - Maneja la eliminación de una instancia.
+ * @param {object} instance - Instancia a eliminar.
+ * 
+ * @method handleCancel - Maneja la cancelación de los modales de agregar y editar.
+ * 
+ * @method handleSave - Maneja el guardado de una instancia (agregar o editar).
+ * @param {object} values - Valores del formulario.
+ * 
+ * @method handleUserAuthorizationClick - Maneja la selección de la entidad de autorización de usuarios.
+ * 
+ * @method handleAccept - Maneja la aceptación de un usuario pendiente.
+ * @param {object} user - Usuario a aceptar.
+ * 
+ * @method handleReject - Maneja el rechazo de un usuario pendiente.
+ * @param {object} user - Usuario a rechazar.
+ * 
+ * @method handleResourceClick - Maneja la selección de la entidad de recursos.
+ * 
+ * @method handleReservationRequestsClick - Maneja la selección de la entidad de solicitudes de reserva.
+ * 
+ * @method handleAcceptReservation - Maneja la aceptación de una solicitud de reserva.
+ * @param {object} reservation - Solicitud de reserva a aceptar.
+ * 
+ * @method handleRejectReservation - Maneja el rechazo de una solicitud de reserva.
+ * @param {object} reservation - Solicitud de reserva a rechazar.
+ */
 const AdminPage = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('Role') === 'admin');

@@ -74,6 +74,46 @@ const Button = styled.button`
 
 
 
+/**
+ * Componente de registro de usuario.
+ *
+ * Este componente permite a los usuarios registrarse proporcionando un nombre de usuario, correo electrónico, contraseña y rol.
+ * Dependiendo del rol seleccionado, el usuario será redirigido a una página específica o se le notificará que debe esperar la aprobación.
+ *
+ * @component
+ * @returns {JSX.Element} El formulario de registro.
+ *
+ * @example
+ * return <Register />
+ *
+ * @function
+ * @name Register
+ *
+ * @description
+ * El componente utiliza el hook `useState` para manejar el estado del formulario y los errores, y el hook `useNavigate` para la navegación.
+ * Al enviar el formulario, se realiza una solicitud POST a la API para registrar al usuario. Si la solicitud es exitosa, se guarda el token de autenticación en el localStorage y se redirige al usuario según su rol.
+ * Si hay errores en la solicitud, se muestran los mensajes de error correspondientes.
+ *
+ * @property {Object} formData - Estado que contiene los datos del formulario.
+ * @property {string} formData.username - Nombre de usuario.
+ * @property {string} formData.email - Correo electrónico.
+ * @property {string} formData.password - Contraseña.
+ * @property {string} formData.rol - Rol del usuario (padre, educador, administrador).
+ *
+ * @property {Object} errors - Estado que contiene los errores del formulario.
+ * @property {string} apiError - Estado que contiene el error de la API.
+ *
+ * @function handleChange
+ * Maneja los cambios en los campos del formulario y actualiza el estado `formData`.
+ *
+ * @function handleSubmit
+ * Maneja el envío del formulario, realiza la solicitud a la API y maneja las respuestas y errores.
+ *
+ * @requires useNavigate - Hook de React Router para la navegación.
+ * @requires useState - Hook de React para manejar el estado.
+ * @requires fetch - Función para realizar solicitudes HTTP.
+ * @requires message - Componente para mostrar mensajes de éxito o error.
+ */
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

@@ -46,6 +46,15 @@ const CarouselContainer = styled.div`
     left: 3%;
 `;
 
+/**
+ * Componente AboutUs
+ * 
+ * Este componente representa la página "Sobre Nosotros" de un parque infantil.
+ * Proporciona información sobre el parque, su misión y las actividades que ofrece.
+ * También incluye un carrusel de imágenes que muestra diferentes áreas y eventos del parque.
+ * 
+ * @returns {JSX.Element} El componente AboutUs.
+ */
 const AboutUs = () => {
     return (
         <AboutUsContainer>

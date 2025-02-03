@@ -3,6 +3,31 @@ import { FaInfoCircle, FaTimesCircle } from 'react-icons/fa';
 import '../styles/reservation-container.css'; 
 
 
+/**
+ * Componente ReservationContainer
+ * 
+ * Este componente se encarga de mostrar una lista de reservas para un padre dado (parentId).
+ * Permite ver los detalles de una reserva seleccionada y cancelar una reserva.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {string} props.parentId - El ID del padre para el cual se obtendrán las reservas.
+ * 
+ * @returns {JSX.Element} El componente ReservationContainer.
+ * 
+ * @example
+ * <ReservationContainer parentId="12345" />
+ * 
+ * @component
+ * 
+ * @typedef {Object} Reservation
+ * @property {string} id - El ID de la reserva.
+ * @property {string} activityName - El nombre de la actividad reservada.
+ * @property {string} activityPhoto - La URL de la foto de la actividad.
+ * @property {string} status - El estado de la reserva.
+ * @property {string} date - La fecha de la reserva.
+ * @property {string} time - La hora de la reserva.
+ * @property {string} description - La descripción de la actividad reservada.
+ */
 const ReservationContainer = ({ parentId }) => {
     const [reservations, setReservations] = useState([]);
     const [selectedReservation, setSelectedReservation] = useState(null);

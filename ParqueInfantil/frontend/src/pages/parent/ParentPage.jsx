@@ -42,6 +42,27 @@ const MenuItem = styled.div`
         `}
 `;
 
+/**
+ * Componente ParentPage
+ * 
+ * Este componente representa la página principal para los usuarios con el rol de "padre".
+ * 
+ * @returns {JSX.Element} El componente ParentPage.
+ * 
+ * Funcionalidad:
+ * - Verifica si el usuario está autenticado como "padre" utilizando el valor almacenado en localStorage.
+ * - Si el usuario no está autenticado, redirige a la página de alerta (AlertPage).
+ * - Permite la navegación entre diferentes menús: Catálogo, Reservas y Home.
+ * - Muestra el contenido correspondiente según el menú seleccionado.
+ * 
+ * Estados:
+ * - isAuthenticated: Booleano que indica si el usuario está autenticado como "padre".
+ * - selectedMenu: String que indica el menú actualmente seleccionado.
+ * - showSubMenu: Booleano que indica si el submenú debe mostrarse (solo aplicable al menú "Catálogo").
+ * 
+ * Métodos:
+ * - handleMenuClick: Maneja el evento de clic en los elementos del menú, actualizando el estado del menú seleccionado y la visibilidad del submenú.
+ */
 const ParentPage = () => {
 
     const [isAuthenticated, setIsAuthenticated] = useState(

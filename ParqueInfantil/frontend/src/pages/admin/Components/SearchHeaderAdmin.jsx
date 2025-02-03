@@ -10,6 +10,16 @@ const Container = styled.div`
   margin-bottom: 20px;
 `;
 
+/**
+ * Componente SearchHeaderAdmin
+ * 
+ * Este componente renderiza un contenedor con un campo de entrada para realizar búsquedas.
+ * 
+ * @param {Object} props - Las propiedades que se pasan al componente.
+ * @param {function} props.handleSearch - Función que se ejecuta cuando el valor del campo de entrada cambia.
+ * 
+ * @returns {JSX.Element} Un contenedor con un campo de entrada para búsquedas.
+ */
 const SearchHeaderAdmin = ({handleSearch}) => {
     return (
         <Container>

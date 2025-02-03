@@ -1,16 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaFileExport } from 'react-icons/fa';
 
+
+/**
+ * Componente funcional que representa la vista de solicitud de estadísticas.
+ * 
+ * Este componente muestra un contenedor con un encabezado y un contenedor de estadísticas
+ * que incluye imágenes generadas de las estadísticas de gestión del parque.
+ * 
+ * @returns {JSX.Element} La vista de solicitud de estadísticas.
+ */
 const StatisticsRequestView = () => {
     return (
         <Container>
             <Header>
                 <Title>Estadísticas de Gestión del Parque</Title>
-                <ExportButton>
-                    <FaFileExport />
-                    Exportar Información
-                </ExportButton>
+                
             </Header>
             <StatisticsContainer>
                 <StatisticImage src="path/to/your/generated/image1.png" alt="Estadística 1" />
@@ -42,25 +47,7 @@ const Title = styled.h1`
     color: #333;
 `;
 
-const ExportButton = styled.button`
-    display: flex;
-    align-items: center;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
 
-    &:hover {
-        background-color: #0056b3;
-    }
-
-    svg {
-        margin-right: 8px;
-    }
-`;
 
 const StatisticsContainer = styled.div`
     display: flex;

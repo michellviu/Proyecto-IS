@@ -43,6 +43,16 @@ const Info = styled.h1`
     margin-left: 10%;
 `;
 
+/**
+ * Componente Tarjeta que muestra información sobre una actividad.
+ *
+ * @param {string} nombreAct - Nombre de la actividad.
+ * @param {string} fecha - Fecha de la actividad.
+ * @param {string} estado - Estado de la actividad (cancelado, aceptada, en espera).
+ * @param {number} capacidad - Capacidad de la actividad.
+ * @param {string} [foto=poster] - URL de la foto de la actividad.
+ * @returns {JSX.Element} - Elemento JSX que representa la tarjeta de la actividad.
+ */
 const Tarjeta = (nombreAct, fecha, estado, capacidad, foto = poster) => {
 
     const getColorByEstado = (estado) => {

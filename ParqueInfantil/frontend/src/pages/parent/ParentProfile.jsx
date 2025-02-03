@@ -81,6 +81,42 @@ const EditIcon = styled(FaPencilAlt)`
     cursor: pointer;
 `;
 
+/**
+ * Componente ParentProfile
+ * 
+ * Este componente representa el perfil de un padre. Permite visualizar y editar la información del perfil, 
+ * incluyendo nombre, nombre de usuario, email, teléfono y biografía. También permite cambiar o eliminar la foto de perfil.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <ParentProfile />
+ * )
+ * 
+ * @returns {JSX.Element} El componente ParentProfile.
+ * 
+ * @function
+ * @name ParentProfile
+ * 
+ * @description
+ * - Utiliza el hook useState para manejar el estado del perfil y el campo que se está editando.
+ * - handleChange: Maneja los cambios en los campos del formulario y actualiza el estado del perfil.
+ * - handleEdit: Establece el campo que se está editando.
+ * - handleSubmit: Maneja el envío del formulario, actualiza el estado y puede enviar los datos a un servidor.
+ * 
+ * @typedef {Object} Profile
+ * @property {string} name - Nombre del padre.
+ * @property {string} username - Nombre de usuario del padre.
+ * @property {string} email - Email del padre.
+ * @property {string} phone - Teléfono del padre.
+ * @property {string} bio - Biografía del padre.
+ * @property {string} [avatar] - URL de la foto de perfil del padre.
+ * 
+ * @typedef {Object} Event
+ * @property {Object} target - El elemento objetivo del evento.
+ * @property {string} target.name - Nombre del campo del formulario.
+ * @property {string} target.value - Valor del campo del formulario.
+ */
 const ParentProfile = () => {
     const [profile, setProfile] = useState({
         name: 'Juan Pérez',

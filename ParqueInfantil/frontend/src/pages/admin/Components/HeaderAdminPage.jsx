@@ -40,6 +40,14 @@ const Nav = styled.nav`
   }
 `;
 
+/**
+ * Componente HeaderAdminPage
+ * 
+ * Este componente representa el encabezado de la página de administración.
+ * Incluye un mensaje de bienvenida y una barra de navegación con enlaces a diferentes rutas.
+ * 
+ * @returns {JSX.Element} El componente HeaderAdminPage.
+ */
 const HeaderAdminPage = () => {
 
   return (

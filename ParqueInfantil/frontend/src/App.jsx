@@ -19,6 +19,25 @@ import StatisticsRequest from './pages/educator/StatisticsRequest';
 import ParentProfile from './pages/parent/ParentProfile';
 import ReservedActivities from './pages/parent/ReservedActivities';*/
 
+/**
+ * Componente principal de la aplicación que define las rutas utilizando React Router.
+ * 
+ * @component
+ * @returns {JSX.Element} El componente App con las rutas definidas.
+ * 
+ * Rutas:
+ * - "/" : Componente Home
+ * - "/register" : Componente Register
+ * - "/about" : Componente AboutUs
+ * - "/contact" : Componente ContactUs
+ * - "/adminPage" : Componente AdminPage
+ * - "/padrePage" : Componente ParentPage
+ * - "/alertPage" : Componente AlertPage
+ * - "/activity-catalog" : Componente ActivityCatalog
+ * - "/educadorPage" : Componente EducatorPage
+ * 
+ * Nota: La ruta "/educator/profile" está comentada y no se encuentra activa.
+ */
 const App = () => {
     return (
         <Router>
