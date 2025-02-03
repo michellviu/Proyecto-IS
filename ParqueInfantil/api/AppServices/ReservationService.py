@@ -43,6 +43,10 @@ class ReservationService(GenericService, IReservationService):
         # Obtener la actividad correspondiente a la reservación
         actividad_programada = data.get('idAP')
         num_ninos = data.get('num_ninos')
+        estado = data.get('estado')
+        
+        if estado == 'Cancelado':
+            return
 
         # Calcular el número actual de participantes
         total_participantes_actuales = ScheduledActRepository.get_actividades_numparticipantes()
@@ -50,7 +54,6 @@ class ReservationService(GenericService, IReservationService):
         for act in total_participantes_actuales:
             if act['idAP'] == actividad_programada.idAP:
                 fecha_fin_naive = make_naive(act['fecha_fin'])
-                print(fecha_fin_naive)
                 if fecha_fin_naive < datetime.now():
                     raise ValueError("La actividad ya ha finalizado.")
                 participantes = act['total_participants']
@@ -72,9 +75,9 @@ class ReservationService(GenericService, IReservationService):
     def get_tasa_confirmacion_por_rangoedad():
         # Definir los rangos de edad
         rangos_edad = {
-        '0-12': (0, 12),
-        '13-17': (13, 17),
-        '18-25': (18, 100),
+        '0-5': (0, 5),
+        '6-12': (6, 12),
+        '13-18': (13, 18),        
         }
 
         # Inicializar un diccionario para almacenar los resultados
@@ -109,3 +112,5 @@ class ReservationService(GenericService, IReservationService):
             print(f"Rango de edad {rango}:")
             print(f"  Confirmadas: {datos['confirmadas']} ({datos['proporcion_confirmadas']:.2%})")
             print(f"  Canceladas: {datos['canceladas']} ({datos['proporcion_canceladas']:.2%})")
+        
+        return resultados
