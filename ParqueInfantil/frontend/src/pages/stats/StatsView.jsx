@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Menu, Layout, Spin } from 'antd';
 import { BarChartOutlined, LineChartOutlined, PieChartOutlined, AreaChartOutlined, DotChartOutlined, RadarChartOutlined } from '@ant-design/icons';
 import { FaFileExport } from 'react-icons/fa';
-import { handleExport } from './HandlersAPI';
+import { handleExport, fetchImageRoute } from './HandlersAPI';
 
 const { Header, Content } = Layout;
 
@@ -79,9 +79,30 @@ const StatsView = () => {
     
 
     const handleMenuClick = async (e) => {
+        var ruta = "";
         setLoading(true);
         setSelectedMenu(e.key);
-
+        switch (e.key) {
+            case '1':
+                ruta ="calificaciones";
+                break;
+            case '2':
+                ruta = "actividades_participantes";
+                break;
+            case '3':
+                ruta = "";
+                break;
+            case '4':
+                ruta = "";
+                break;
+            case '5':
+                ruta = "uso_recursos";
+                break;
+            default:
+                ruta = "reservaciones_aceptadas";
+                break;
+        }
+        await fetchImageRoute(ruta,setImageSrc);
         setLoading(false);
     };
 
@@ -125,7 +146,7 @@ const StatsView = () => {
                 {loading ? (
                     <Spin size="large" />
                 ) : (
-                    <img src={imageSrc} alt="Estadísticas" style={{ width: '100%' }} />
+                    <img src={`../../../../api/${imageSrc}`} alt="Estadísticas" style={{ width: '100%' }} />
                 )}
                    <ExportButton onClick={handleExportAPI}>
                     <FaFileExport />

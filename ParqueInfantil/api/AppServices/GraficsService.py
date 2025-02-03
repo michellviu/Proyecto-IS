@@ -60,6 +60,7 @@ class Graphics:
             "reservaciones_aceptadas.png",
         )
         plt.savefig(path)
+        plt.close()
         
         
         
@@ -83,6 +84,7 @@ class Graphics:
             "reservaciones_denegadas.png",
         )
         plt.savefig(path)
+        plt.close()
         
         
         # Crear el gráfico de barras para reservaciones totales

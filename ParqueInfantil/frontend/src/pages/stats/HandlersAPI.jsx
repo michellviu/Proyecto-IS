@@ -32,4 +32,27 @@ const handleExport = async () => {
     }
 };
 
- export {handleExport};
+
+const fetchImageRoute = async (ruta, setImageSrc) => {
+    try {
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(`http://127.0.0.1:8000/api/stats/${ruta}/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            message.error('No se pudo obtener la ruta: ' + data.error);
+            throw new Error('Failed to export');
+        }
+        setImageSrc(data.image_path);
+    } catch (error) {
+        console.error('Failed to export', error);
+    }
+};
+
+
+ export {handleExport, fetchImageRoute};
