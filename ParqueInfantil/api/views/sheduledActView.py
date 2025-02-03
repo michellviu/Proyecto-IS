@@ -13,7 +13,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.pagination import PageNumberPagination
-
+from .custompaginator.custompaginator import SmallPageNumberPagination
 
 # vista para crear o listar todas las instalaciones
 class ScheduledActView(generics.ListCreateAPIView):
@@ -134,6 +134,7 @@ class ScheduledActRealTimeView(generics.ListAPIView):
     
 class ScheduledActCatalogView(generics.ListAPIView):
     serializer_class = ScheduledActSerializer
+    pagination_class = SmallPageNumberPagination 
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
