@@ -18,8 +18,8 @@ class Usuario(AbstractUser):
 
     rol = models.CharField(max_length=10, choices=ROL_CHOICES, default=PADRE)
     role_confirmation = models.BooleanField(default=False)
-    imagen = models.ImageField(upload_to="media/images/usuarios", null=True, blank=True)
-
+    # imagen = models.ImageField(upload_to="media/images/usuarios", null=True, blank=True)
+    imagen = models.CharField(max_length=200,blank=True,null=True)  # URL de la imagen
     def __str__(self):
         return self.username
 

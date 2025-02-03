@@ -10,3 +10,6 @@ class ResourceService(GenericService, IResourceService):
 
     def get_resource_in_use(self):
         return self.repository.get_resource_in_use()
+    
+    def get_frecuencia_uso(self,id_recurso):
+        return self.repository.get_frecuencia_uso(id_recurso)

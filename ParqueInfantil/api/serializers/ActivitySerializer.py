@@ -24,6 +24,7 @@ class ActividadSerializer(serializers.ModelSerializer):
             "duracion",
             "num_participantes",
             "descripcion",
+            "imagen",
         ]
 
 

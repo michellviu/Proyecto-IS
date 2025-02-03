@@ -1,4 +1,9 @@
 from rest_framework import serializers
+from api.AppServices.InstallationService import InstallationService
+from api.InfrastructurePersistence.InstallationRepository import InstallationRepository
+from api.InfrastructurePersistence.ScheduledActRepository import ScheduledActRepository
+from api.AppServices.ResourceService import ResourceService
+from api.InfrastructurePersistence.ResourceRepository import ResourceRepository
 from api.models import (
     Instalacion,
     Recurso,
@@ -12,18 +17,36 @@ from django.contrib.auth import get_user_model
 
 class InstalacionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="idI", required=False)
-
+    # numero_actividades_realizadas = serializers.IntegerField(read_only=True)
     class Meta:
         model = Instalacion
         fields = ["id", "nombre", "tipo", "ubicacion", "capacidad"]
 
 
+# class InstalacionNumActividadesSerializer(serializers.ModelSerializer):
+#     id = serializers.IntegerField(source="idI", required=False)
+#     numero_actividades_realizadas = serializers.SerializerMethodField()
+
+#     def get_numero_actividades_realizadas(self, obj):
+#         return InstallationService(InstallationRepository()).get_numactividades(obj.idI)
+
+#     class Meta:
+#         model = Instalacion
+#         fields = ["id", "nombre","numero_actividades_realizadas"]
+
+
+
+
 class RecursoSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="idR", required=False)
+    numero_actividades = serializers.SerializerMethodField()
+
+    def get_numero_actividades(self, obj):
+        return ResourceService(ResourceRepository(ScheduledActRepository(),InstallationRepository())).get_frecuencia_uso(obj.idR)
 
     class Meta:
         model = Recurso
-        fields = ["id", "estado", "tipo", "frecuencia_uso", "idI"]
+        fields = ["id", "estado", "tipo", "numero_actividades", "idI"]
 
 
 class PadreSerializer(serializers.ModelSerializer):
