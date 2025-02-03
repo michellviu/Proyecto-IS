@@ -2,4 +2,7 @@ from abc import ABC, abstractmethod
 from .IGenericRepository import IGenericRepository
 
 class IInstallationRepository(IGenericRepository, ABC):
-    pass
+    
+    @abstractmethod
+    def get_numactividades():
+        pass

@@ -7,6 +7,7 @@ from api.AppServices.UserService import UserService
 from api.InfrastructurePersistence.UserRepository import UserRepository
 from .permissions.permissions_by_roles import IsAdmin, IsAdminOrSelf
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.permissions import AllowAny
 
 
 class UserView(generics.ListCreateAPIView):
@@ -89,6 +90,48 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         elif self.request.method == "DELETE":
             return [IsAdminOrSelf()]
         return super().get_permissions()
+
+
+class UserDetailPersonalView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_service = UserService(UserRepository())
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            user = self.request.user
+            usuario = self.user_service.get_by_id(user.idU)
+            serializer = self.get_serializer(usuario)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            usuario = self.request.user
+            user = self.user_service.get_by_id(usuario.idU)
+            serializer = self.get_serializer(user, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.user_service.update(user.idU, serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+           usuario = self.request.user
+           user = self.user_service.get_by_id(usuario.idU)
+           self.user_service.delete(user.idU)
+           return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+
 
 
 class UserByRoleView(generics.ListAPIView):

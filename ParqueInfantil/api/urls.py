@@ -6,7 +6,12 @@ from .views.registerView import RegistroView
 from .views.SearchView import SearchView
 from .views.orderbyProperty import OrderByPropertyView
 from .views.loginView import LoginView
-from .views.installationView import InstalacionView, InstalacionDetailView
+from .views.installationView import(
+    InstalacionView,
+    InstalacionDetailView,
+    InstalacionNumActividadesView
+
+) 
 from .views.activityView import (
     ActividadView,
     ActividadDetailView,
@@ -19,6 +24,7 @@ from .views.userView import (
     UserView,
     UserDetailView,
     UnconfirmedUsersView,
+    UserDetailPersonalView,
 )
 from .views.confirmRoleView import ConfirmRoleView
 from .views.attributesView import AttributesView
@@ -79,6 +85,7 @@ urlpatterns = [
     path("login/", LoginView.as_view()),
     # Instalacion
     path("instalacion/", InstalacionView.as_view()),
+    path("instalacion/numactividades/", InstalacionNumActividadesView.as_view()),
     path("instalacion/<int:pk>/", InstalacionDetailView.as_view()),
     # Actividad
     path("actividad/", ActividadView.as_view()),
@@ -101,6 +108,7 @@ urlpatterns = [
     path("recurso/<int:pk>/", RecursoDetailView.as_view()),
     # Usuario
     path("usuario/", UserView.as_view()),
+    path("usuario/perfil/", UserDetailPersonalView.as_view()),
     path("usuario/noconfirmado/", UnconfirmedUsersView.as_view()),
     path("usuario/<int:pk>/", UserDetailView.as_view()),
     path("usuario/<str:role>/", UserByRoleView.as_view()),

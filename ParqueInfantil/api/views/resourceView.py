@@ -9,6 +9,8 @@ from ..serializers.serializer import RecursoSerializer
 from api.AppServices.ResourceService import ResourceService
 from api.InfrastructurePersistence.ResourceRepository import ResourceRepository
 from api.InfrastructurePersistence.ScheduledActRepository import ScheduledActRepository
+from api.AppServices.InstallationService import InstallationService
+from api.InfrastructurePersistence.InstallationRepository import InstallationRepository
 from django.core.exceptions import ObjectDoesNotExist
 
 # vista para crear o listar todos los recursos
@@ -18,7 +20,7 @@ class RecursoView(generics.ListCreateAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository()))
+        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository(),InstallationRepository()))
 
     @swagger_auto_schema(
         operation_description="Listar todos los recursos",
@@ -45,7 +47,7 @@ class ResourceInUseView(generics.ListAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository()))
+        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository(),InstallationRepository()))
 
     def get_queryset(self):
         return self.resource_service.get_resource_in_use()
@@ -60,7 +62,7 @@ class RecursoDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository()))
+        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository(),InstallationRepository()))
 
     @swagger_auto_schema(
         operation_description="Obtener los detalles de un recurso",

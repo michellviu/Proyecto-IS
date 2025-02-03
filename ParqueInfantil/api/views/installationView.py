@@ -1,6 +1,7 @@
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import generics, status
+from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .permissions.permissions_by_roles import IsAdmin, IsPadre, IsEducador
@@ -56,6 +57,7 @@ class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     )
     def get_object(self):
         try:
+         print (self.installation_service.get_numactividades(self.kwargs["pk"]).numero_actividades_realizadas)
          return self.installation_service.get_by_id(self.kwargs["pk"])
         except ObjectDoesNotExist as e:
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
@@ -86,3 +88,17 @@ class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class InstalacionNumActividadesView(generics.ListAPIView):
+    permission_classes = [IsAdmin]
+    serializer_class = InstalacionSerializer
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.installation_service = InstallationService(InstallationRepository())
+
+   
+    def get(self, request, *args, **kwargs):
+        installations = self.installation_service.get_numactividades()
+        return Response(installations, status=status.HTTP_200_OK)
