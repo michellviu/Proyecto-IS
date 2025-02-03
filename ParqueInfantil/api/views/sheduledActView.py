@@ -58,7 +58,7 @@ class ScheduledActView(generics.ListCreateAPIView):
         if self.request.method == "POST":
             return [IsAdmin()]
         elif self.request.method == "GET":
-            return [AllowAny()]
+            return [IsAdmin()]
         return super().get_permissions()
 
 
@@ -129,12 +129,23 @@ class ScheduledActRealTimeView(generics.ListAPIView):
     )
     def get(self, request, *args, **kwargs):
         actividades = self.scheduled_act_service.get_actividades_en_tiempo_real()
-        serializer = Actividad_programadaSerializer(actividades, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        paginator = PageNumberPagination()
+        paginator.page_size = 3  # Número de elementos por página
+
+        # Paginar el queryset
+        result_page = paginator.paginate_queryset(actividades, request)
+       
+        # Serializar los objetos paginados
+        serializer = Actividad_programadaSerializer(result_page, many=True)
+        # Devolver la respuesta paginada
+        return paginator.get_paginated_response(serializer.data)
+
     
 class ScheduledActCatalogView(generics.ListAPIView):
     serializer_class = ScheduledActSerializer
     pagination_class = SmallPageNumberPagination 
+    permission_classes = [AllowAny]
     
 
     def __init__(self, **kwargs):
@@ -155,13 +166,26 @@ class ScheduledActCatalogView(generics.ListAPIView):
             activities = self.scheduled_act_service.get_all().filter(**filter_kwargs)
             if order:
                 activities = activities.order_by('fecha_hora')
+            else:
+                activities = activities.order_by('-fecha_hora')
         else:
             activities = self.scheduled_act_service.get_all()
             if order:
                 activities = activities.order_by('fecha_hora')
+            else:
+                activities = activities.order_by('-fecha_hora')
          
-        serializer = ScheduledActSerializer(activities, many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        paginator = PageNumberPagination()
+        paginator.page_size = 3  # Número de elementos por página
+
+        # Paginar el queryset
+        result_page = paginator.paginate_queryset(activities, request)
+       
+        # Serializar los objetos paginados
+        serializer = ScheduledActSerializer(result_page, many=True)
+        # Devolver la respuesta paginada
+        return paginator.get_paginated_response(serializer.data)
+        
     
 
 class ScheduledActRealizView(generics.ListAPIView):
