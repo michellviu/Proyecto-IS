@@ -6,7 +6,8 @@ import { handleLogOut } from "../admin/HandlersRequests";
 import { fetchResponsibleActivities, fetchProfileData } from "./HandlersAPI";
 
 import Menu from "./Componentes/Menu";
-
+import ActivityCatalog from "../catalog/ActivityCatalog"
+import MyActivitiesView from "./Componentes/MyActivitiesView"
 
 const Container = styled.div`
   display: flex;
@@ -14,7 +15,7 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-    width: 80%;
+    width: 100%;
     background-color: #f5f5dc; /* beige */
     display: flex;
 `;
@@ -28,12 +29,16 @@ const EducatorPage = () => {
   }
   const [activities, setActivities] = useState([]);
   const [profileData, setProfileData] = useState([]);
-  const [selectedMenu, setSelectedMenu] = useState("Actividades");
+  const [selectedMenu, setSelectedMenu] = useState("Catálogo");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchResponsibleActivities(setActivities);
-  });
+
+  const handleCatalogoClick = async () => {
+    setLoading(true);
+    setSelectedMenu("Catálogo");
+    setLoading(false);
+  };
+
 
   const handleActivitiesClick = async () => {
     setLoading(true);
@@ -59,6 +64,7 @@ const EducatorPage = () => {
   return (
     <Container>
       <Menu
+        handleCatalogoClick={handleCatalogoClick}
         handleActivitiesClick={handleActivitiesClick}
         handlePerfilClick={handlePerfilClick}
         handleLogOutClick={handleLogOut}
@@ -66,13 +72,23 @@ const EducatorPage = () => {
         selectedMenu={selectedMenu}
       />
       <Content>
-        {selectedMenu === "Actividades" && <></>}
+        {selectedMenu === "Catálogo" && <ActivityCatalog/>}
+
+        {selectedMenu === "Actividades" && <></>
+        
+        // <MyActivitiesView
+        // handleNext={handlePage}
+        // handlePrevious={handle}
+        // activities={activities}
+        
+        // />
+        }
 
         {selectedMenu === "Perfil" && <></>}
 
         {selectedMenu === "Estadísticas " && <></>}
 
-        {selectedMenu === "Catálogo" && <></>}
+
       </Content>
     </Container>
   );
