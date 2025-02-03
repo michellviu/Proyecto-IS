@@ -54,7 +54,7 @@ const Menu = ({ handleActivitiesClick, handleStatsClick, selectedMenu, handlePer
             </MenuItem>
 
             <MenuItem
-                selected={selectedMenu === 'Estadísticas'}
+                selected={selectedMenu === 'Estadisticas'}
                 onClick={handleStatsClick}
             >
                 Estadísticas

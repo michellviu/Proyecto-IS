@@ -5,6 +5,7 @@ import ActivityCatalog from '../catalog/ActivityCatalog'; // Make sure to import
 import Perfil from './ParentProfile';
 import PlayHubLogo from '../../assets/PlayHub.png';
 import Reservations from './Reservations'
+import AlertPage from '../AlertPage';
 
 const Container = styled.div`
     display: flex;
@@ -43,7 +44,8 @@ const MenuItem = styled.div`
 
 const ParentPage = () => {
 
-    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('Role') === 'padre');
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        localStorage.getItem('Role') === 'padre');
     if (!isAuthenticated){
       return (
         <AlertPage />
@@ -81,12 +83,6 @@ const ParentPage = () => {
                     Reservaciones
                 </MenuItem>
                 <MenuItem
-                    selected={selectedMenu === 'Perfil'}
-                    onClick={() => handleMenuClick('Perfil')}
-                >
-                    Perfil
-                </MenuItem>
-                <MenuItem
                     selected={selectedMenu === 'Home'}
                     onClick={() => handleMenuClick('Home')}
                 >
@@ -104,11 +100,6 @@ const ParentPage = () => {
                 {selectedMenu === 'Reservas' && (
                     <div style={{ width: '100%' }}>
                         <Reservations />
-                    </div>
-                )}
-                {selectedMenu === 'Perfil' && (
-                    <div style={{ width: '100%' }}>
-                        <Perfil />
                     </div>
                 )}
                 {selectedMenu === 'Home' && (

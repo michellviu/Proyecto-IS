@@ -8,6 +8,8 @@ import { fetchResponsibleActivities, fetchProfileData } from "./HandlersAPI";
 import Menu from "./Componentes/Menu";
 import ActivityCatalog from "../catalog/ActivityCatalog"
 import MyActivitiesView from "./Componentes/MyActivitiesView"
+import StatsView from "../stats/StatsView";
+import AlertPage from '../AlertPage';
 
 const Container = styled.div`
   display: flex;
@@ -15,17 +17,20 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-    width: 100%;
-    background-color: #f5f5dc; /* beige */
-    display: flex;
+  width: 80%;
+  background-color: #f5f5dc; /* beige */
+  display: flex;
+  margin-right: 0;
 `;
 
 const EducatorPage = () => {
+
   const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem("Role") === "educador"
-  );
-  if (!isAuthenticated) {
-    return <AlertPage />;
+    localStorage.getItem('Role') === 'educador');
+  if (!isAuthenticated){
+    return (
+      <AlertPage />
+    );
   }
   const [activities, setActivities] = useState([]);
   const [profileData, setProfileData] = useState([]);
@@ -54,10 +59,10 @@ const EducatorPage = () => {
     setLoading(false);
   };
 
-  const handleStatsClick = async () => {
+  const handleStatsClick =  async () => {
     setLoading(true);
-    setSelectedMenu("Estadísticas");
-    //  await fetchStats();
+    setSelectedMenu("Estadisticas");
+    await fetchProfileData(setProfileData);
     setLoading(false);
   };
 
@@ -84,9 +89,16 @@ const EducatorPage = () => {
         // />
         }
 
-        {selectedMenu === "Perfil" && <></>}
+        {selectedMenu === "Perfil" && <> </>}
 
-        {selectedMenu === "Estadísticas " && <></>}
+        {selectedMenu === "Estadisticas" && 
+        <>
+          <StatsView /> 
+
+        </>
+        
+      
+        }
 
 
       </Content>
