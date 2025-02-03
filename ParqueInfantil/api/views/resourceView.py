@@ -43,7 +43,7 @@ class RecursoView(generics.ListCreateAPIView):
 
 class ResourceInUseView(generics.ListAPIView):
     serializer_class = RecursoSerializer
-    permission_classes = [IsAdmin,IsPadre,IsEducador]
+    permission_classes = [IsAdmin|IsEducador|IsPadre]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
