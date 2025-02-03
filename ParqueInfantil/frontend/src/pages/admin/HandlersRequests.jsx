@@ -353,8 +353,12 @@ const fetchPendingReservations = async (setPendingReservations, setNextPage, set
 
 };
 
-const handleAcceptRev = async (reservation) => {//manejar buen editado 
+const handleAcceptRev = async (reservation) => {
     try {
+        const updatedReservation = {id: reservation.id,idP:reservation.idP, idAP: reservation.idAP  ,
+             fecha_hora: reservation.fecha_hora, num_ninos: reservation.num_ninos ,
+             comentarios: reservation.comentarios, 
+            estado: 'Confirmado' };
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/reservacion/${reservation.id}/`, {
             method: 'PUT',
@@ -362,7 +366,7 @@ const handleAcceptRev = async (reservation) => {//manejar buen editado
                 'Content-Type': 'application/json',
                 'Authorization': token
             },
-            body: JSON.stringify(reservation)
+            body: JSON.stringify(updatedReservation)
         });
         const data = await response.json();
         if (!response.ok) {
@@ -375,8 +379,12 @@ const handleAcceptRev = async (reservation) => {//manejar buen editado
     }
 };
 
-const handleRejectRev = async (reservation) => {//manejar buen editado 
+const handleRejectRev = async (reservation) => {
     try {
+        const updatedReservation = {id: reservation.id,idP:reservation.idP, idAP: reservation.idAP  ,
+            fecha_hora: reservation.fecha_hora, num_ninos: reservation.num_ninos ,
+            comentarios: reservation.comentarios, 
+           estado: 'Cancelado' };
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/reservacion/${reservation.id}/`, {
             method: 'PUT',
@@ -384,7 +392,7 @@ const handleRejectRev = async (reservation) => {//manejar buen editado
                 'Content-Type': 'application/json',
                 'Authorization': token
             },
-            body: JSON.stringify(reservation)
+            body: JSON.stringify(updatedReservation)
         });
         const data = await response.json();
         if (!response.ok) {

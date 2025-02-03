@@ -1,28 +1,45 @@
 import React from 'react';
 import styled from 'styled-components';
 import HeaderHome from '../components/headers/HeaderHome';
-// import Login from './Login';
 import { FaHome } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import LoginForm from './Login';
+import fondo from '../assets/fondo.jpeg'
 
-
-import homeImage from '../assets/home.jpg';
 
 const HomeContainer = styled.div`
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-  //  background-image: url(${homeImage});
+    justify-content: center;
+    overflow: hidden;
+    background-image: url(${fondo});
     background-size: cover;
     background-position: center;
-    min-height: 100vh;
-    background-filter: blur(100px);
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0);
+        backdrop-filter: blur(5px);
+        z-index: 1;
+    }
+    > * {
+        position: relative;
+        z-index: 2;
+    }
 `;
 
 
 const Footer = styled.footer`
-    background-color: #ffcccb;
+    background-color:rgba(161, 134, 133, 0.42);
     width: 100%;
     text-align: center;
     padding: 10px 0;
@@ -31,11 +48,12 @@ const Footer = styled.footer`
 `;
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 10;
 `;
 
 const Title = styled.h1`
@@ -51,7 +69,7 @@ const Icon = styled(FaHome)`
 
 const RegisterLink = styled(Link)`
     margin-top: 1rem;
-    color: #007bff;
+    color #007bff;
     text-decoration: none;
 
     &:hover {
@@ -59,13 +77,15 @@ const RegisterLink = styled(Link)`
     }
 `;
 
+
+
 const Home = () => {
 
     const authToken = localStorage.getItem('authToken');
-    localStorage.clear();
+
     return (
         <HomeContainer>
-            <HeaderHome />
+            <HeaderHome style={{ marginTop: 0 }} />
             {/* <img src={logo} alt="The Play Hub Logo" style={{ width: '200px', marginBottom: '20px' }} /> */}
             
             {!authToken ? (

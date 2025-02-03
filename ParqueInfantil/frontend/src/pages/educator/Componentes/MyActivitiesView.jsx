@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import { FaBook } from 'react-icons/fa';
 import { Button } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-
 const Catalog = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -22,12 +21,21 @@ const ActivityCard = styled.div`
     padding: 20px;
     width: 200px;
     text-align: center;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2ba475f (feat: Add educator profile and statistics views with pagination controls)
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
 
     &:hover {
         transform: translateY(-5px);
     }
+<<<<<<< HEAD
+=======
+>>>>>>> b36630d (Minor changes)
+=======
+>>>>>>> 2ba475f (feat: Add educator profile and statistics views with pagination controls)
 `;
 
 const ActivityInfo = styled.div`
