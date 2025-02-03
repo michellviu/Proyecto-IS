@@ -9,7 +9,7 @@ import ParentPage from './pages/parent/ParentPage';
 import AdminPage from './pages/admin/AdminPage';
 import ActivityCatalog from './pages/ActivityCatalog';
 // import ParentProfile from './pages/parent/ParentProfile';
-// import ResponsibleActivities from './pages/educator/ResponsibleActivities';
+import EducatorPage from './pages/educator/EducatorPage';
 // import EducatorProfile from './pages/educator/EducatorProfile';
 
 /*
@@ -31,8 +31,8 @@ const App = () => {
                 <Route path="/padrePage" element={<ParentPage />} />
                 <Route path="/alertPage" element={<AlertPage />} />
                 <Route path="/activity-catalog" element={<ActivityCatalog />} />
-                {/* <Route path="/educator/profile" element={<EducatorProfile />} />
-                <Route path="/educadorPage" element={<ResponsibleActivities />} /> */}
+                {/* <Route path="/educator/profile" element={<EducatorProfile />} /> */}
+                <Route path="/educadorPage" element={<EducatorPage />} />
             </Routes>
         </Router>
     );

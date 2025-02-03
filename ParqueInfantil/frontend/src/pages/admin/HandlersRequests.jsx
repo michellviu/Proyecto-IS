@@ -1,7 +1,4 @@
 import { message } from 'antd';
-import React, { useState, useEffect } from 'react';
-
-
 
 //Get
 const fetchEntities = async (setEntities) => {
@@ -51,7 +48,7 @@ const fetchAtributes = async (entity, setAtributes) => {
     }
 };
 
-const fetchInstances = async (entity, setInstances, setFilteredInstances, blockNumber = 0) => {
+const fetchInstances = async (entity, setInstances, setNextPage, setPreviousPage) => {
     try {
         var ruta = `http://127.0.0.1:8000/api/${entity.toLowerCase()}/`;
         if (entity === 'Padre' || entity === 'Educador') {
@@ -73,11 +70,35 @@ const fetchInstances = async (entity, setInstances, setFilteredInstances, blockN
             message.error('No se pudieron cargar las instancias: ' + data.error);
             throw new Error('Network response was not ok');
         }   
+        setNextPage(data.next);
+        setPreviousPage(data.previous);
         setInstances(data.results);
-        setFilteredInstances(data.results);
     } catch (error) {
         console.error('Failed to fetch instances:', error);
-        message.error('Fallo el backend');
+    }
+};
+
+
+const fetchPage = async (setInstances, setNextPage, setPreviousPage, url ) => {
+    try {
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            message.error('No se pudieron cargar las instancias: ' + data.error);
+            throw new Error('Network response was not ok');
+        }
+        setNextPage(data.next);
+        setPreviousPage(data.previous);
+        setInstances(data.results);
+    } catch (error) {
+        console.error('Failed to fetch instances:', error);
     }
 };
 
@@ -103,7 +124,7 @@ const handleDeleteRequest = async (entity, instance) => {
     }
 };
 
-const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstances) => {
+const fetchSearch = async (entity, attribute, e, setInstances, setNextPage, setPreviousPage) => {
     const query = e.target.value;
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
@@ -126,14 +147,15 @@ const fetchSearch = async (entity, attribute, e, setInstances, setFilteredInstan
             message.error('No se pudo filtrar: ' + data.error);
             throw new Error('Network response was not ok');
         }
-        setInstances(data);
-        setFilteredInstances(data.results);
+        setNextPage(data.next);
+        setPreviousPage(data.previous);
+        setInstances(data.results);
     } catch (error) {
         console.error('Failed to search instances:', error);
     }
 };
 
-const fetchOrder = async (entity, attribute, order, setInstances, setFilteredInstances) => {
+const fetchOrder = async (entity, attribute, order, setInstances, setNextPage, setPreviousPage) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const url = new URL('http://127.0.0.1:8000/api/orderbyproperty/');
@@ -155,8 +177,9 @@ const fetchOrder = async (entity, attribute, order, setInstances, setFilteredIns
             message.error('No se pudo ordenar: ' + data.error);
             throw new Error('Network response was not ok');
         }
-        setInstances(data);
-        setFilteredInstances(data);
+        setNextPage(data.next);
+        setPreviousPage(data.previous);
+        setInstances(data.results);
     } catch (error) {
         console.error('Failed to order instances:', error);
     }
@@ -208,7 +231,7 @@ const handleAdd = async (entity, instance) => {
 
 //Asignacion de roles
 
-const fetchPendingUsers = async (setPendingUsers) => {
+const fetchPendingUsers = async (setPendingUsers, setNextPage , setPreviousPage) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/usuario/noconfirmado/`, {
@@ -223,12 +246,12 @@ const fetchPendingUsers = async (setPendingUsers) => {
             message.error('No se pudieron obtener los usuarios pendientes: ' + data.error);
             throw new Error('Network response was not ok');
         }
-
+        setNextPage(data.next);
+        setPreviousPage(data.previous);
         setPendingUsers(data.results);
         message.success('Usuarios pendientes obtenidos exitosamente');
     } catch (error) {
         console.error('Failed to fetch pending users:', error);
-
     }
 };
 
@@ -279,7 +302,7 @@ const handleRejectUser = async (user) => {
 
 //Recursos e Instalaciones
 
-const fetchResourcesInUse = async (setResources) => {
+const fetchResourcesInUse = async (setResources, setNextPage ,setPreviousPage) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/recurso/enuso/`, {
@@ -294,6 +317,8 @@ const fetchResourcesInUse = async (setResources) => {
             message.error('No se pudieron obtener los recursos en uso: ' + data.error);
             throw new Error('Network response was not ok');
         }
+        setNextPage(data.next);
+        setPreviousPage(data.previous);
         setResources(data.results);
         message.success('Recursos en uso obtenidos exitosamente');
     } catch (error) {
@@ -303,7 +328,7 @@ const fetchResourcesInUse = async (setResources) => {
 
 // Reservas
 
-const fetchPendingReservations = async (setPendingReservations) => {
+const fetchPendingReservations = async (setPendingReservations, setNextPage, setPreviousPage) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/reservacion/noconfirmado/`, {
@@ -318,7 +343,8 @@ const fetchPendingReservations = async (setPendingReservations) => {
             message.error('No se pudieron obtener las solicitudes de reserva: ' + data.error);
             throw new Error('Network response was not ok');
         }
-
+        setNextPage(data.next);
+        setPreviousPage(data.previous);
         setPendingReservations(data.results);
         message.success('Solicitudes de reserva obtenidas exitosamente');
     } catch (error) {
@@ -327,7 +353,7 @@ const fetchPendingReservations = async (setPendingReservations) => {
 
 };
 
-const handleAcceptRev = async (reservation) => {
+const handleAcceptRev = async (reservation) => {//manejar buen editado 
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/reservacion/${reservation.id}/`, {
@@ -349,7 +375,7 @@ const handleAcceptRev = async (reservation) => {
     }
 };
 
-const handleRejectRev = async (reservation) => {
+const handleRejectRev = async (reservation) => {//manejar buen editado 
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/reservacion/${reservation.id}/`, {
@@ -373,15 +399,6 @@ const handleRejectRev = async (reservation) => {
 
 const handleLogOut = async () => {
     try {
-        // const response = await fetch(`http://127.0.0.1:8000/logout/${user.Id}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // });
-        // if (!response.ok) {
-        //     throw new Error('Network response was not ok');
-        // }
         localStorage.removeItem('Role');
         localStorage.removeItem('AuthToken'); // Eliminar el token de localStorage
         message.success('Sesión cerrada exitosamente');
@@ -392,7 +409,7 @@ const handleLogOut = async () => {
     }
 };
 export {
-    fetchEntities, fetchAtributes, fetchInstances, // Metodos Get
+    fetchEntities, fetchAtributes, fetchInstances, fetchPage,  // Metodos Get
     handleDeleteRequest, fetchSearch, fetchOrder, handleEdit, handleAdd, // Metodos Crud
     fetchPendingUsers, handleAcceptUser, handleRejectUser, // Metodos Asignacion de Rol
     fetchResourcesInUse, // Metodos de Gestion de Recursos
