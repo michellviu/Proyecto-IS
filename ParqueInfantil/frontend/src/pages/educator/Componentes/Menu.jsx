@@ -29,8 +29,8 @@ const MenuItem = styled.div`
         `}
 `;
 
-const Menu = ({ handleActivitiesClick, handleStatsClick, selectedMenu, handlePerfilClick, handleLogOutClick }) => {
-   
+const Menu = ({ handleActivitiesClick, handleStatsClick, selectedMenu, handlePerfilClick, handleLogOutClick, handleCatalogoClick  }) => {
+
     const navigate = useNavigate();
     const handleLogOut = () => {
         handleLogOutClick();
@@ -40,6 +40,12 @@ const Menu = ({ handleActivitiesClick, handleStatsClick, selectedMenu, handlePer
     return (
         <Sidebar>
             <div style={{ marginTop: '50px' }} />
+            <MenuItem
+                selected={selectedMenu === 'Catálogo'}
+                onClick={handleCatalogoClick}
+            >
+                Catálogo
+            </MenuItem>
             <MenuItem
                 selected={selectedMenu === 'Actividades'}
                 onClick={handleActivitiesClick}
