@@ -88,7 +88,6 @@ const Home = () => {
             <HeaderHome style={{ marginTop: 0 }} />
             {/* <img src={logo} alt="The Play Hub Logo" style={{ width: '200px', marginBottom: '20px' }} /> */}
             
-
             {!authToken ? (
                 <Container>
                     <Icon />
