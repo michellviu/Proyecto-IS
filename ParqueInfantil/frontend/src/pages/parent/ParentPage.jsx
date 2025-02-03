@@ -1,7 +1,7 @@
 import React, { useState, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import ActivityCatalog from '../ActivityCatalog'; // Make sure to import your component
+import ActivityCatalog from '../catalog/ActivityCatalog'; // Make sure to import your component
 import Perfil from './ParentProfile';
 import PlayHubLogo from '../../assets/PlayHub.png';
 import Reservations from './Reservations'
@@ -74,22 +74,6 @@ const ParentPage = () => {
                 >
                     Catálogo
                 </MenuItem>
-                {showSubMenu && selectedMenu === 'Catalogo' && (
-                    <>
-                        <MenuItem
-                            selected={selectedMenu === 'Actividad Actual'}
-                            onClick={() => handleMenuClick('Actividad Actual')}
-                        >
-                            Actividad Actual
-                        </MenuItem>
-                        <MenuItem
-                            selected={selectedMenu === 'Actividades Futuras'}
-                            onClick={() => handleMenuClick('Actividades Futuras')}
-                        >
-                            Actividades Futuras
-                        </MenuItem>
-                    </>
-                )}
                 <MenuItem
                     selected={selectedMenu === 'Reservas'}
                     onClick={() => handleMenuClick('Reservas')}
@@ -115,16 +99,6 @@ const ParentPage = () => {
                 {selectedMenu === 'Catalogo' && (
                     <div style={{ width: '100%' }}>
                         <ActivityCatalog />
-                    </div>
-                )}
-                {selectedMenu === 'Actividad Actual' && (
-                    <div style={{ width: '100%' }}>
-                        {/* Add your component for Actividad Actual here */}
-                    </div>
-                )}
-                {selectedMenu === 'Actividades Futuras' && (
-                    <div style={{ width: '100%' }}>
-                        {/* Add your component for Actividades Futuras here */}
                     </div>
                 )}
                 {selectedMenu === 'Reservas' && (

@@ -7,7 +7,7 @@ import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import ParentPage from './pages/parent/ParentPage';
 import AdminPage from './pages/admin/AdminPage';
-import ActivityCatalog from './pages/ActivityCatalog';
+import ActivityCatalog from './pages/catalog/ActivityCatalog';
 // import ParentProfile from './pages/parent/ParentProfile';
 import EducatorPage from './pages/educator/EducatorPage';
 // import EducatorProfile from './pages/educator/EducatorProfile';
