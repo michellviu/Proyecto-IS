@@ -1,10 +1,11 @@
 import React, { useState, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import ActivityCatalog from '../ActivityCatalog'; // Make sure to import your component
+import ActivityCatalog from '../catalog/ActivityCatalog'; // Make sure to import your component
 import Perfil from './ParentProfile';
 import PlayHubLogo from '../../assets/PlayHub.png';
 import Reservations from './Reservations'
+import AlertPage from '../AlertPage';
 
 const Container = styled.div`
     display: flex;
@@ -42,6 +43,15 @@ const MenuItem = styled.div`
 `;
 
 const ParentPage = () => {
+
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        localStorage.getItem('Role') === 'padre');
+    if (!isAuthenticated){
+      return (
+        <AlertPage />
+      );
+    }
+
     const [selectedMenu, setSelectedMenu] = useState('Catalogo');
 
     const [showSubMenu, setShowSubMenu] = useState(false);
@@ -55,21 +65,6 @@ const ParentPage = () => {
         }
     };
 
-    const navigate = useNavigate();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    useEffect(() => {
-        const userRole = localStorage.getItem('Role');
-        if (userRole !== 'padre') {
-            navigate('/alertPage');
-        } else {
-            setIsAuthenticated(true);
-        }
-    }, [navigate]);
-
-    // if (!isAuthenticated) {
-    //     return;
-    // }
 
     return (
         <Container>
@@ -81,33 +76,11 @@ const ParentPage = () => {
                 >
                     Catálogo
                 </MenuItem>
-                {showSubMenu && selectedMenu === 'Catalogo' && (
-                    <>
-                        <MenuItem
-                            selected={selectedMenu === 'Actividad Actual'}
-                            onClick={() => handleMenuClick('Actividad Actual')}
-                        >
-                            Actividad Actual
-                        </MenuItem>
-                        <MenuItem
-                            selected={selectedMenu === 'Actividades Futuras'}
-                            onClick={() => handleMenuClick('Actividades Futuras')}
-                        >
-                            Actividades Futuras
-                        </MenuItem>
-                    </>
-                )}
                 <MenuItem
                     selected={selectedMenu === 'Reservas'}
                     onClick={() => handleMenuClick('Reservas')}
                 >
                     Reservaciones
-                </MenuItem>
-                <MenuItem
-                    selected={selectedMenu === 'Perfil'}
-                    onClick={() => handleMenuClick('Perfil')}
-                >
-                    Perfil
                 </MenuItem>
                 <MenuItem
                     selected={selectedMenu === 'Home'}
@@ -124,24 +97,9 @@ const ParentPage = () => {
                         <ActivityCatalog />
                     </div>
                 )}
-                {selectedMenu === 'Actividad Actual' && (
-                    <div style={{ width: '100%' }}>
-                        {/* Add your component for Actividad Actual here */}
-                    </div>
-                )}
-                {selectedMenu === 'Actividades Futuras' && (
-                    <div style={{ width: '100%' }}>
-                        {/* Add your component for Actividades Futuras here */}
-                    </div>
-                )}
                 {selectedMenu === 'Reservas' && (
                     <div style={{ width: '100%' }}>
                         <Reservations />
-                    </div>
-                )}
-                {selectedMenu === 'Perfil' && (
-                    <div style={{ width: '100%' }}>
-                        <Perfil />
                     </div>
                 )}
                 {selectedMenu === 'Home' && (

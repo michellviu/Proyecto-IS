@@ -2,7 +2,6 @@ import React from 'react';
 import { FaUser } from 'react-icons/fa';
 import styled from 'styled-components';
 import HeaderHome from '../components/headers/HeaderHome';
-import { Link } from 'react-router-dom';
 import { Carousel }  from 'react-bootstrap';
 import foto1 from '../assets/area1.jpg';
 import foto2 from '../assets/act1.jpg';
@@ -52,9 +51,6 @@ const AboutUs = () => {
         <AboutUsContainer>
             <HeaderHome />
             { /*<Logo src={logo} alt="Logo del Parque" />*/}
-            <Link to="/adminPage" className="nav-link">
-                <FaUser /> ADMIN
-            </Link>
             <Title>Sobre Nosotros</Title>
             <Paragraph>¡Bienvenidos a nuestro parque infantil! Nos dedicamos a proporcionar un entorno seguro y divertido para que los niños jueguen y aprendan.</Paragraph>
             <Paragraph>Nuestra misión es crear un espacio donde los niños puedan explorar, descubrir y crecer a través del juego. Creemos que el juego es una parte esencial del desarrollo infantil y nos esforzamos por ofrecer una variedad de actividades que se adapten a diferentes intereses y grupos de edad.</Paragraph>
