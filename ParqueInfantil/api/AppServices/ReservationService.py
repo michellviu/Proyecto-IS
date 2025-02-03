@@ -68,7 +68,6 @@ class ReservationService(GenericService, IReservationService):
         return self.reservation_repository.get_reservations_by_user(user_id)
 
     def get_unconfirmed_reservations(self):
-        ReservationService.get_tasa_confirmacion_por_rangoedad()
         return self.reservation_repository.get_unconfirmed_reservations()
     
     @staticmethod

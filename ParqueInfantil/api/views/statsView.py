@@ -76,3 +76,15 @@ class StatsActividadesMasParticipadasView(APIView):
         self.graphics.Graficar_Actividades_Mas_Participadas()
         image_path = "media/images/reportes/actividades_participantes.png"
         return Response({"image_path": image_path})
+    
+class StatsUsoDeRecursosView(APIView):
+    permission_classes = [AllowAny]
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.graphics = Graphics()
+
+    def get(self, request, *args, **kwargs):
+        self.graphics.Graficar_Uso_De_Recursos()
+        image_path = "media/images/reportes/recursos_uso.png"
+        return Response({"image_path": image_path})

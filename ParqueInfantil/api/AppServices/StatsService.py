@@ -3,6 +3,9 @@ from ..InfrastructurePersistence.QualificationRepository import QualificationRep
 from ..InfrastructurePersistence.ScheduledActRepository import ScheduledActRepository
 from ..AppServices.ActivityService import ActivityService
 from ..InfrastructurePersistence.ActivityRepository import ActivityRepository
+from ..InfrastructurePersistence.InstallationRepository import InstallationRepository
+from ..AppServices.ResourceService import ResourceService
+from ..InfrastructurePersistence.ResourceRepository import ResourceRepository
 from api.models.reservacion import Reservacion
 from django.db.models import Count, Case, When, IntegerField
 from collections import defaultdict
@@ -13,6 +16,7 @@ class Stats:
     def __init__(self):
         self.qualification_service = QualificationService(QualificationRepository(),ScheduledActRepository())
         self.activity_service = ActivityService(ActivityRepository())
+        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository(),InstallationRepository()))
 
     def CalificacionesUsuarios(self):
 
@@ -87,6 +91,15 @@ class Stats:
         # Ordenar las actividades por el número de participantes y tomar las primeras 3
         most_participated_activities = sorted(activities, key=lambda a: a['participantes'], reverse=True)[:3]
         return most_participated_activities
+    
+    
+    def get_recursos_mas_utilizados(self):
+        recursos = self.resource_service.get_all()
+        response = {}
+        for recurso in recursos:
+            response[recurso.idR] = {
+                "cantidad": self.resource_service.get_frecuencia_uso(recurso.idR)}
+        return response
         
         
         

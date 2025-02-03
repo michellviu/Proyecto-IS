@@ -2,7 +2,7 @@ from django.http import Http404
 from rest_framework.exceptions import ValidationError as Http400
 from rest_framework.response import Response
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
@@ -48,7 +48,7 @@ class QualificationView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "POST":
-            return [AllowAny()]
+            return [IsAuthenticated()]
         elif self.request.method == "GET":
             return [IsAdmin()]
         return super().get_permissions()
@@ -68,6 +68,8 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     )
     def update(self, request, *args, **kwargs):
         try:
+            user = self.request.user
+            self.check_object_permissions(request, user)
             qualification = self.qualification_service.get_by_id(kwargs["pk"])
             serializer = self.get_serializer(qualification, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
@@ -86,6 +88,8 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     )
     def destroy(self, request, *args, **kwargs):
         try:
+            user = self.request.user
+            self.check_object_permissions(request, user)
             self.qualification_service.delete(kwargs["pk"])
             return Response(status=status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist as e:
@@ -119,7 +123,7 @@ class QualificationDetailView(generics.RetrieveUpdateDestroyAPIView):
         """
         if self.request.method == "GET":
             return [AllowAny()]
-        elif self.request.method in ["PUT", "PATCH"]:
+        elif self.request.method == ["PUT"]:
             return [MySelf()]
         elif self.request.method == "DELETE":
             return [IsAdmin() or MySelf()]

@@ -155,4 +155,28 @@ class Graphics:
         )
         plt.savefig(path)
         plt.close()
-    
+
+    def Graficar_Uso_De_Recursos(self):
+        recursos = self.stats.get_recursos_mas_utilizados()
+        ids = list(recursos.keys())
+        usos = [recursos[idR]['cantidad'] for idR in ids]
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.axis('tight')
+        ax.axis('off')
+        table_data = [['ID', 'Uso']] + list(zip(ids, usos))
+        table = ax.table(cellText=table_data, colLabels=None, cellLoc='center', loc='center')
+        table.auto_set_font_size(False)
+        table.set_fontsize(10)
+        table.scale(1.2, 1.2)
+
+        path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "media",
+            "images",
+            "reportes",
+            "recursos_uso.png",
+        )
+        plt.savefig(path)
+        plt.close()

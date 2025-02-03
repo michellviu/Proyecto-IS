@@ -19,6 +19,7 @@ from .views.statsView import (
     StatsReservacionesTotalesView,
     StatsActividadesCalificacionesAvgView,
     StatsActividadesMasParticipadasView,
+    StatsUsoDeRecursosView
 )
 from .views.activityView import (
     ActividadView,
@@ -145,4 +146,5 @@ urlpatterns = [
     path("stats/reservaciones_totales/", StatsReservacionesTotalesView.as_view()),
     path("stats/actividades_calificacionesavg/", StatsActividadesCalificacionesAvgView.as_view()),
     path("stats/actividades_participantes/", StatsActividadesMasParticipadasView.as_view()),
+    path("stats/uso_recursos/",StatsUsoDeRecursosView.as_view())
 ]
