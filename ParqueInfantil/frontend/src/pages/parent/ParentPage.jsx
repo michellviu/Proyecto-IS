@@ -6,6 +6,9 @@ import Perfil from './ParentProfile';
 import PlayHubLogo from '../../assets/PlayHub.png';
 import Reservations from './Reservations'
 import AlertPage from '../AlertPage';
+import { handleLogOut } from '../admin/HandlersRequests';
+import { FiLogOut } from 'react-icons/fi';
+
 
 const Container = styled.div`
     display: flex;
@@ -105,9 +108,12 @@ const ParentPage = () => {
                 </MenuItem>
                 <MenuItem
                     selected={selectedMenu === 'Home'}
-                    onClick={() => handleMenuClick('Home')}
+                    onClick={() => {
+                        handleLogOut();
+                        window.location.href = '/';
+                    }}
                 >
-                    Home
+                   LogOut <FiLogOut/>
                 </MenuItem>
 
                 <img src={PlayHubLogo} alt="PlayHub Logo" style={{ width: '100%', marginTop: 'auto' }} />
