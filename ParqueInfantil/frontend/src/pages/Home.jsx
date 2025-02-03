@@ -69,7 +69,7 @@ const Icon = styled(FaHome)`
 
 const RegisterLink = styled(Link)`
     margin-top: 1rem;
-    color:rgba(199, 199, 199, 0.1);
+    color #007bff;
     text-decoration: none;
 
     &:hover {
@@ -85,10 +85,9 @@ const Home = () => {
 
     return (
         <HomeContainer>
-            <HeaderHome />
+            <HeaderHome style={{ marginTop: 0 }} />
             {/* <img src={logo} alt="The Play Hub Logo" style={{ width: '200px', marginBottom: '20px' }} /> */}
             
-
             {!authToken ? (
                 <Container>
                     <Icon />
