@@ -30,6 +30,7 @@ class Graphics:
         )
         plt.savefig(path)
         # plt.show()
+        plt.close()
     
     def GraficarTasaConfirmacionPorRangoEdad(self):
         
@@ -59,6 +60,7 @@ class Graphics:
             "reservaciones_aceptadas.png",
         )
         plt.savefig(path)
+        
         
         
         # Crear el gráfico de barras para reservaciones canceladas
@@ -103,3 +105,54 @@ class Graphics:
             "reservaciones_totales.png",
         )
         plt.savefig(path)
+        plt.close()
+    
+    def Graficar_Actividades_Avg_Qualifications(self):
+        
+        actividades = self.stats.get_actividades_avg_qualifications()
+        ids = [actividad_id for actividad_id in actividades]
+        nombres = [actividades[actividad_id]['nombre'] for actividad_id in actividades]
+        calificaciones = [actividades[actividad_id]['calificacion'] for actividad_id in actividades]
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.axis('tight')
+        ax.axis('off')
+        table_data = [['ID', 'Nombre', 'Calificación']] + list(zip(ids, nombres, calificaciones))
+        table = ax.table(cellText=table_data, colLabels=None, cellLoc='center', loc='center')
+        table.auto_set_font_size(False)
+        table.set_fontsize(10)
+        table.scale(1.2, 1.2)
+
+        path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "media",
+            "images",
+            "reportes",
+            "actividades_calificaciones.png",
+        )
+        plt.savefig(path)
+        plt.close()
+        
+    def Graficar_Actividades_Mas_Participadas(self):
+        
+        actividades = self.stats.get_most_participated_activities()
+        nombres = [actividad['nombre'] for actividad in actividades]
+        participantes = [actividad['participantes'] for actividad in actividades]
+
+        plt.figure(figsize=(10, 6))
+        plt.pie(participantes, labels=nombres, autopct='%1.1f%%', startangle=140)
+        plt.axis('equal')  # Asegurar que el gráfico de pastel sea circular
+        plt.title('Actividades con mayor Participación')
+        
+        path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "media",
+            "images",
+            "reportes",
+            "actividades_participantes.png",
+        )
+        plt.savefig(path)
+        plt.close()
+    

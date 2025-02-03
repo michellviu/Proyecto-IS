@@ -1,11 +1,13 @@
 from reportlab.lib.pagesizes import A4
 from django.http import HttpResponse
+from rest_framework.permissions import AllowAny
 import os
 from rest_framework.views import APIView
 from ..AppServices.ReportGeneration import ReportGeneration
 
 
 class ReportView(APIView):
+    permission_classes = [AllowAny]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

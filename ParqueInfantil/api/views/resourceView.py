@@ -43,7 +43,7 @@ class RecursoView(generics.ListCreateAPIView):
 
 class ResourceInUseView(generics.ListAPIView):
     serializer_class = RecursoSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAdmin,IsPadre,IsEducador]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -51,6 +51,18 @@ class ResourceInUseView(generics.ListAPIView):
 
     def get_queryset(self):
         return self.resource_service.get_resource_in_use()
+
+
+class ResourceAvailableView(generics.ListAPIView):
+    serializer_class = RecursoSerializer
+    permission_classes = [IsAdmin | IsPadre]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.resource_service = ResourceService(ResourceRepository(ScheduledActRepository(),InstallationRepository()))
+
+    def get_queryset(self):
+        return self.resource_service.get_resource_disponibles()
         
    
 
