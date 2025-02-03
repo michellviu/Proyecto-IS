@@ -135,17 +135,33 @@ class ScheduledActRealTimeView(generics.ListAPIView):
 class ScheduledActCatalogView(generics.ListAPIView):
     serializer_class = ScheduledActSerializer
     pagination_class = SmallPageNumberPagination 
+    
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.scheduled_act_service = ScheduledActService(ScheduledActRepository())
 
     @swagger_auto_schema(
-        operation_description="Catalogo de las actividades programadas",
-        responses={200: ScheduledActSerializer(many=True)},
-    )
-    def get_queryset(self):
-        return self.scheduled_act_service.get_all()
+        manual_parameters=[
+            openapi.Parameter('query', openapi.IN_QUERY, description="Search query", type=openapi.TYPE_STRING),
+            openapi.Parameter('order',openapi.IN_QUERY, description="Order by date", type=openapi.TYPE_BOOLEAN)
+        ],
+        responses={200: 'Success', 400: 'Bad Request'})
+    def get(self, request, *args, **kwargs):
+        query = request.query_params.get('query')
+        order = request.query_params.get('order')
+        filter_kwargs = {"idA__nombre__icontains": query}
+        if query:
+            activities = self.scheduled_act_service.get_all().filter(**filter_kwargs)
+            if order:
+                activities = activities.order_by('fecha_hora')
+        else:
+            activities = self.scheduled_act_service.get_all()
+            if order:
+                activities = activities.order_by('fecha_hora')
+         
+        serializer = ScheduledActSerializer(activities, many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
     
 
 class ScheduledActRealizView(generics.ListAPIView):
@@ -192,3 +208,4 @@ class ScheduledActForEducadorView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return self.scheduled_act_service.get_actividades_por_educador(user.idU)
+    
