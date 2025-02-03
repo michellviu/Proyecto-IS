@@ -9,5 +9,9 @@ class IResourceService(IGenericService, ABC):
         pass
    
    @abstractmethod
+   def get_resource_disponibles(self):
+          pass
+   
+   @abstractmethod
    def get_frecuencia_uso(self,id_recurso):
         pass

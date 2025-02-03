@@ -13,6 +13,8 @@ class ReportGeneration:
     def create_pdf(self, file_path):
         self.graphics.GraficarCalificaciones()
         self.graphics.GraficarTasaConfirmacionPorRangoEdad()
+        self.graphics.Graficar_Actividades_Avg_Qualifications()
+        self.graphics.Graficar_Actividades_Mas_Participadas()
 
         p = canvas.Canvas(file_path, pagesize=A4)
         p.drawString(100, 800, "Estadísticas del Parque Infantil")
@@ -69,6 +71,36 @@ class ReportGeneration:
          )
    
         p.drawImage(totales_image_path, 100, 200, width=400, height=200)
+        
+        p.showPage()
+        
+         # Agregar el gráfico de reservaciones canceladas
+        p.drawString(100, 800, "Estadísticas de Actividades con Calificaciones")
+        canceladas_image_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "media",
+        "images",
+        "reportes",
+        "actividades_calificaciones.png",
+         )
+        
+        p.drawImage(canceladas_image_path, 100, 550, width=400, height=200)
+        
+        p.drawString(100, 450, "Estadísticas de Actividades con mayor participación")
+        totales_image_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "media",
+        "images",
+        "reportes",
+        "actividades_participantes.png",
+         )
+        
+        p.drawImage(totales_image_path, 100, 200, width=400, height=200)
+        
+        
+        
  
         
         

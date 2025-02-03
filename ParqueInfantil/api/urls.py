@@ -12,13 +12,21 @@ from .views.installationView import(
     InstalacionNumActividadesView
 
 ) 
+from .views.statsView import (
+    StatsCalificacionesTotalesView,
+    StatsReservacionesAceptadasView,
+    StatsReservacionesDenegadasView,
+    StatsReservacionesTotalesView,
+    StatsActividadesCalificacionesAvgView,
+    StatsActividadesMasParticipadasView,
+)
 from .views.activityView import (
     ActividadView,
     ActividadDetailView,
     ActividadCalificacionesView,
     ActividadParticipantesView,
 )
-from .views.resourceView import RecursoView, RecursoDetailView, ResourceInUseView
+from .views.resourceView import RecursoView, RecursoDetailView, ResourceInUseView, ResourceAvailableView
 from .views.userView import (
     UserByRoleView,
     UserView,
@@ -105,6 +113,7 @@ urlpatterns = [
     # Recurso
     path("recurso/", RecursoView.as_view()),
     path("recurso/enuso/", ResourceInUseView.as_view()),
+    path("recurso/disponibles/", ResourceAvailableView.as_view()),
     path("recurso/<int:pk>/", RecursoDetailView.as_view()),
     # Usuario
     path("usuario/", UserView.as_view()),
@@ -129,4 +138,11 @@ urlpatterns = [
     # Tests
     path("test/", TestGraficarCalificacionesView.as_view()),
     path("pdf/", ReportView.as_view()),
+    # Estadísticas
+    path("stats/calificaciones/", StatsCalificacionesTotalesView.as_view()),
+    path("stats/reservaciones_aceptadas/", StatsReservacionesAceptadasView.as_view()),
+    path("stats/reservaciones_denegadas/", StatsReservacionesDenegadasView.as_view()),
+    path("stats/reservaciones_totales/", StatsReservacionesTotalesView.as_view()),
+    path("stats/actividades_calificacionesavg/", StatsActividadesCalificacionesAvgView.as_view()),
+    path("stats/actividades_participantes/", StatsActividadesMasParticipadasView.as_view()),
 ]
