@@ -58,7 +58,7 @@ class ScheduledActView(generics.ListCreateAPIView):
         if self.request.method == "POST":
             return [IsAdmin()]
         elif self.request.method == "GET":
-            return [AllowAny()]
+            return [IsAdmin()]
         return super().get_permissions()
 
 
@@ -135,6 +135,7 @@ class ScheduledActRealTimeView(generics.ListAPIView):
 class ScheduledActCatalogView(generics.ListAPIView):
     serializer_class = ScheduledActSerializer
     pagination_class = SmallPageNumberPagination 
+    permission_classes = [AllowAny]
     
 
     def __init__(self, **kwargs):
@@ -155,10 +156,14 @@ class ScheduledActCatalogView(generics.ListAPIView):
             activities = self.scheduled_act_service.get_all().filter(**filter_kwargs)
             if order:
                 activities = activities.order_by('fecha_hora')
+            else:
+                activities = activities.order_by('-fecha_hora')
         else:
             activities = self.scheduled_act_service.get_all()
             if order:
                 activities = activities.order_by('fecha_hora')
+            else:
+                activities = activities.order_by('-fecha_hora')
          
         serializer = ScheduledActSerializer(activities, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
