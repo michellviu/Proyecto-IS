@@ -355,7 +355,10 @@ const fetchPendingReservations = async (setPendingReservations, setNextPage, set
 
 const handleAcceptRev = async (reservation) => {
     try {
-        const updatedReservation = { ...reservation, estado: 'Confirmado' };
+        const updatedReservation = {id: reservation.id,idP:reservation.idP, idAP: reservation.idAP  ,
+             fecha_hora: reservation.fecha_hora, num_ninos: reservation.num_ninos ,
+             comentarios: reservation.comentarios, 
+            estado: 'Confirmado' };
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/reservacion/${reservation.id}/`, {
             method: 'PUT',
@@ -378,7 +381,10 @@ const handleAcceptRev = async (reservation) => {
 
 const handleRejectRev = async (reservation) => {
     try {
-        const updatedReservation = { ...reservation, estado: 'Cancelado' };
+        const updatedReservation = {id: reservation.id,idP:reservation.idP, idAP: reservation.idAP  ,
+            fecha_hora: reservation.fecha_hora, num_ninos: reservation.num_ninos ,
+            comentarios: reservation.comentarios, 
+           estado: 'Cancelado' };
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/reservacion/${reservation.id}/`, {
             method: 'PUT',
