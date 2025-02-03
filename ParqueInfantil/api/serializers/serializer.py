@@ -39,14 +39,14 @@ class InstalacionSerializer(serializers.ModelSerializer):
 
 class RecursoSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="idR", required=False)
-    numero_actividades = serializers.SerializerMethodField()
+    # frecuencia_uso = serializers.SerializerMethodField()
 
-    def get_numero_actividades(self, obj):
-        return ResourceService(ResourceRepository(ScheduledActRepository(),InstallationRepository())).get_frecuencia_uso(obj.idR)
+    # def get_numero_actividades(self, obj):
+    #     return ResourceService(ResourceRepository(ScheduledActRepository(),InstallationRepository())).get_frecuencia_uso(obj.idR)
 
     class Meta:
         model = Recurso
-        fields = ["id", "estado", "tipo", "numero_actividades", "idI"]
+        fields = ["id", "estado", "tipo","frecuencia_uso", "idI"]
 
 
 class PadreSerializer(serializers.ModelSerializer):
