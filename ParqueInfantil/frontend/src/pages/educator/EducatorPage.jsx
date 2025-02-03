@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-    width: 80%;
+    width: 100%;
     background-color: #f5f5dc; /* beige */
     display: flex;
 `;
@@ -32,9 +32,6 @@ const EducatorPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("Catálogo");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchResponsibleActivities(setActivities);
-  });
 
   const handleCatalogoClick = async () => {
     setLoading(true);
@@ -42,7 +39,6 @@ const EducatorPage = () => {
     setLoading(false);
   };
 
-        {selectedMenu === "Perfil" && <></>}
 
   const handleActivitiesClick = async () => {
     setLoading(true);
