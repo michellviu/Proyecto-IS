@@ -39,6 +39,19 @@ const OptionsCell = styled.td`
     gap: 10px;
 `;
 
+/**
+ * Componente Table que renderiza una tabla con encabezados y datos proporcionados.
+ * 
+ * @param {Object[]} headers - Array de objetos que representan los encabezados de la tabla.
+ * @param {string} headers[].name - Nombre del encabezado.
+ * @param {Object[]} data - Array de objetos que representan las filas de datos de la tabla.
+ * @param {Function} onHeaderClick - Función que se ejecuta al hacer clic en un encabezado.
+ * @param {Function} onDeleteClick - Función que se ejecuta al hacer clic en el botón de eliminar.
+ * @param {Function} onEditClick - Función que se ejecuta al hacer clic en el botón de editar.
+ * @param {Function} onSortClick - Función que se ejecuta al hacer clic en el botón de ordenar.
+ * 
+ * @returns {JSX.Element} El componente Table.
+ */
 const Table = ({ headers, data, onHeaderClick, onDeleteClick, onEditClick, onSortClick}) => {
     return (
         <TableContainer>

@@ -48,6 +48,16 @@ const fetchAtributes = async (entity, setAtributes) => {
     }
 };
 
+/**
+ * Función para obtener instancias de una entidad desde una API.
+ *
+ * @param {string} entity - Nombre de la entidad a obtener (e.g., 'Padre', 'Educador', 'Administrador').
+ * @param {function} setInstances - Función para actualizar el estado de las instancias obtenidas.
+ * @param {function} setNextPage - Función para actualizar el estado de la siguiente página.
+ * @param {function} setPreviousPage - Función para actualizar el estado de la página anterior.
+ *
+ * @throws {Error} Si la respuesta de la red no es satisfactoria.
+ */
 const fetchInstances = async (entity, setInstances, setNextPage, setPreviousPage) => {
     try {
         var ruta = `http://127.0.0.1:8000/api/${entity.toLowerCase()}/`;

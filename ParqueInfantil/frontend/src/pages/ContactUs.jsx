@@ -82,6 +82,25 @@ const Button = styled.button`
   }
 `;
 
+/**
+ * Componente ContactUs
+ * 
+ * Este componente representa una página de contacto donde los usuarios pueden enviar sus consultas o mensajes.
+ * 
+ * @returns {JSX.Element} Un formulario de contacto con campos para nombre, correo electrónico y mensaje.
+ * 
+ * Estructura del componente:
+ * - Container: Contenedor principal del formulario de contacto.
+ * - HeaderHome: Componente de encabezado de la página.
+ * - Logo: Imagen del logo del parque.
+ * - Title: Título de la página de contacto.
+ * - Form: Formulario que contiene los campos de entrada.
+ * - FormGroup: Agrupación de cada campo del formulario.
+ * - Label: Etiqueta para cada campo del formulario.
+ * - Input: Campo de entrada para nombre y correo electrónico.
+ * - Textarea: Campo de texto para el mensaje.
+ * - Button: Botón para enviar el formulario.
+ */
 const ContactUs = () => {
   return (
     <Container>

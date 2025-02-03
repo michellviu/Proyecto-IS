@@ -27,6 +27,20 @@ const IconWrapper = styled.div`
     margin-right: 8px;
 `;
 
+/**
+ * Componente MenuCatalogo
+ * 
+ * Este componente representa un menú con tres opciones: "En curso", "Programadas" y "Realizadas".
+ * Cada opción tiene un ícono asociado y dispara una función cuando se hace clic en ella.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {function} props.onEnCursoClick - Función que se ejecuta al hacer clic en "En curso".
+ * @param {function} props.onProgramadasClick - Función que se ejecuta al hacer clic en "Programadas".
+ * @param {function} props.onRealizadasClick - Función que se ejecuta al hacer clic en "Realizadas".
+ * @param {string} props.actual - La opción actualmente seleccionada.
+ * 
+ * @returns {JSX.Element} El componente MenuCatalogo.
+ */
 const MenuCatalogo = ({ onEnCursoClick, onProgramadasClick, onRealizadasClick, actual }) => {
     return (
         <MenuContainer>

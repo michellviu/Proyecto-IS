@@ -1,6 +1,16 @@
 import { message } from "antd";
 
 
+/**
+ * Función para obtener actividades desde la API.
+ *
+ * @param {Function} setActivities - Función para actualizar el estado de las actividades.
+ * @param {Function} setNext - Función para actualizar el estado del siguiente conjunto de actividades.
+ * @param {Function} setPrevious - Función para actualizar el estado del conjunto de actividades anterior.
+ * @param {string} ruta - Ruta específica para obtener las actividades.
+ * @returns {Promise<void>} - Promesa que se resuelve cuando la operación de fetch se completa.
+ * @throws {Error} - Lanza un error si la respuesta de la red no es correcta.
+ */
 const fetchActivities = async ( setActivities, setNext, setPrevious, ruta ) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
@@ -48,8 +58,4 @@ const fetchPage = async ({setActivities, setNext, setPrevious, page }) => {
         console.error('Failed to fetch page:', error);
     }
 };
-
-
-
-
 export {fetchActivities, fetchPage};

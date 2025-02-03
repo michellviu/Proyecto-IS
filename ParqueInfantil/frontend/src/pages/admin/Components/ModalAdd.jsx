@@ -1,6 +1,21 @@
 import { Button, Input, Modal, Form } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
+/**
+ * Componente ModalAdd
+ * 
+ * Este componente representa un modal para agregar una nueva instancia. 
+ * Utiliza un formulario para capturar los datos necesarios y permite guardar o cancelar la operación.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {boolean} props.isAddModalVisible - Indica si el modal debe estar visible.
+ * @param {Function} props.handleCancel - Función para manejar la cancelación del modal.
+ * @param {Object} props.form - Objeto del formulario de Ant Design.
+ * @param {Function} props.handleSave - Función para manejar el guardado de los datos del formulario.
+ * @param {Array} props.atributes - Lista de atributos que se utilizarán para generar los campos del formulario.
+ * 
+ * @returns {JSX.Element} El componente ModalAdd.
+ */
 const ModalAdd = ({ isAddModalVisible, handleCancel, form, handleSave, atributes }) => {
   return (
     <Modal

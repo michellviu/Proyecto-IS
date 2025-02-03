@@ -49,6 +49,15 @@ const StyledLink = styled(Link)`
     }
 `;
 
+/**
+ * Componente HeaderHome
+ * 
+ * Este componente representa el encabezado de la página principal. 
+ * Utiliza `useLocation` para determinar la ruta actual y resaltar 
+ * el enlace activo en la barra de navegación.
+ * 
+ * @returns {JSX.Element} El componente HeaderHome.
+ */
 const HeaderHome = () => {
     const location = useLocation();
 

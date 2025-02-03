@@ -79,6 +79,15 @@ const RegisterLink = styled(Link)`
 
 
 
+/**
+ * Componente Home.
+ * 
+ * Este componente representa la página de inicio de la aplicación. 
+ * Verifica si hay un token de autenticación almacenado en el localStorage 
+ * y muestra diferentes contenidos basados en la autenticación del usuario.
+ * 
+ * @returns {JSX.Element} El componente Home.
+ */
 const Home = () => {
 
     const authToken = localStorage.getItem('authToken');

@@ -42,6 +42,37 @@ const ErrorMessage = styled.p`
     margin-bottom: 1rem;
 `;
 
+/**
+ * Componente de formulario de inicio de sesión.
+ * 
+ * @component
+ * @returns {JSX.Element} Formulario de inicio de sesión.
+ * 
+ * @description
+ * Este componente renderiza un formulario de inicio de sesión que permite a los usuarios ingresar su nombre de usuario y contraseña.
+ * Al enviar el formulario, se realiza una solicitud de inicio de sesión a la API y, si es exitoso, se guarda el token de autenticación
+ * y el rol del usuario en el almacenamiento local y se redirige al usuario a la página correspondiente según su rol.
+ * 
+ * @example
+ * <LoginForm />
+ * 
+ * @function
+ * @name LoginForm
+ * 
+ * @property {function} useNavigate - Hook de React Router para la navegación.
+ * @property {function} useState - Hook de React para manejar el estado del componente.
+ * @property {function} login - Función asíncrona que realiza la solicitud de inicio de sesión a la API.
+ * @property {function} handleSubmit - Función que maneja el envío del formulario.
+ * @property {string} username - Estado que almacena el nombre de usuario ingresado.
+ * @property {string} password - Estado que almacena la contraseña ingresada.
+ * @property {string} error - Estado que almacena los mensajes de error.
+ * @property {function} setEmail - Función para actualizar el estado del nombre de usuario.
+ * @property {function} setPassword - Función para actualizar el estado de la contraseña.
+ * @property {function} setError - Función para actualizar el estado de los mensajes de error.
+ * @property {function} message.success - Función para mostrar un mensaje de éxito.
+ * @property {function} message.error - Función para mostrar un mensaje de error.
+ * @property {function} navigate - Función para redirigir al usuario a una página específica.
+ */
 const LoginForm = () => {
     const navigate = useNavigate();
     const [username, setEmail] = useState('');

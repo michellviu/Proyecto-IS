@@ -3,6 +3,18 @@ import { Link } from 'react-router-dom';
 import { FaHome, FaList, FaUser, FaCalendarCheck } from 'react-icons/fa';
 
 
+/**
+ * Componente HeaderParent
+ * 
+ * Este componente representa el encabezado principal para los padres en la aplicación.
+ * Muestra un mensaje de bienvenida con el nombre de usuario y una barra de navegación
+ * con enlaces a diferentes secciones de la aplicación.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {string} props.username - El nombre de usuario que se mostrará en el mensaje de bienvenida.
+ * 
+ * @returns {JSX.Element} El componente HeaderParent.
+ */
 const HeaderParent = ({ username }) => {
     return (
         <header className="header-parent">

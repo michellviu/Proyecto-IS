@@ -10,6 +10,18 @@ const Sidebar = styled(Menu)`
 `;
 
 
+/**
+ * Componente MenuAdmin que renderiza un menú de administración con varias opciones.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Array<string>} props.entities - Lista de entidades a mostrar en el submenú.
+ * @param {Function} props.handleUserAuthorizationClick - Función a ejecutar al hacer clic en "Autorización de Usuarios".
+ * @param {Function} props.handleResourceClick - Función a ejecutar al hacer clic en "Recursos en Uso".
+ * @param {Function} props.handleMenuClick - Función a ejecutar al hacer clic en una entidad del submenú.
+ * @param {Function} props.handleReservationRequestsClick - Función a ejecutar al hacer clic en "Solicitudes de Reserva".
+ *
+ * @returns {JSX.Element} El componente Sidebar con las opciones del menú.
+ */
 const MenuAdmin = ({ entities, handleUserAuthorizationClick, handleResourceClick,
     handleMenuClick, handleReservationRequestsClick }) => {
     

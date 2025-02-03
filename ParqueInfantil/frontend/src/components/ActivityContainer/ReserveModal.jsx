@@ -32,17 +32,65 @@ const ModalContent = styled.div`
     margin-bottom: 20px;
   }
 `;
+/**
+ * Componente ReserveModal
+ * 
+ * Este componente representa un modal para reservar una actividad.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {boolean} props.isOpen - Indica si el modal está abierto.
+ * @param {Function} props.closeModal - Función para cerrar el modal.
+ * @param {Object} props.form - Objeto de formulario para manejar los campos y la validación.
+ * @param {Function} props.onFinish - Función que se ejecuta al enviar el formulario con éxito.
+ * 
+ * @returns {JSX.Element} El componente ReserveModal.
+ */
+const ReserveModal = ({ isOpen, closeModal
+ , form, onFinish
+ }) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   form.validateFields().then((values) => {
+  //     onFinish(values);
+  //     handleClose();
+  //   });
+  // };
 
-const ReserveModal = ({ isOpen, closeModal }) => (
-  <Modal isOpen={isOpen} onRequestClose={closeModal} contentLabel="Reserve">
-    <ModalContent>
-      <h2>Reservar Actividad</h2>
-      <p>Aquí puedes reservar la actividad.</p>
-      <Button onClick={closeModal} title="Cerrar">
-        <FaTimes />
-      </Button>
-    </ModalContent>
-  </Modal>
-);
+  // const handleClose = () => {
+  //   form.resetFields();
+  //   closeModal();
+  // };
+
+  return (
+    <Modal isOpen={isOpen} onRequestClose={closeModal} contentLabel="Reserve">
+      <ModalContent>
+        <h2>Reservar Actividad</h2>
+        <form onSubmit={closeModal}>
+          {/* <div>
+            <label>
+              Número de niños:
+              {form.getFieldDecorator("numChildren", {
+                rules: [{ required: true, message: "Por favor ingrese el número de niños", type: "number", min: 0 }],
+              })(<input type="number" min="0" />)}
+            </label>
+          </div>
+          <div>
+            <label>
+              Comentarios:
+              {form.getFieldDecorator("comments")(<textarea />)}
+            </label>
+          </div> */}
+          <div>
+            <Button type="submit">Reservar</Button>
+            <Button type="button" onClick={closeModal} title="Cerrar">
+              <FaTimes />
+            </Button>
+          </div>
+        </form>
+      </ModalContent>
+    </Modal>
+  );
+};
+
 export default ReserveModal;
 

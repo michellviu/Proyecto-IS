@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaSort, FaSearch } from "react-icons/fa";
 import ActivityContainer from "../../components/ActivityContainer";
@@ -96,16 +96,65 @@ const Pagination = styled.div`
   }
 `;
 
+/**
+ * Componente ActivityCatalog
+ * 
+ * Este componente muestra un catálogo de actividades, permitiendo al usuario
+ * buscar, ordenar y filtrar actividades en curso, programadas y realizadas.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <ActivityCatalog />
+ * )
+ * 
+ * @returns {JSX.Element} El componente ActivityCatalog.
+ * 
+ * @function
+ * @name ActivityCatalog
+ * 
+ * @description
+ * - Utiliza varios estados para manejar la carga de datos, el rol del usuario,
+ *   las actividades, la paginación y el tipo de actividad.
+ * - Incluye funciones para manejar la búsqueda, el ordenamiento, el filtrado
+ *   y la paginación de actividades.
+ * - Realiza peticiones asíncronas para obtener las actividades según el tipo
+ *   seleccionado (en curso, programadas, realizadas).
+ * 
+ * @property {boolean} loading - Estado que indica si los datos están cargando.
+ * @property {string} rol - Rol del usuario obtenido del localStorage.
+ * @property {Array} activities - Lista de actividades.
+ * @property {string} next - URL de la siguiente página de actividades.
+ * @property {string} previous - URL de la página anterior de actividades.
+ * @property {string} kindActivity - Tipo de actividad seleccionada.
+ * 
+ * @function handleSearch - Maneja la búsqueda de actividades.
+ * @function handleSort - Maneja el ordenamiento de actividades.
+ * @function filteredActivities - Filtra las actividades según ciertos criterios.
+ * @function handlePage - Maneja la paginación de actividades.
+ * @function handlerFetching - Realiza la petición para obtener actividades según el tipo.
+ * @function handleEnCurso - Maneja la selección de actividades en curso.
+ * @function handleProgramadas - Maneja la selección de actividades programadas.
+ * @function handleRealizadas - Maneja la selección de actividades realizadas.
+ * 
+ * @requires fetchPage - Función para obtener una página de actividades.
+ * @requires fetchActivities - Función para obtener actividades según el tipo.
+ * @requires Container - Componente contenedor.
+ * @requires MenuCatalogo - Componente del menú de catálogo.
+ * @requires SearchBar - Componente de la barra de búsqueda.
+ * @requires FaSearch - Icono de búsqueda.
+ * @requires FaSort - Icono de ordenamiento.
+ * @requires SortButton - Botón de ordenamiento.
+ * @requires Spin - Componente de carga.
+ * @requires Activities - Componente contenedor de actividades.
+ * @requires ActivityContainer - Componente contenedor de una actividad.
+ * @requires PaginationControls - Componente de controles de paginación.
+ */
 const ActivityCatalog = () => {
   const [loading, setLoading] = useState(false);
   const [rol, setRol] = useState(localStorage.getItem('Role'));
-  const [activities, setActivities] = useState([
-    // ejemplo
-    { id: 1, name: "Activity 1", date: "2023-10-01" },
-    { id: 2, name: "Activity 2", date: "2023-10-05" },
-    { id: 3, name: "Activity 3", date: "2023-10-03" }
- 
-  ]);
+  const [activities, setActivities] = useState([]);
+  
 
   const [next, setNext] = useState();
   const [previous, setPrevious] = useState();
