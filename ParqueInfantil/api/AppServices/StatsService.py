@@ -96,12 +96,13 @@ class Stats:
         return self.activity_service.get_activities_with_highest_participation()
 
     def get_recursos_mas_utilizados(self):
-        # recursos = self.resource_service.get_all()
-        # response = {}
-        # for recurso in recursos:
-        #     response[recurso.idR] = {
-        #         "cantidad": self.resource_service.get_frecuencia_uso(recurso.idR)
-        #     }
 
         response = self.resource_service.get_recursos_mas_utilizados()
-        return response
+
+        if response is None:
+            return {}
+
+        resources = {}
+        for row in response:
+            resources[row[0]] = {"cantidad": row[3]}
+        return resources

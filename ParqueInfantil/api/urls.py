@@ -70,7 +70,11 @@ from rest_framework_simplejwt.views import (
 from .views.CustomTokenObtainPairView import CustomTokenObtainPairView
 from .views.testsview import TestGraficarCalificacionesView
 from .views.ReportView import ReportView
-from .views.StatsTables import ExportHighestAverageCalificationActivitiesView
+from .views.StatsTables import (
+    ExportHighestAverageCalificationActivitiesView,
+    View_activities_with_highest_participation,
+    View_recursos_mas_utilizados,
+)
 
 # router = routers.DefaultRouter()
 # router.register(r'instalacion', views.InstalacionView, 'instalacion')
@@ -161,7 +165,12 @@ urlpatterns = [
     path("stats/uso_recursos/", StatsUsoDeRecursosView.as_view()),
     # Tablas
     path(
-        "stats/tables/avgqualifications/",
+        "stats/tables/avgQualifications/",
         ExportHighestAverageCalificationActivitiesView.as_view(),
     ),
+    path(
+        "stats/tables/mostParticiped/",
+        View_activities_with_highest_participation.as_view(),
+    ),
+    path("stats/tables/mostUsedResources/", View_recursos_mas_utilizados.as_view()),
 ]

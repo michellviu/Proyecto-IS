@@ -75,8 +75,8 @@ class ResourceRepository(GenericRepository, IResourceRepository):
                     "api_actividad" a ON i."idI" = a."idI_id"
                 INNER JOIN 
                     "api_actividad_programada" ap ON a."idA" = ap."idA_id"
-                WHERE 
-                    ap.fecha_hora >= NOW() - INTERVAL '30 days'
+                --WHERE 
+                    --ap.fecha_hora >= NOW() - INTERVAL '30 days'
                 GROUP BY 
                     r."idR", r.tipo, i.nombre
                 ORDER BY 
@@ -87,8 +87,14 @@ class ResourceRepository(GenericRepository, IResourceRepository):
 
             rows = cursor.fetchall()
 
-            resources = {}
-            for row in rows:
-                resources[row[0]] = {"cantidad": row[3]}
+            resources = [
+                {
+                    "id": row[0],
+                    "tipo_recurso": row[1],
+                    "nombre_instalacion": row[2],
+                    "total_usos": row[3],
+                }
+                for row in rows
+            ]
 
         return resources

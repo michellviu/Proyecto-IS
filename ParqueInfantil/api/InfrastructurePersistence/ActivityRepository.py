@@ -179,7 +179,7 @@ class ActivityRepository(GenericRepository, IActivityRepository):
                     "api_reservacion" r ON ap."idAP" = r."idAP_id"
                 WHERE 
                     r.estado = 'Confirmado'
-                    AND ap.fecha_hora >= NOW() - INTERVAL '30 days'
+                    --AND ap.fecha_hora >= NOW() - INTERVAL '30 days'
                 GROUP BY 
                     a."idA", a.nombre
                 ORDER BY 
