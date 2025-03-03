@@ -112,7 +112,8 @@ class Graphics:
         ids = [actividad_id for actividad_id in actividades]
         nombres = [actividades[actividad_id]["nombre"] for actividad_id in actividades]
         calificaciones = [
-            actividades[actividad_id]["calificacion"] for actividad_id in actividades
+            actividades[actividad_id].get("calificacion", 0)
+            for actividad_id in actividades
         ]
 
         fig, ax = plt.subplots(figsize=(10, 6))
@@ -163,6 +164,9 @@ class Graphics:
 
     def Graficar_Uso_De_Recursos(self):
         recursos = self.stats.get_recursos_mas_utilizados()
+        if recursos is None:
+            print("Error: No se pudieron obtener los recursos más utilizados.")
+            return
         ids = list(recursos.keys())
         usos = [recursos[idR]["cantidad"] for idR in ids]
 
