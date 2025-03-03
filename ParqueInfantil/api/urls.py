@@ -6,12 +6,11 @@ from .views.registerView import RegistroView
 from .views.SearchView import SearchView
 from .views.orderbyProperty import OrderByPropertyView
 from .views.loginView import LoginView
-from .views.installationView import(
+from .views.installationView import (
     InstalacionView,
     InstalacionDetailView,
-    InstalacionNumActividadesView
-
-) 
+    InstalacionNumActividadesView,
+)
 from .views.statsView import (
     StatsCalificacionesTotalesView,
     StatsReservacionesAceptadasView,
@@ -19,7 +18,7 @@ from .views.statsView import (
     StatsReservacionesTotalesView,
     StatsActividadesCalificacionesAvgView,
     StatsActividadesMasParticipadasView,
-    StatsUsoDeRecursosView
+    StatsUsoDeRecursosView,
 )
 from .views.activityView import (
     ActividadView,
@@ -27,7 +26,12 @@ from .views.activityView import (
     ActividadCalificacionesView,
     ActividadParticipantesView,
 )
-from .views.resourceView import RecursoView, RecursoDetailView, ResourceInUseView, ResourceAvailableView
+from .views.resourceView import (
+    RecursoView,
+    RecursoDetailView,
+    ResourceInUseView,
+    ResourceAvailableView,
+)
 from .views.userView import (
     UserByRoleView,
     UserView,
@@ -57,7 +61,7 @@ from .views.qualificationView import (
     QualificationView,
     QualificationDetailView,
     QualificationByActivityView,
-    QualificationByUserView
+    QualificationByUserView,
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -66,6 +70,7 @@ from rest_framework_simplejwt.views import (
 from .views.CustomTokenObtainPairView import CustomTokenObtainPairView
 from .views.testsview import TestGraficarCalificacionesView
 from .views.ReportView import ReportView
+from .views.StatsTables import ExportHighestAverageCalificationActivitiesView
 
 # router = routers.DefaultRouter()
 # router.register(r'instalacion', views.InstalacionView, 'instalacion')
@@ -108,9 +113,10 @@ urlpatterns = [
     path("actividad_programada/catalog/", ScheduledActCatalogView.as_view()),
     path("actividad_programada/<int:pk>/", ScheduledActDetailView.as_view()),
     path("actividad_programada/tiemporeal/", ScheduledActRealTimeView.as_view()),
-    path("actividad_programada/numparticipantes/", ScheduledActParticipantsView.as_view()),
+    path(
+        "actividad_programada/numparticipantes/", ScheduledActParticipantsView.as_view()
+    ),
     path("actividad_programada/poreducador/", ScheduledActForEducadorView.as_view()),
-
     # Recurso
     path("recurso/", RecursoView.as_view()),
     path("recurso/enuso/", ResourceInUseView.as_view()),
@@ -144,7 +150,18 @@ urlpatterns = [
     path("stats/reservaciones_aceptadas/", StatsReservacionesAceptadasView.as_view()),
     path("stats/reservaciones_denegadas/", StatsReservacionesDenegadasView.as_view()),
     path("stats/reservaciones_totales/", StatsReservacionesTotalesView.as_view()),
-    path("stats/actividades_calificacionesavg/", StatsActividadesCalificacionesAvgView.as_view()),
-    path("stats/actividades_participantes/", StatsActividadesMasParticipadasView.as_view()),
-    path("stats/uso_recursos/",StatsUsoDeRecursosView.as_view())
+    path(
+        "stats/actividades_calificacionesavg/",
+        StatsActividadesCalificacionesAvgView.as_view(),
+    ),
+    path(
+        "stats/actividades_participantes/",
+        StatsActividadesMasParticipadasView.as_view(),
+    ),
+    path("stats/uso_recursos/", StatsUsoDeRecursosView.as_view()),
+    # Tablas
+    path(
+        "stats/tables/avgqualifications/",
+        ExportHighestAverageCalificationActivitiesView.as_view(),
+    ),
 ]

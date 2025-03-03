@@ -77,17 +77,14 @@ class Stats:
         return resultados
 
     def get_actividades_avg_qualifications(self):
-        # activities = self.activity_service.get_all()
-        # avg_qualifications = {}
-        # for activity in activities:
-        #     avg_qualifications[activity.idA] = {
-        #         "nombre": activity.nombre,
-        #         "calificacion": self.activity_service.get_average_calification(
-        #             activity.idA
-        #         ),
-        #     }
-        # return avg_qualifications
-        return self.activity_service.get_highest_average_calification_activities()
+        result = self.activity_service.get_highest_average_calification_activities()
+        highest_avg_calification_activities = {}
+        for row in result:
+            highest_avg_calification_activities[row["id"]] = {
+                "nombre": row["nombre"],
+                "promedio_puntuacion": row["puntuacion"],
+            }
+        return highest_avg_calification_activities
 
     def get_most_participated_activities(self):
         # activities = self.activity_service.get_most_participated_activities()

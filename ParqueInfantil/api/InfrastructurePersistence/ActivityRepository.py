@@ -136,8 +136,8 @@ class ActivityRepository(GenericRepository, IActivityRepository):
                 "api_actividad_programada" ap ON a."idA" = ap."idA_id"
             JOIN
                 "api_calificacion" c ON ap."idAP" = c."idAP_id"
-            WHERE
-                ap.fecha_hora >= NOW() - INTERVAL '30 days'
+            --WHERE
+                --ap.fecha_hora >= NOW() - INTERVAL '30 days'
             GROUP BY
                 a."idA", a.nombre
             ORDER BY
@@ -147,12 +147,15 @@ class ActivityRepository(GenericRepository, IActivityRepository):
             )
             result = cursor.fetchall()
 
-        highest_avg_calification_activities = {}
+        highest_avg_calification_activities = []
         for row in result:
-            highest_avg_calification_activities[row[0]] = {
-                "nombre": row[1],
-                "promedio_puntuacion": row[2],
-            }
+            highest_avg_calification_activities.append(
+                {
+                    "id": row[0],
+                    "nombre": row[1],
+                    "puntuacion": row[2],
+                }
+            )
 
         return highest_avg_calification_activities
 
