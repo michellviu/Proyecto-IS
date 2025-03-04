@@ -1,0 +1,62 @@
+# Estructura de la Aplicación Frontend del Proyecto ParqueInfantil
+
+La aplicación frontend del proyecto ParqueInfantil está ubicada en la carpeta `ParqueInfantil/frontend`. Esta aplicación está construida utilizando React y Vite, y está organizada en varios directorios y archivos que facilitan la gestión y el desarrollo de nuevas funcionalidades. A continuación, se describe la estructura de la aplicación y el propósito de cada componente principal.
+
+## Estructura de Directorios y Archivos
+
+### `src/`
+Este directorio contiene todo el código fuente de la aplicación.
+
+#### `components/`
+Este directorio contiene componentes reutilizables que se utilizan en varias partes de la aplicación. Algunos de los componentes clave incluyen:
+
+- **ActivityContainer.jsx**: Componente que representa un contenedor para una actividad, mostrando su imagen, información y modales relacionados.
+- **headers/**: Contiene componentes de encabezado para diferentes roles de usuario, como `HeaderHome.jsx`, `header-educator.jsx`, y `header-parent.jsx`.
+- **reservation-container.jsx**: Componente que muestra una lista de reservas para un padre dado, permitiendo ver los detalles de una reserva seleccionada y cancelar una reserva.
+
+#### `pages/`
+Este directorio contiene las diferentes páginas de la aplicación, organizadas por roles y funcionalidades.
+
+- **admin/**: Contiene componentes y vistas específicas para el rol de administrador.
+    - **AdminPage.jsx**: Página principal de administración para gestionar entidades, usuarios, recursos y reservas.
+    - **Components/**: Contiene componentes auxiliares utilizados en la página de administración, como `MenuAdmin.jsx`, `EntityView.jsx`, `UserAuthorization.jsx`, entre otros.
+    - **HandlersRequests.jsx**: Contiene funciones para manejar solicitudes API relacionadas con la administración.
+
+- **catalog/**: Contiene componentes relacionados con el catálogo de actividades.
+    - **ActivityCatalog.jsx**: Componente que muestra un catálogo de actividades, permitiendo buscar, ordenar y filtrar actividades.
+    - **HandlersAPI.jsx**: Contiene funciones para manejar solicitudes API relacionadas con el catálogo de actividades.
+
+- **educator/**: Contiene componentes y vistas específicas para el rol de educador.
+    - **EducatorPage.jsx**: Página principal para los educadores, mostrando diferentes vistas basadas en el menú seleccionado.
+    - **Componentes/**: Contiene componentes auxiliares utilizados en la página del educador, como `Menu.jsx`, `MyActivitiesView.jsx`, `StatisticsRequestView.jsx`, entre otros.
+    - **HandlersAPI.jsx**: Contiene funciones para manejar solicitudes API relacionadas con el educador.
+
+- **parent/**: Contiene componentes y vistas específicas para el rol de padre.
+    - **ParentPage.jsx**: Página principal para los padres, permitiendo la navegación entre diferentes menús como Catálogo, Reservas y Home.
+    - **ParentProfile.jsx**: Componente que representa el perfil de un padre, permitiendo visualizar y editar la información del perfil.
+    - **Reservations.jsx**: Componente que muestra una lista de reservas realizadas por el padre.
+
+- **stats/**: Contiene componentes relacionados con las estadísticas.
+    - **StatsView.jsx**: Componente que muestra diferentes estadísticas de gestión del parque.
+
+- **AboutUs.jsx**: Página que proporciona información sobre el parque infantil, su misión y las actividades que ofrece.
+- **AlertPage.jsx**: Página de alerta que se muestra cuando un usuario no está autenticado.
+- **ContactUs.jsx**: Página de contacto con un formulario para que los usuarios puedan enviar mensajes.
+- **Home.jsx**: Página de inicio de la aplicación.
+- **Login.jsx**: Componente de formulario de inicio de sesión.
+- **Register.jsx**: Componente de registro de usuario.
+
+### `App.jsx`
+Este archivo define las rutas principales de la aplicación utilizando React Router. Incluye rutas para las diferentes páginas como Home, Register, AboutUs, ContactUs, AdminPage, ParentPage, y EducatorPage.
+
+### `index.html`
+Archivo HTML principal que sirve como punto de entrada para la aplicación.
+
+### `main.jsx`
+Archivo principal de JavaScript que renderiza la aplicación React en el DOM.
+
+## Dependencias
+El archivo `package.json` en la raíz del directorio `frontend` lista todas las dependencias y scripts necesarios para ejecutar y construir la aplicación. Algunas de las dependencias clave incluyen React, React Router, Ant Design, Styled Components, y Vite.
+
+## Conclusión
+La estructura de la aplicación frontend del proyecto ParqueInfantil está bien organizada, con una clara separación de responsabilidades entre componentes y páginas. Esto facilita el mantenimiento y la inclusión de nuevas funcionalidades. Los programadores pueden apoyarse en esta estructura para entender rápidamente dónde realizar cambios y cómo extender la funcionalidad existente.
