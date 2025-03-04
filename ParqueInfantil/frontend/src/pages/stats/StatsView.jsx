@@ -4,6 +4,7 @@ import { Menu, Layout, Spin } from 'antd';
 import { BarChartOutlined, LineChartOutlined, PieChartOutlined, AreaChartOutlined, DotChartOutlined, RadarChartOutlined } from '@ant-design/icons';
 import { FaFileExport } from 'react-icons/fa';
 import { handleExport, fetchImageRoute } from './HandlersAPI';
+import { Table } from 'antd';
 
 const { Header, Content } = Layout;
 
@@ -75,6 +76,17 @@ const StatsView = () => {
     const [selectedMenu, setSelectedMenu] = useState('1');
     const [loading, setLoading] = useState(false);
     const [imageSrc, setImageSrc] = useState('');
+    const [data, setData] = useState([]);
+    const [columns, setColumns] = useState([]);
+
+
+    const updateColumns = () => {
+       setColumns( data.length > 0 ? Object.keys(data[0]).map(key => ({
+            title: key.charAt(0).toUpperCase() + key.slice(1),
+            dataIndex: key,
+            key: key,
+        })) : []);
+    };
 
     
 
@@ -102,7 +114,8 @@ const StatsView = () => {
                 ruta = "reservaciones_aceptadas";
                 break;
         }
-        await fetchImageRoute(ruta,setImageSrc);
+        await fetchImageRoute(ruta, setData, setImageSrc);
+        updateColumns();
         setLoading(false);
     };
 
@@ -141,14 +154,57 @@ const StatsView = () => {
                 </Menu>
             </StyledHeader>
 
-         
             <StyledContent>
                 {loading ? (
                     <Spin size="large" />
                 ) : (
-                    <img src={`../../../../api/${imageSrc}`} alt="Estadísticas" style={{ width: '100%' }} />
+                    <>
+                            {selectedMenu === '1' &&
+                                <>
+                                <Table columns={columns} dataSource={data} pagination={false} />
+                                <img src={`../../../../api/${imageSrc}`} alt="Promedio de Calificación" style={{ width: '100%' }} />
+                                </>
+                            }
+                    
+                            {selectedMenu === '2' &&
+                                <>
+                                    <Table columns={columns} dataSource={data} pagination={false} />
+                                <img src={`../../../../api/${imageSrc}`} alt="Actividades con Mayor Participación" style={{ width: '100%' }} />
+                                </>
+                            }
+
+                            {selectedMenu === '3' &&
+                                <>
+                                    <Table columns={columns} dataSource={data} pagination={false} />
+                                
+                                <img src={`../../../../api/${imageSrc}`} alt="Total de Reservas" style={{ width: '100%' }} />
+                            </>
+                            }
+                            {selectedMenu === '4' &&
+                                <>
+                                    <Table columns={columns} dataSource={data} pagination={false} />
+
+                                <img src={`../../../../api/${imageSrc}`} alt="Disponibilidad de Recursos" style={{ width: '100%' }} />
+                            </>
+                            }
+
+                            {selectedMenu === '5' &&
+                                <>
+                                    <Table columns={columns} dataSource={data} pagination={false} />
+
+                                <img src={`../../../../api/${imageSrc}`} alt="Frecuencia de Uso de Recursos" style={{ width: '100%' }} /> 
+                            </>
+                            }
+
+                            {selectedMenu === '6' &&
+                                <>
+                                    <Table columns={columns} dataSource={data} pagination={false} />
+                                <img src={`../../../../api/${imageSrc}`} alt="Tasa de Confirmación de Reserva" style={{ width: '100%' }} />
+                            </>
+                            }
+                    </>
                 )}
-                   <ExportButton onClick={handleExportAPI}>
+                <ExportButton onClick={handleExportAPI}>
                     <FaFileExport />
                     Exportar Información
                 </ExportButton>
