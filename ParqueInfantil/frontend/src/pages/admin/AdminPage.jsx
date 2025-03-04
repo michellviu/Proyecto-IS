@@ -233,7 +233,9 @@ const AdminPage = () => {
 
   //Metodos CRUD 
   const handleEditModal = (instance) => {
+    setLoading(true);
     setCurrentInstance(instance);
+    setLoading(false);
     setIsEditModalVisible(true);
   };
 
@@ -252,13 +254,16 @@ const AdminPage = () => {
   }
 
   const handleCancel = () => {
+    setLoading(true);
+    setCurrentInstance(null);
     setIsAddModalVisible(false);
     setIsEditModalVisible(false);
-    setCurrentInstance(null);
+    setLoading(false);
   };
 
   const handleSave = async (values) => {
     setLoading(true);
+    setCurrentInstance(null);
     if (isEditModalVisible) {
       await handleEdit(selectedEntity, values.id, values);
     } else {
@@ -266,7 +271,6 @@ const AdminPage = () => {
     }
     setIsAddModalVisible(false);
     setIsEditModalVisible(false);
-    setCurrentInstance(null);
     await refresh();
     setLoading(false);
   };

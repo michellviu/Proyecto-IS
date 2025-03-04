@@ -61,18 +61,25 @@ const ActivityModal = ({ isOpen, closeModal, activity, openReserveModal, openCom
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
+        return new Date(dateString).toLocaleDateString('es-ES', options);
     };
 
     const formatTime = (dateString) => {
-        const options = { hour: '2-digit', minute: '2-digit' };
+        const options = { hour: '2-digit', minute: '2-digit', hour12: true };
         return new Date(dateString).toLocaleTimeString(undefined, options);
     };
-
     const renderStars = (rating) => {
         const stars = [];
         for (let i = 0; i < 5; i++) {
-            stars.push(<span key={i} className={i < rating ? "star filled" : "star"}>★</span>);
+            stars.push(
+                <span 
+                    key={i} 
+                    className={i < rating ? "star filled" : "star"} 
+                    style={{ color: i < rating ? "yellow" : "gold", border: i >= rating ? "1px solid gold" : "none" }}
+                >
+                    ★
+                </span>
+            );
         }
         return stars;
     };

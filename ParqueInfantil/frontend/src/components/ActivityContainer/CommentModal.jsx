@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
+import { message, Form } from "antd";
 
 // Definición de un botón estilizado usando styled-components
 const Button = styled.button`
@@ -43,18 +44,59 @@ const ModalContent = styled.div`
  *
  * @returns {JSX.Element} El componente Modal con su contenido.
  */
-const CommentModal = ({ isOpen, closeModal }) => (
-  // Uso del componente Modal de react-modal
-  <Modal isOpen={isOpen} onRequestClose={closeModal} contentLabel="Comment">
-    <ModalContent>
-      <h2>Comentar Actividad</h2>
-      <p>Aquí puedes dejar un comentario sobre la actividad.</p>
-      {/* Botón para cerrar el modal */}
-      <Button onClick={closeModal} title="Cerrar">
-        <FaTimes />
-      </Button>
-    </ModalContent>
-  </Modal>
-);
+const CommentModal = ({ isOpen, closeModal, form, onFinish }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    form.validateFields().then((values) => {
+      onFinish(values);
+      message.success(values.puntuacion);
+      handleClose();
+    });
+  };
 
+  const handleClose = () => {
+    form.resetFields();
+    closeModal();
+  };
+
+
+  return (
+    // Uso del componente Modal de react-modal
+    <Modal isOpen={isOpen} onRequestClose={closeModal} contentLabel="Comment">
+      <ModalContent>
+        <p>Aquí puedes dejar un comentario sobre la actividad.</p>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>
+              Puntuación:
+              <input
+                type="number"
+                min="1"
+                max="5"
+                value={form.puntuacion}
+                onChange={(e) => form.setFieldValue('puntuacion', e.target.value)}
+                required
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              Comentario:
+              <textarea
+                value={form.comentario}
+                onChange={(e) => form.setFieldValue('comentario', e.target.value)}
+              />
+            </label>
+          </div>
+          <div>
+            <Button type="submit">Calificar</Button>
+            <Button type="button" onClick={handleClose} title="Cerrar">
+              <FaTimes />
+            </Button>
+          </div>
+        </form>
+      </ModalContent>
+    </Modal>
+  );
+};
 export default CommentModal;

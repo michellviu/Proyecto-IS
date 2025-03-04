@@ -48,41 +48,50 @@ const ModalContent = styled.div`
 const ReserveModal = ({ isOpen, closeModal
  , form, onFinish
  }) => {
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   form.validateFields().then((values) => {
-  //     onFinish(values);
-  //     handleClose();
-  //   });
-  // };
+  
 
-  // const handleClose = () => {
-  //   form.resetFields();
-  //   closeModal();
-  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    form.validateFields().then((values) => {
+      onFinish(values);
+      handleClose();
+    });
+  };
+
+  const handleClose = () => {
+    form.resetFields();
+    closeModal();
+  };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={closeModal} contentLabel="Reserve">
+    <Modal isOpen={isOpen} onRequestClose={handleClose} contentLabel="Reserve">
       <ModalContent>
         <h2>Reservar Actividad</h2>
-        <form onSubmit={closeModal}>
-          {/* <div>
+        <form onSubmit={handleSubmit}>
+          <div>
             <label>
               Número de niños:
-              {form.getFieldDecorator("numChildren", {
-                rules: [{ required: true, message: "Por favor ingrese el número de niños", type: "number", min: 0 }],
-              })(<input type="number" min="0" />)}
+              <input
+                type="number"
+                min="0"
+                value={form.numChildren}
+                onChange={(e) => form.setFieldValue('num_ninos', e.target.value)}
+                required
+              />
             </label>
           </div>
           <div>
             <label>
               Comentarios:
-              {form.getFieldDecorator("comments")(<textarea />)}
+              <textarea
+                value={form.comments}
+                onChange={(e) => form.setFieldValue('comentarios', e.target.value)}
+              />
             </label>
-          </div> */}
+          </div>
           <div>
             <Button type="submit">Reservar</Button>
-            <Button type="button" onClick={closeModal} title="Cerrar">
+            <Button type="button" onClick={handleClose} title="Cerrar">
               <FaTimes />
             </Button>
           </div>

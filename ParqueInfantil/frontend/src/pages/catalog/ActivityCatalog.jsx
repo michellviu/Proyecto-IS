@@ -239,7 +239,7 @@ const ActivityCatalog = () => {
       <Activities>
     {activities.map((activity) => (
       <ActivityContainer
-        key={activity.id}
+        key={activity.idAP}
         data={activity}
         rol={rol}
         time={kindActivity}

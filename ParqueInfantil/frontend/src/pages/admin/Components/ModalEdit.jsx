@@ -29,15 +29,17 @@ const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance, curre
             }
             }
             footer={null}
-            afterClose={() => {
-                form.resetFields();
-                setCurrentInstance(null);
-            }}
+            afterClose={() => 
+                form.resetFields()}
         >
             <Form
                 key={currentInstance ? currentInstance.id : 'new'}
                 initialValues={currentInstance}
-                onFinish={(values) => handleSave(values)}
+                onFinish={(values) => {
+                    handleSave(values);
+                    form.resetFields();
+                }
+                }
             >
                 {atributes.map(attribute => (
                     <Form.Item
@@ -53,7 +55,10 @@ const ModalEdit = ({ isEditModalVisible, handleCancel, setCurrentInstance, curre
                     <Button type="primary" htmlType="submit" style={{ backgroundColor: '#689172', borderColor: 'hsl(135, 18.20%, 55.90%)', color: 'white' }}>
                         Guardar
                     </Button>
-                    <Button onClick={handleCancel} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
+                    <Button onClick={() => {
+                        handleCancel(); 
+                        setCurrentInstance(null);
+                    }} style={{ backgroundColor: '#8d3636', borderColor: 'lightcoral', marginLeft: '10px', color: 'white' }} icon={<CloseOutlined />}>
                         Cancelar
                     </Button>
                 </Form.Item>

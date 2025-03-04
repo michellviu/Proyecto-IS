@@ -6,7 +6,9 @@ import ReserveModal from "./ActivityContainer/ReserveModal";
 import CommentModal from "./ActivityContainer/CommentModal";
 import ActivityModal from "./ActivityContainer/ActivityModal";
 
-import { Form, Spin } from 'antd';
+import { Form, Spin, message } from 'antd';
+
+import { handleReservationRequest, handleCalificationRequest } from "./ActivityContainer/HandlerAPI";
 
 
 
@@ -105,7 +107,15 @@ const ActivityContainer = ({ key, data, rol, time }) => {
     setReserveModalIsOpen(true);
   };
 
-  const closeReserveModal = () => {
+  const handleReservation = async (values) => {
+
+    const reservationData = {
+      idAP: data.idAP,
+      estado: "Pendiente",
+      ...values
+    };
+
+    await handleReservationRequest(reservationData);
     setReserveModalIsOpen(false);
   };
 
@@ -113,7 +123,14 @@ const ActivityContainer = ({ key, data, rol, time }) => {
     setCommentModalIsOpen(true);
   };
 
-  const closeCommentModal = () => {
+  const handleCalification = async (values) => {
+    
+    const calificationData = {
+      idAP: data.idAP,
+      ...values
+    };
+
+    await handleCalificationRequest(calificationData);
     setCommentModalIsOpen(false);
   };
 
@@ -136,15 +153,17 @@ const ActivityContainer = ({ key, data, rol, time }) => {
         rol={rol}
         time={time}
       />
-     <ReserveModal
+      <ReserveModal
         isOpen={reserveModalIsOpen}
-        closeModal={closeReserveModal}
+        closeModal={() => setReserveModalIsOpen(false)}
         form={form}
-        onFinish={closeReserveModal}
-      /> 
+        onFinish={handleReservation}
+      />
       <CommentModal
         isOpen={commentModalIsOpen}
-        closeModal={closeCommentModal}
+        closeModal={() => setCommentModalIsOpen(false)}
+        form={form}
+        onFinish={handleCalification}
       />
     </Card>
   );
