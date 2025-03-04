@@ -17,15 +17,28 @@ const ActivityImage = ({ image, name, openModal }) => (
   <Image src={image} alt={name} onClick={openModal} />
 );
 
-const ActivityInfo = ({ activity, openModal }) => (
-  <Info>
-    <h3>{activity.nombre}</h3>
-    <p>{activity.fecha_hora}</p>
-    <Button onClick={openModal} title="Más información">
-      <FaInfoCircle />
-    </Button>
-  </Info>
-);
+const ActivityInfo = ({ activity, openModal }) => {
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
+
+  const formatTime = (dateString) => {
+    const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+    return new Date(dateString).toLocaleTimeString(undefined, options);
+  };
+
+  return (
+    <Info>
+      <h3>{activity.nombre}</h3>
+      <p><strong>Hora:</strong> {formatTime(activity.fecha_hora)}</p>
+      <p><strong>Fecha:</strong> {formatDate(activity.fecha_hora)}</p>
+      <Button onClick={openModal} title="Más información">
+        <FaInfoCircle />
+      </Button>
+    </Info>
+  );
+};
 
 
 const Card = styled.div`
@@ -129,7 +142,7 @@ const ActivityContainer = ({ key, data, rol, time }) => {
       idAP: data.idAP,
       ...values
     };
-
+    
     await handleCalificationRequest(calificationData);
     setCommentModalIsOpen(false);
   };

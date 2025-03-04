@@ -70,12 +70,12 @@ const ActivityModal = ({ isOpen, closeModal, activity, openReserveModal, openCom
     };
     const renderStars = (rating) => {
         const stars = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < rating; i++) {
             stars.push(
                 <span 
                     key={i} 
-                    className={i < rating ? "star filled" : "star"} 
-                    style={{ color: i < rating ? "yellow" : "gold", border: i >= rating ? "1px solid gold" : "none" }}
+                    className="star filled" 
+                    style={{ color: "yellow" }}
                 >
                     ★
                 </span>

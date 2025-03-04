@@ -5,7 +5,6 @@ import { message } from "antd";
 const handleReservationRequest = async (request) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
-        message.success(request.idAP);
         const response = await fetch(`http://127.0.0.1:8000/api/reservacion/porpadre/`, {
             method: 'POST',
             headers: {
@@ -28,7 +27,6 @@ const handleReservationRequest = async (request) => {
 
 const handleCalificationRequest = async (request) => {
     try {
-        
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
         const response = await fetch(`http://127.0.0.1:8000/api/calificacion/porusuario/`, {
             method: 'POST',

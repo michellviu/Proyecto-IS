@@ -1,99 +1,115 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import {
-  FaTimes,
-} from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 
 const Button = styled.button`
-  background: rgb(196, 120, 49);
+  background: #c47831;
   border: none;
   color: white;
-  padding: 10px;
-  border-radius: 50%;
+  padding: 10px 20px;
+  border-radius: 5px;
   cursor: pointer;
   margin: 5px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  position: relative;
+  transition: background 0.3s ease;
   &:hover {
-    background: #rgba(196, 132, 49, 0.77);
+    background: #a65d2d;
+  }
+`;
+
+const CloseButton = styled(Button)`
+  background: transparent;
+  color: #c47831;
+  padding: 10px;
+  border-radius: 50%;
+  &:hover {
+    background: rgba(196, 120, 49, 0.1);
   }
 `;
 
 const ModalContent = styled.div`
   padding: 20px;
   text-align: center;
-  img {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: auto;
+  position: relative;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+  text-align: left;
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  input,
+  textarea {
     width: 100%;
-    height: auto;
-    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  textarea {
+    resize: vertical;
   }
 `;
-/**
- * Componente ReserveModal
- * 
- * Este componente representa un modal para reservar una actividad.
- * 
- * @param {Object} props - Las propiedades del componente.
- * @param {boolean} props.isOpen - Indica si el modal está abierto.
- * @param {Function} props.closeModal - Función para cerrar el modal.
- * @param {Object} props.form - Objeto de formulario para manejar los campos y la validación.
- * @param {Function} props.onFinish - Función que se ejecuta al enviar el formulario con éxito.
- * 
- * @returns {JSX.Element} El componente ReserveModal.
- */
-const ReserveModal = ({ isOpen, closeModal
- , form, onFinish
- }) => {
-  
+
+const ReserveModal = ({ isOpen, closeModal, form, onFinish }) => {
+  const [numChildren, setNumChildren] = useState("");
+  const [comments, setComments] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    form.validateFields().then((values) => {
-      onFinish(values);
-      handleClose();
-    });
+    const values = {
+      num_ninos: numChildren,
+      comentarios: comments,
+    };
+    onFinish(values);
+    handleClose();
   };
 
   const handleClose = () => {
-    form.resetFields();
+    setNumChildren("");
+    setComments("");
     closeModal();
   };
 
   return (
     <Modal isOpen={isOpen} onRequestClose={handleClose} contentLabel="Reserve">
       <ModalContent>
+        <CloseButton onClick={handleClose} title="Cerrar">
+          <FaTimes />
+        </CloseButton>
         <h2>Reservar Actividad</h2>
         <form onSubmit={handleSubmit}>
-          <div>
-            <label>
-              Número de niños:
-              <input
-                type="number"
-                min="0"
-                value={form.numChildren}
-                onChange={(e) => form.setFieldValue('num_ninos', e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              Comentarios:
-              <textarea
-                value={form.comments}
-                onChange={(e) => form.setFieldValue('comentarios', e.target.value)}
-              />
-            </label>
-          </div>
+          <FormGroup>
+            <label>Número de niños:</label>
+            <input
+              type="number"
+              min="0"
+              value={numChildren}
+              onChange={(e) => setNumChildren(e.target.value)}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Comentarios:</label>
+            <textarea
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+            />
+          </FormGroup>
           <div>
             <Button type="submit">Reservar</Button>
-            <Button type="button" onClick={handleClose} title="Cerrar">
-              <FaTimes />
-            </Button>
           </div>
         </form>
       </ModalContent>
