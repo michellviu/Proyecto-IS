@@ -36,6 +36,67 @@ const fetchActivities = async ( setActivities, setNext, setPrevious, ruta ) => {
 };
 
 
+const fetchSearch = async (setActivities, setNext, setPrevious, query) => {
+    try {
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const url = new URL('http://127.0.0.1:8000/api/search/');
+        const params = {
+            model: "actividad_programada",
+            field: "nombre",
+            query: query
+        };
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            message.error('No se pudo filtrar: ' + data.error);
+            throw new Error('Network response was not ok');
+        }
+        setNext(data.next);
+        setPrevious(data.previous);
+        setActivities(data.results);
+    } catch (error) {
+        console.error('Failed to search instances:', error);
+    }
+};
+
+const fetchOrder = async (setActivities, setNext, setPrevious, order) => {
+    try {
+        const token = `Bearer ${localStorage.getItem('AuthToken')}`;
+        const url = new URL('http://127.0.0.1:8000/api/orderbyproperty/');
+        const params = {
+            model: "actividad_programada",
+            field: "fecha_hora",
+            criterion: order
+        };
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            message.error('No se pudo ordenar: ' + data.error);
+            throw new Error('Network response was not ok');
+        }
+        setNext(data.next);
+        setPrevious(data.previous);
+        setActivities(data.results);
+    } catch (error) {
+        console.error('Failed to order instances:', error);
+    }
+};
+
+
 const fetchPage = async ({setActivities, setNext, setPrevious, page }) => {
     try {
         const token = `Bearer ${localStorage.getItem('AuthToken')}`;
@@ -58,4 +119,4 @@ const fetchPage = async ({setActivities, setNext, setPrevious, page }) => {
         console.error('Failed to fetch page:', error);
     }
 };
-export {fetchActivities, fetchPage};
+export {fetchActivities, fetchPage, fetchSearch, fetchOrder};

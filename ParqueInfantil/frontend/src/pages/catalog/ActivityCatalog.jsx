@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FaSort, FaSearch } from "react-icons/fa";
 import ActivityContainer from "../../components/ActivityContainer";
 import { message, Spin } from "antd";
-import { fetchActivities, fetchPage } from "./HandlersAPI";
+import { fetchActivities, fetchPage, fetchSearch , fetchOrder} from "./HandlersAPI";
 import MenuCatalogo from "./MenuCatalogo";
 import PaginationControls from "../admin/Components/PaginationControls";
 
@@ -154,6 +154,7 @@ const ActivityCatalog = () => {
   const [loading, setLoading] = useState(false);
   const [rol, setRol] = useState(localStorage.getItem('Role'));
   const [activities, setActivities] = useState([]);
+  const [sort, setSort] = useState(0);
   
 
   const [next, setNext] = useState();
@@ -161,11 +162,25 @@ const ActivityCatalog = () => {
   const [kindActivity, setKindActivity] = useState('Programadas');
   
 
-  const handleSearch = () => {};
+  const handleSearch = async (event) => {
+    setLoading(true);
+    const query = event.target.value;
+    await fetchSearch(setActivities, setNext, setPrevious, query);
+    setLoading(false);
+  };
 
-  const handleSort = () => {};
+  
+  
 
-  const filteredActivities = () => {};
+  const handleSort = async () => {
+    setLoading(true);
+    const order = sort === 0 ? "asc" : "desc";
+    await fetchOrder(setActivities, setNext, setPrevious, order);
+    setSort(sort === 0 ? 1 : 0);
+    setLoading(false);
+  };
+
+ 
 
   const handlePage = async (page) => {
     setLoading(true);

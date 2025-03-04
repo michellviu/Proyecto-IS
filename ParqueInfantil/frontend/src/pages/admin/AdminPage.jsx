@@ -245,12 +245,17 @@ const AdminPage = () => {
   };
 
   const handleDelete = async (instance) => {
-    setLoading(true);
     setCurrentInstance(instance);
-    await handleDeleteRequest(selectedEntity, instance.id);
-    setCurrentInstance(null);
-    await refresh();
-    setLoading(false);
+    const confirm = window.confirm("¿Estás seguro de que quieres eliminar esta instancia?");
+    if (confirm) {
+      setLoading(true);
+      await handleDeleteRequest(selectedEntity, instance.id);
+      setCurrentInstance(null);
+      await refresh();
+      setLoading(false);
+    } else {
+      setCurrentInstance(null);
+    }
   }
 
   const handleCancel = () => {
