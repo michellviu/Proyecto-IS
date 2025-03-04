@@ -155,6 +155,7 @@ const Register = () => {
         localStorage.setItem("AuthToken", result.access);
         message.success("Registro exitoso");
         if (formData.rol === 'padre') {
+          localStorage.setItem("Role", "padre");
           navigate(`/padrePage`);
         } else {
           message.warning('Debe esperar a que sea aceptada su aplicación');

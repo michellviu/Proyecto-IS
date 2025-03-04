@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import ActivityCatalog from '../catalog/ActivityCatalog'; // Make sure to import your component
 import Perfil from './ParentProfile';
 import PlayHubLogo from '../../assets/PlayHub.png';
-import Reservations from './Reservations'
+// import MyReservationsView from './Reservations';
 import AlertPage from '../AlertPage';
 import { handleLogOut } from '../admin/HandlersRequests';
 import { FiLogOut } from 'react-icons/fi';
@@ -126,7 +126,14 @@ const ParentPage = () => {
                 )}
                 {selectedMenu === 'Reservas' && (
                     <div style={{ width: '100%' }}>
-                        <Reservations />
+                        {/* <MyReservationsView
+                            reservations={ }
+                            next={ }
+                            previous={ }
+                            handleNext={ }
+                            handlePrevious={ }
+                            handleCancel={ }
+                        /> */}
                     </div>
                 )}
                 {selectedMenu === 'Home' && (

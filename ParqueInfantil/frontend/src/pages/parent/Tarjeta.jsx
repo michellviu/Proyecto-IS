@@ -75,8 +75,8 @@ const Tarjeta = (nombreAct, fecha, estado, capacidad, foto = poster) => {
             <Info > {capacidad} </Info> */}
             {/* <h1 style={{ color: getColorByEstado(estado), fontSize: '2em' }}> {estado} </h1> */}
 
-            <FullImage src={tarjeta} alt="Full Screen" />
-            <Image src={poster} alt="Poster" />
+            {/* <FullImage src={tarjeta} alt="Full Screen" />
+            <Image src={poster} alt="Poster" /> */}
         </Container>
     );
 };
