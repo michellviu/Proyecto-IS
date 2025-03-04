@@ -13,6 +13,7 @@ from ..DomainServices.RepositoryInterfaces.IScheduledActRepository import (
 )
 from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError
+from ..models.globals import GlobalVariables
 
 
 class QualificationService(GenericService, IQualificationService):
@@ -40,7 +41,9 @@ class QualificationService(GenericService, IQualificationService):
 
         if self.check_for_consistency(data):
             try:
-                return super().create(data)
+                result = super().create(data)
+                GlobalVariables.update_field("qualification_change", True)
+                return result
             except Exception as e:
                 raise ValidationError(str(e))
 
@@ -51,7 +54,9 @@ class QualificationService(GenericService, IQualificationService):
     def update(self, id, data):
         if self.check_for_consistency(data):
             try:
-                return super().update(id, data)
+                result = super().update(id, data)
+                GlobalVariables.update_field("qualification_change", True)
+                return result
             except Exception as e:
                 raise ValidationError(str(e))
 
@@ -96,3 +101,14 @@ class QualificationService(GenericService, IQualificationService):
 
     def group_by_scores(self):
         return self.qualification_repository.group_by_scores()
+
+    def delete(self, id):
+        try:
+            entity = self.get_by_id(id)
+            result = self.qualification_repository.delete(entity)
+            GlobalVariables.update_field("qualification_change", True)
+            return result
+        except self.qualification_repository.model.DoesNotExist:
+            raise ValidationError(f"Entity with id {id} not found.")
+        except Exception as e:
+            raise ValidationError(str(e))

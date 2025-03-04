@@ -77,30 +77,32 @@ class Stats:
         return resultados
 
     def get_actividades_avg_qualifications(self):
-        activities = self.activity_service.get_all()
-        avg_qualifications = {}
-        for activity in activities:
-            avg_qualifications[activity.idA] = {
-                "nombre": activity.nombre,
-                "calificacion": self.activity_service.get_average_calification(
-                    activity.idA
-                ),
+        result = self.activity_service.get_highest_average_calification_activities()
+        highest_avg_calification_activities = {}
+        for row in result:
+            highest_avg_calification_activities[row["id"]] = {
+                "nombre": row["nombre"],
+                "promedio_puntuacion": row["puntuacion"],
             }
-        return avg_qualifications
+        return highest_avg_calification_activities
 
     def get_most_participated_activities(self):
-        activities = self.activity_service.get_most_participated_activities()
-        # Ordenar las actividades por el número de participantes y tomar las primeras 3
-        most_participated_activities = sorted(
-            activities, key=lambda a: a["participantes"], reverse=True
-        )[:3]
-        return most_participated_activities
+        # activities = self.activity_service.get_most_participated_activities()
+        # # Ordenar las actividades por el número de participantes y tomar las primeras 3
+        # most_participated_activities = sorted(
+        #     activities, key=lambda a: a["participantes"], reverse=True
+        # )[:3]
+        # return most_participated_activities
+        return self.activity_service.get_activities_with_highest_participation()
 
     def get_recursos_mas_utilizados(self):
-        recursos = self.resource_service.get_all()
-        response = {}
-        for recurso in recursos:
-            response[recurso.idR] = {
-                "cantidad": self.resource_service.get_frecuencia_uso(recurso.idR)
-            }
-        return response
+
+        response = self.resource_service.get_recursos_mas_utilizados()
+
+        if response is None:
+            return {}
+
+        resources = {}
+        for row in response:
+            resources[row[0]] = {"cantidad": row[3]}
+        return resources
