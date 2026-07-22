@@ -6,7 +6,9 @@ import ReserveModal from "./ActivityContainer/ReserveModal";
 import CommentModal from "./ActivityContainer/CommentModal";
 import ActivityModal from "./ActivityContainer/ActivityModal";
 
-import { Form, Spin } from 'antd';
+import { Form, Spin, message } from 'antd';
+
+import { handleReservationRequest, handleCalificationRequest } from "./ActivityContainer/HandlerAPI";
 
 
 
@@ -15,15 +17,28 @@ const ActivityImage = ({ image, name, openModal }) => (
   <Image src={image} alt={name} onClick={openModal} />
 );
 
-const ActivityInfo = ({ activity, openModal }) => (
-  <Info>
-    <h3>{activity.nombre}</h3>
-    <p>{activity.fecha_hora}</p>
-    <Button onClick={openModal} title="Más información">
-      <FaInfoCircle />
-    </Button>
-  </Info>
-);
+const ActivityInfo = ({ activity, openModal }) => {
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
+
+  const formatTime = (dateString) => {
+    const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+    return new Date(dateString).toLocaleTimeString(undefined, options);
+  };
+
+  return (
+    <Info>
+      <h3>{activity.nombre}</h3>
+      <p><strong>Hora:</strong> {formatTime(activity.fecha_hora)}</p>
+      <p><strong>Fecha:</strong> {formatDate(activity.fecha_hora)}</p>
+      <Button onClick={openModal} title="Más información">
+        <FaInfoCircle />
+      </Button>
+    </Info>
+  );
+};
 
 
 const Card = styled.div`
@@ -105,7 +120,15 @@ const ActivityContainer = ({ key, data, rol, time }) => {
     setReserveModalIsOpen(true);
   };
 
-  const closeReserveModal = () => {
+  const handleReservation = async (values) => {
+
+    const reservationData = {
+      idAP: data.idAP,
+      estado: "Pendiente",
+      ...values
+    };
+
+    await handleReservationRequest(reservationData);
     setReserveModalIsOpen(false);
   };
 
@@ -113,7 +136,14 @@ const ActivityContainer = ({ key, data, rol, time }) => {
     setCommentModalIsOpen(true);
   };
 
-  const closeCommentModal = () => {
+  const handleCalification = async (values) => {
+    
+    const calificationData = {
+      idAP: data.idAP,
+      ...values
+    };
+    
+    await handleCalificationRequest(calificationData);
     setCommentModalIsOpen(false);
   };
 
@@ -136,15 +166,17 @@ const ActivityContainer = ({ key, data, rol, time }) => {
         rol={rol}
         time={time}
       />
-     <ReserveModal
+      <ReserveModal
         isOpen={reserveModalIsOpen}
-        closeModal={closeReserveModal}
+        closeModal={() => setReserveModalIsOpen(false)}
         form={form}
-        onFinish={closeReserveModal}
-      /> 
+        onFinish={handleReservation}
+      />
       <CommentModal
         isOpen={commentModalIsOpen}
-        closeModal={closeCommentModal}
+        closeModal={() => setCommentModalIsOpen(false)}
+        form={form}
+        onFinish={handleCalification}
       />
     </Card>
   );

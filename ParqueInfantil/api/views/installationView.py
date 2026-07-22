@@ -11,6 +11,7 @@ from api.AppServices.InstallationService import InstallationService
 from api.InfrastructurePersistence.InstallationRepository import InstallationRepository
 from django.core.exceptions import ObjectDoesNotExist
 
+
 # vista para crear o listar todas las instalaciones
 class InstalacionView(generics.ListCreateAPIView):
     permission_classes = [IsAdmin]
@@ -19,7 +20,7 @@ class InstalacionView(generics.ListCreateAPIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.installation_service = InstallationService(InstallationRepository())
-    
+
     @swagger_auto_schema(
         operation_description="Listar todas las instalaciones",
         responses={200: InstalacionSerializer(many=True)},
@@ -38,8 +39,6 @@ class InstalacionView(generics.ListCreateAPIView):
         self.installation_service.create(serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-  
-
 
 # vista para ver, actualizar o eliminar una instalacion
 class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -50,19 +49,25 @@ class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
         super().__init__(**kwargs)
         self.installation_service = InstallationService(InstallationRepository())
 
-
-    @swagger_auto_schema(
-        operation_description="Obtener los detalles de una instalación",
-        responses={200: InstalacionSerializer},
-    )
-    def get_object(self):
-        try:
-         print (self.installation_service.get_numactividades(self.kwargs["pk"]).numero_actividades_realizadas)
-         return self.installation_service.get_by_id(self.kwargs["pk"])
-        except ObjectDoesNotExist as e:
-            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"error": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # @swagger_auto_schema(
+    #     operation_description="Obtener los detalles de una instalación",
+    #     responses={200: InstalacionSerializer},
+    # )
+    # def get_object(self):
+    #     try:
+    #         print(
+    #             self.installation_service.get_numactividades(
+    #                 self.kwargs["pk"]
+    #             ).numero_actividades_realizadas
+    #         )
+    #         return self.installation_service.get_by_id(self.kwargs["pk"])
+    #     except ObjectDoesNotExist as e:
+    #         return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+    #     except Exception as e:
+    #         return Response(
+    #             {"error": "An unexpected error occurred."},
+    #             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    #         )
 
     @swagger_auto_schema(
         operation_description="Actualizar una instalación existente",
@@ -70,7 +75,11 @@ class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
         responses={200: InstalacionSerializer},
     )
     def update(self, request, *args, **kwargs):
-        installation = self.get_object()
+        installation = self.installation_service.get_by_id(self.kwargs["pk"])
+        # print("Imprimiendo\r\n")
+        # print(installation)
+        # print("\r\nImprimiendo")
+
         serializer = self.get_serializer(installation, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.installation_service.update(installation.idI, serializer.validated_data)
@@ -82,12 +91,14 @@ class InstalacionDetailView(generics.RetrieveUpdateDestroyAPIView):
     )
     def destroy(self, request, *args, **kwargs):
         try:
-         self.installation_service.delete(self.kwargs["pk"])
-         return Response(status=status.HTTP_204_NO_CONTENT)
+            self.installation_service.delete(self.kwargs["pk"])
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist as e:
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class InstalacionNumActividadesView(generics.ListAPIView):
@@ -98,7 +109,6 @@ class InstalacionNumActividadesView(generics.ListAPIView):
         super().__init__(**kwargs)
         self.installation_service = InstallationService(InstallationRepository())
 
-   
     def get(self, request, *args, **kwargs):
         installations = self.installation_service.get_numactividades()
         return Response(installations, status=status.HTTP_200_OK)

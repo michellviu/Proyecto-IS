@@ -8,6 +8,7 @@ from api.DomainServices.RepositoryInterfaces.IActivityRepository import (
 from .GenericRepository import GenericRepository
 from datetime import datetime, timedelta
 from .ScheduledActRepository import ScheduledActRepository
+from django.db import connection
 from api.DomainServices.RepositoryInterfaces.IScheduledActRepository import (
     IScheduledActRepository,
 )
@@ -16,7 +17,7 @@ from api.DomainServices.RepositoryInterfaces.IScheduledActRepository import (
 class ActivityRepository(GenericRepository, IActivityRepository):
     def __init__(self):
         super().__init__(Actividad)
-    
+
     @staticmethod
     def get_average_calification(actividad_id):
         # Filter scheduled activities by the given activity ID
@@ -96,7 +97,7 @@ class ActivityRepository(GenericRepository, IActivityRepository):
     @staticmethod
     def get_cant_participantes(actividad_id):
         act_progs = ScheduledActRepository.get_actividades_numparticipantes()
-         # Calculate the date for one month ago from now
+        # Calculate the date for one month ago from now
         last_month = datetime.now() - timedelta(days=90)
         act_progs = act_progs.filter(fecha_hora__gte=last_month)
         cant_participantes = 0
@@ -120,3 +121,81 @@ class ActivityRepository(GenericRepository, IActivityRepository):
             activities_details.append(activity_details)
 
         return activities_details
+
+    def get_highest_average_calification_activities(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+            SELECT
+                a."idA",
+                a.nombre,
+                AVG(c.puntuacion) AS promedio_puntuacion
+            FROM
+                "api_actividad" a
+            JOIN
+                "api_actividad_programada" ap ON a."idA" = ap."idA_id"
+            JOIN
+                "api_calificacion" c ON ap."idAP" = c."idAP_id"
+            --WHERE
+                --ap.fecha_hora >= NOW() - INTERVAL '30 days'
+            GROUP BY
+                a."idA", a.nombre
+            ORDER BY
+                promedio_puntuacion DESC
+            LIMIT 10;
+            """
+            )
+            result = cursor.fetchall()
+
+        highest_avg_calification_activities = []
+        for row in result:
+            highest_avg_calification_activities.append(
+                {
+                    "id": row[0],
+                    "nombre": row[1],
+                    "puntuacion": row[2],
+                }
+            )
+
+        return highest_avg_calification_activities
+
+    def get_activities_with_highest_participation(self):
+        """
+        Retrieve the 10 activities with the highest total participants in confirmed reservations
+        for scheduled activities in the last 30 days.
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT 
+                    a."idA" AS id,
+                    a.nombre AS nombre,
+                    SUM(r.num_ninos) AS participantes
+                FROM 
+                    "api_actividad" a
+                INNER JOIN 
+                    "api_actividad_programada" ap ON a."idA" = ap."idA_id"
+                INNER JOIN 
+                    "api_reservacion" r ON ap."idAP" = r."idAP_id"
+                WHERE 
+                    r.estado = 'Confirmado'
+                    --AND ap.fecha_hora >= NOW() - INTERVAL '30 days'
+                GROUP BY 
+                    a."idA", a.nombre
+                ORDER BY 
+                    participantes DESC
+                LIMIT 10;
+                """
+            )
+            rows = cursor.fetchall()
+
+        activities = []
+        for row in rows:
+            activities.append(
+                {
+                    "id": row[0],
+                    "nombre": row[1],
+                    "participantes": row[2],
+                }
+            )
+        return activities

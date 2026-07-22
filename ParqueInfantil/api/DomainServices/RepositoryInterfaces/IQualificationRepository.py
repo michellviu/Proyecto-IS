@@ -12,5 +12,6 @@ class IQualificationRepository(IGenericRepository):
     def get_qualifications_by_user(self, idU: int):
         pass
 
-    
-    
+    @abstractmethod
+    def group_by_scores():
+        pass

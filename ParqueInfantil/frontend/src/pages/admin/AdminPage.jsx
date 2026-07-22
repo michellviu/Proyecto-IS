@@ -233,7 +233,9 @@ const AdminPage = () => {
 
   //Metodos CRUD 
   const handleEditModal = (instance) => {
+    setLoading(true);
     setCurrentInstance(instance);
+    setLoading(false);
     setIsEditModalVisible(true);
   };
 
@@ -243,22 +245,30 @@ const AdminPage = () => {
   };
 
   const handleDelete = async (instance) => {
-    setLoading(true);
     setCurrentInstance(instance);
-    await handleDeleteRequest(selectedEntity, instance.id);
-    setCurrentInstance(null);
-    await refresh();
-    setLoading(false);
+    const confirm = window.confirm("¿Estás seguro de que quieres eliminar esta instancia?");
+    if (confirm) {
+      setLoading(true);
+      await handleDeleteRequest(selectedEntity, instance.id);
+      setCurrentInstance(null);
+      await refresh();
+      setLoading(false);
+    } else {
+      setCurrentInstance(null);
+    }
   }
 
   const handleCancel = () => {
+    setLoading(true);
+    setCurrentInstance(null);
     setIsAddModalVisible(false);
     setIsEditModalVisible(false);
-    setCurrentInstance(null);
+    setLoading(false);
   };
 
   const handleSave = async (values) => {
     setLoading(true);
+    setCurrentInstance(null);
     if (isEditModalVisible) {
       await handleEdit(selectedEntity, values.id, values);
     } else {
@@ -266,7 +276,6 @@ const AdminPage = () => {
     }
     setIsAddModalVisible(false);
     setIsEditModalVisible(false);
-    setCurrentInstance(null);
     await refresh();
     setLoading(false);
   };

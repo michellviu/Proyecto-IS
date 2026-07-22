@@ -18,5 +18,13 @@ class IActivityRepository(IGenericRepository, ABC):
         pass
 
     @abstractmethod
-    def get_cant_participantes(self,actividad_id):
+    def get_cant_participantes(self, actividad_id):
+        pass
+
+    @abstractmethod
+    def get_highest_average_calification_activities(self):
+        pass
+
+    @abstractmethod
+    def get_activities_with_highest_participation(self):
         pass
